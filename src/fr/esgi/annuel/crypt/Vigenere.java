@@ -2,6 +2,13 @@ package fr.esgi.annuel.crypt;
 
 public class Vigenere
 {
+	/**
+	 *
+	 *
+	 * @param keyword
+	 * @param line
+	 * @return
+	 **/
 	public static String encrypt(String keyword, String line)
 	{
 		String result = "";
@@ -18,6 +25,13 @@ public class Vigenere
 		return result;
 	}
 
+	/**
+	 *
+	 *
+	 * @param keyword
+	 * @param line
+	 * @return
+	 **/
 	public static String decrypt(String keyword, String line)
 	{
 		String result = "";
@@ -35,9 +49,4 @@ public class Vigenere
 		}
 		return result;
 	}
-
-	/*
-	 * public static void main(String args[]) throws IOException { Vigenere obj = new Vigenere(); BufferedReader in = new BufferedReader(new InputStreamReader(System.in)); int choice; System.out.println("Menu:\n1: Encryption\n2: Decryption"); choice = Integer.parseInt(in.readLine()); System.out.println("Enter the keyword: "); String keyword = in.readLine(); System.out.println("Enter the line: ");
-	 * String line = in.readLine(); System.out.println("Result:"); switch (choice) { case 1: System.out.println(obj.encrypt(keyword, line)); break; case 2: System.out.println(obj.decrypt(keyword, line)); break; default: System.out.println("Invalid input!"); break; } }
-	 */
 }

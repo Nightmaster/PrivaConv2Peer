@@ -1,5 +1,7 @@
 package fr.esgi.annuel.gui;
 
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -26,19 +28,19 @@ public class ProfilView extends JPanel
 	 */
 	public ProfilView()
 	{
-		setLayout(null);
-		add(getLblNom());
-		add(getTextFieldFName());
-		add(getLblPrnom());
-		add(getTextFieldName());
-		add(getLblPseudonyme());
-		add(getTextField());
-		add(getLblNouveauMotDe());
-		add(getPwdFieldChange());
-		add(getLblConfirmationDuMot());
-		add(getPwdFieldConfirm());
-		add(getTextField_1());
-		add(getLblAdresseEmail());
+		GroupLayout groupLayout = new GroupLayout(this);
+		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addComponent(getLblNom()).addGap(141).addComponent(getLblAdresseEmail()))
+				.addGroup(groupLayout.createSequentialGroup().addComponent(getTextFieldFName(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE).addGap(19).addComponent(getTextField_1(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)).addGroup(groupLayout.createSequentialGroup().addComponent(getLblPrnom()).addGap(126).addComponent(getLblNouveauMotDe()))
+				.addGroup(groupLayout.createSequentialGroup().addComponent(getTextFieldName(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE).addGap(19).addComponent(getPwdFieldChange(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)).addGroup(groupLayout.createSequentialGroup().addComponent(getLblPseudonyme()).addGap(101).addComponent(getLblConfirmationDuMot()))
+				.addGroup(groupLayout.createSequentialGroup().addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE).addGap(19).addComponent(getPwdFieldConfirm(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)));
+		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(
+				groupLayout.createSequentialGroup().addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblNom()).addComponent(getLblAdresseEmail())).addGap(6)
+						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getTextFieldFName(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getTextField_1(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
+						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblPrnom()).addGroup(groupLayout.createSequentialGroup().addGap(5).addComponent(getLblNouveauMotDe()))).addGap(6)
+						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getTextFieldName(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getPwdFieldChange(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
+						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblPseudonyme()).addComponent(getLblConfirmationDuMot())).addGap(11)
+						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getPwdFieldConfirm(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))));
+		setLayout(groupLayout);
 
 	}
 
@@ -47,7 +49,6 @@ public class ProfilView extends JPanel
 		if (lblAdresseEmail == null)
 		{
 			lblAdresseEmail = new JLabel("Adresse email");
-			lblAdresseEmail.setBounds(162, 0, 66, 14);
 		}
 		return lblAdresseEmail;
 	}
@@ -57,7 +58,6 @@ public class ProfilView extends JPanel
 		if (lblConfirmationDuMot == null)
 		{
 			lblConfirmationDuMot = new JLabel("Confirmation du mot de passe");
-			lblConfirmationDuMot.setBounds(162, 107, 143, 14);
 		}
 		return lblConfirmationDuMot;
 	}
@@ -67,7 +67,6 @@ public class ProfilView extends JPanel
 		if (lblNom == null)
 		{
 			lblNom = new JLabel("Nom");
-			lblNom.setBounds(0, 0, 21, 14);
 		}
 		return lblNom;
 	}
@@ -77,7 +76,6 @@ public class ProfilView extends JPanel
 		if (lblNouveauMotDe == null)
 		{
 			lblNouveauMotDe = new JLabel("Nouveau mot de passe");
-			lblNouveauMotDe.setBounds(162, 56, 110, 14);
 		}
 		return lblNouveauMotDe;
 	}
@@ -87,7 +85,6 @@ public class ProfilView extends JPanel
 		if (lblPrnom == null)
 		{
 			lblPrnom = new JLabel("Pr\u00E9nom");
-			lblPrnom.setBounds(0, 51, 36, 14);
 		}
 		return lblPrnom;
 	}
@@ -97,7 +94,6 @@ public class ProfilView extends JPanel
 		if (lblPseudonyme == null)
 		{
 			lblPseudonyme = new JLabel("Pseudonyme");
-			lblPseudonyme.setBounds(0, 107, 61, 14);
 		}
 		return lblPseudonyme;
 	}
@@ -107,7 +103,6 @@ public class ProfilView extends JPanel
 		if (pwdFieldChange == null)
 		{
 			pwdFieldChange = new JPasswordField();
-			pwdFieldChange.setBounds(162, 76, 143, 20);
 		}
 		return pwdFieldChange;
 	}
@@ -117,7 +112,6 @@ public class ProfilView extends JPanel
 		if (pwdFieldConfirm == null)
 		{
 			pwdFieldConfirm = new JPasswordField();
-			pwdFieldConfirm.setBounds(162, 132, 143, 20);
 		}
 		return pwdFieldConfirm;
 	}
@@ -127,7 +121,6 @@ public class ProfilView extends JPanel
 		if (textField == null)
 		{
 			textField = new JTextField();
-			textField.setBounds(0, 132, 143, 20);
 			textField.setColumns(10);
 		}
 		return textField;
@@ -138,7 +131,6 @@ public class ProfilView extends JPanel
 		if (textField_1 == null)
 		{
 			textField_1 = new JTextField();
-			textField_1.setBounds(162, 20, 143, 20);
 			textField_1.setColumns(10);
 		}
 		return textField_1;
@@ -149,7 +141,6 @@ public class ProfilView extends JPanel
 		if (textFieldFName == null)
 		{
 			textFieldFName = new JTextField();
-			textFieldFName.setBounds(0, 20, 143, 20);
 			textFieldFName.setColumns(10);
 		}
 		return textFieldFName;
@@ -161,7 +152,6 @@ public class ProfilView extends JPanel
 		{
 			textFieldName = new JTextField();
 			textFieldName.setColumns(10);
-			textFieldName.setBounds(0, 76, 143, 20);
 		}
 		return textFieldName;
 	}
