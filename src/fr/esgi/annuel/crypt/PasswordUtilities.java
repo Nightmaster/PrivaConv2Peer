@@ -31,7 +31,7 @@ public class PasswordUtilities
 	private static boolean contientNombre(String pw)
 	{
 		// TODO trouver une RegEx qui fonctionne !
-		return Pattern.compile("/?=.*[0-9]/").matcher(pw).find();
+		return Pattern.compile(".*\\d+.*").matcher(pw).find();
 	}
 
 	/**
