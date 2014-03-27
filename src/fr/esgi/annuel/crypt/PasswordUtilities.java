@@ -7,6 +7,11 @@ import fr.esgi.annuel.constants.Constants;
 public class PasswordUtilities
 {
 
+	private static boolean absenceEspace(String pw)
+	{
+		return Pattern.compile("(?=\\S+$)").matcher(pw).find();
+	}
+
 	/**
 	 * Retourne <code>Vrai</code> si le mot de passe contient un caractère spécial, <code>Faux</code> sinon
 	 *
@@ -28,9 +33,18 @@ public class PasswordUtilities
 		return res;
 	}
 
+	private static boolean contientMaj(String pw)
+	{
+		return Pattern.compile("(?=.*[A-Z])").matcher(pw).find();
+	}
+
+	private static boolean contientMin(String pw)
+	{
+		return Pattern.compile("(?=.*[a-z])").matcher(pw).find();
+	}
+
 	private static boolean contientNombre(String pw)
 	{
-		// TODO trouver une RegEx qui fonctionne !
 		return Pattern.compile(".*\\d+.*").matcher(pw).find();
 	}
 
@@ -57,6 +71,13 @@ public class PasswordUtilities
 		res.put(Constants.PW_LENGTH, estSuffisammentLong(pw));
 		res.put(Constants.PW_SPE_CHAR, contientCaracSpe(pw));
 		res.put(Constants.PW_NUMBER, contientNombre(pw));
+		res.put(Constants.PW_MIN, contientMin(pw));
+		res.put(Constants.PW_MAJ, contientMaj(pw));
 		return res;
+	}
+
+	private static boolean seulementAcceptes(String pw)
+	{
+		return Pattern.compile("/^[-!\"§$%&/()=?+*~#'_:.,;@^<>£¤µa-zA-Zà-9]+$/").matcher(pw).find();
 	}
 }
