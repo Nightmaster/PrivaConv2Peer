@@ -7,11 +7,6 @@ import fr.esgi.annuel.constants.Constants;
 public class PasswordUtilities
 {
 
-	private static boolean absenceEspace(String pw)
-	{
-		return Pattern.compile("(?=\\S+$)").matcher(pw).find();
-	}
-
 	/**
 	 * Retourne <code>Vrai</code> si le mot de passe contient un caractère spécial, <code>Faux</code> sinon
 	 *
@@ -33,16 +28,34 @@ public class PasswordUtilities
 		return res;
 	}
 
+	/**
+	 * Vérifie que le pw contient au moins une majuscule
+	 *
+	 * @param pw {String}: le mot de passe à vérifier
+	 * @return {boolean} <code>true</code> si le pw contient au moins une majuscule, <code>false</code> sinon
+	 **/
 	private static boolean contientMaj(String pw)
 	{
 		return Pattern.compile("(?=.*[A-Z])").matcher(pw).find();
 	}
 
+	/**
+	 * Vérifie que le pw contient au moins une minuscule
+	 *
+	 * @param pw {String}: le mot de passe à vérifier
+	 * @return {boolean} <code>true</code> si le pw contient au moins une minuscule, <code>false</code> sinon
+	 **/
 	private static boolean contientMin(String pw)
 	{
 		return Pattern.compile("(?=.*[a-z])").matcher(pw).find();
 	}
 
+	/**
+	 * Vérifie que le pw contient au moins un chiffre
+	 *
+	 * @param pw {String}: le mot de passe à vérifier
+	 * @return {boolean} <code>true</code> si le pw contient au moins un chiffre, <code>false</code> sinon
+	 **/
 	private static boolean contientNombre(String pw)
 	{
 		return Pattern.compile(".*\\d+.*").matcher(pw).find();
@@ -73,11 +86,19 @@ public class PasswordUtilities
 		res.put(Constants.PW_NUMBER, contientNombre(pw));
 		res.put(Constants.PW_MIN, contientMin(pw));
 		res.put(Constants.PW_MAJ, contientMaj(pw));
+		res.put(Constants.PW_GOOD_FMT, seulementAcceptes(pw));
 		return res;
 	}
 
+	/**
+	 * Vérifie que le mot de passe ne contient que les caractères acceptés
+	 *
+	 * @param pw {String]: Le mot de passe à vérifier
+	 * @return {boolean}: <code>true</code> si le mot de passe valide les attentes, <code>false</code> sinon
+	 **/
 	private static boolean seulementAcceptes(String pw)
 	{
-		return Pattern.compile("/^[-!\"§$%&/()=?+*~#'_:.,;@^<>£¤µa-zA-Zà-9]+$/").matcher(pw).find();
+		// TODO trouver ReGex qui fonctionne
+		return Pattern.compile("/^[-!\"§$%&/()=?+*~#'_:.,;@^<>£¤µa-zA-Z0-9]+$/").matcher(pw).find();
 	}
 }
