@@ -41,13 +41,13 @@ public class IdentificationView extends JPanel
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(
 				groupLayout
-						.createSequentialGroup()
-						.addGroup(
-								groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblIdentifiantDeConnexion()).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE).addGroup(groupLayout.createSequentialGroup().addGap(5).addComponent(getLblPwd())).addComponent(getPasswordField(), GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
-										.addGroup(groupLayout.createSequentialGroup().addGap(23).addComponent(getBtnConnnexion())).addComponent(getChckbxSeSouvenirDe()).addComponent(getLblSenregistrer())).addContainerGap(316, Short.MAX_VALUE)));
+				.createSequentialGroup()
+				.addGroup(
+						groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblIdentifiantDeConnexion()).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE).addGroup(groupLayout.createSequentialGroup().addGap(5).addComponent(getLblPwd())).addComponent(getPasswordField(), GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
+						.addGroup(groupLayout.createSequentialGroup().addGap(23).addComponent(getBtnConnnexion())).addComponent(getChckbxSeSouvenirDe()).addComponent(getLblSenregistrer())).addContainerGap(316, Short.MAX_VALUE)));
 		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(
 				groupLayout.createSequentialGroup().addComponent(getLblIdentifiantDeConnexion()).addGap(4).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addGap(13).addComponent(getLblPwd()).addGap(4).addComponent(getPasswordField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addGap(18)
-						.addComponent(getBtnConnnexion()).addGap(7).addComponent(getChckbxSeSouvenirDe()).addGap(17).addComponent(getLblSenregistrer()).addGap(105)));
+				.addComponent(getBtnConnnexion()).addGap(7).addComponent(getChckbxSeSouvenirDe()).addGap(17).addComponent(getLblSenregistrer()).addGap(105)));
 		setLayout(groupLayout);
 
 	}
