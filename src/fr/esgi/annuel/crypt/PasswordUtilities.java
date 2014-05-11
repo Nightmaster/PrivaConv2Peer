@@ -98,7 +98,6 @@ public class PasswordUtilities
 	 **/
 	private static boolean seulementAcceptes(String pw)
 	{
-		// TODO trouver ReGex qui fonctionne
-		return Pattern.compile("/^[-!\"§$%&/()=?+*~#'_:.,;@^<>£¤µa-zA-Z0-9]+$/").matcher(pw).find();
+		return Pattern.compile("^[-!\"§$%&/()=?+*~#'_:\\.,;@^<>£¤µa-zA-Z0-9]+$").matcher(pw).find();
 	}
 }
