@@ -11,9 +11,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
-import fr.esgi.annuel.Outils;
 import fr.esgi.annuel.constants.Constants;
 import fr.esgi.annuel.ctrl.MasterController;
+import fr.esgi.util.Outils;
 
 @SuppressWarnings("serial")
 public class MasterWindow extends JFrame
@@ -65,13 +65,13 @@ public class MasterWindow extends JFrame
 		}
 	}
 
+	private String actualView;
 	private JPanel contentPane;
 	private MasterController controller;
 	private JMenuBar menuBar;
 	private JMenu mnFichier, menu;
 	private JMenuItem mntmLaunchConv, mntmPropos, mntmQuitter, mntmProfil, mntmAddUser, mntmAide, mntmDisconnect;
 	private String pathToFile, gameName;
-	private String actualView;
 
 	public MasterWindow(MasterController controller)
 	{
@@ -216,7 +216,8 @@ public class MasterWindow extends JFrame
 
 	public void setView(JPanel gv)
 	{
-		this.contentPane = gv;;
+		this.contentPane = gv;
+		;
 	}
 
 }
