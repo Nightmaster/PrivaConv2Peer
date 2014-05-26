@@ -73,6 +73,17 @@ public class PasswordUtilities
 	}
 
 	/**
+	 * Vérifie que le mot de passe ne contient que les caractères acceptés
+	 *
+	 * @param pw {String]: Le mot de passe à vérifier
+	 * @return {boolean}: <code>true</code> si le mot de passe valide les attentes, <code>false</code> sinon
+	 **/
+	private static boolean seulementAcceptes(String pw)
+	{
+		return Pattern.compile("^[-!\"§$%&/()=?+*~#'_:\\.,@^<>£¤µa-zA-Z0-9]+$").matcher(pw).find();
+	}
+
+	/**
 	 * Return a HashMap containing the tests name and a boolean indicating if it has been validated, for the given password
 	 *
 	 * @param pw {String}: the password to check
@@ -88,16 +99,5 @@ public class PasswordUtilities
 		res.put(Constants.PW_MAJ, contientMaj(pw));
 		res.put(Constants.PW_GOOD_FMT, seulementAcceptes(pw));
 		return res;
-	}
-
-	/**
-	 * Vérifie que le mot de passe ne contient que les caractères acceptés
-	 *
-	 * @param pw {String]: Le mot de passe à vérifier
-	 * @return {boolean}: <code>true</code> si le mot de passe valide les attentes, <code>false</code> sinon
-	 **/
-	private static boolean seulementAcceptes(String pw)
-	{
-		return Pattern.compile("^[-!\"§$%&/()=?+*~#'_:\\.,;@^<>£¤µa-zA-Z0-9]+$").matcher(pw).find();
 	}
 }
