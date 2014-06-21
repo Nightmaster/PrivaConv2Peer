@@ -1,6 +1,5 @@
 package fr.esgi.annuel.gui;
 
-import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
@@ -17,7 +16,6 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
-import fr.esgi.annuel.constants.Constants;
 
 public class IdentificationView extends JPanel
 {
@@ -26,11 +24,11 @@ public class IdentificationView extends JPanel
 	private JCheckBox chckbxSeSouvenirDe;
 	private JLabel lblIdentifiantDeConnexion;
 	private JLabel lblPwd;
-	private JLabel lblSenregistrer;
 	private JPasswordField passwordField;
 	private JTextField textField;
 
 	private static final String A_HREF = "<a href=\"", HREF_CLOSED = "\">", HREF_END = "</a>", HTML = "<html>", HTML_END = "</html>";
+	private JButton btnNewButton;
 
 	/**
 	 * Create the panel.
@@ -39,15 +37,18 @@ public class IdentificationView extends JPanel
 	{
 		setLayout(null);
 		GroupLayout groupLayout = new GroupLayout(this);
-		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(
-				groupLayout
-				.createSequentialGroup()
+		groupLayout.setHorizontalGroup(groupLayout
+				.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup().addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addGap(5).addComponent(getLblPwd())).addComponent(getPasswordField(), GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)).addContainerGap(316, Short.MAX_VALUE))
 				.addGroup(
-						groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblIdentifiantDeConnexion()).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE).addGroup(groupLayout.createSequentialGroup().addGap(5).addComponent(getLblPwd())).addComponent(getPasswordField(), GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
-						.addGroup(groupLayout.createSequentialGroup().addGap(23).addComponent(getBtnConnnexion())).addComponent(getChckbxSeSouvenirDe()).addComponent(getLblSenregistrer())).addContainerGap(316, Short.MAX_VALUE)));
+						groupLayout
+						.createSequentialGroup()
+						.addGroup(
+								groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblIdentifiantDeConnexion()).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE).addGroup(groupLayout.createSequentialGroup().addGap(23).addComponent(getBtnConnnexion()))
+								.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addComponent(getBtnNewButton()).addComponent(getChckbxSeSouvenirDe()))).addContainerGap(316, Short.MAX_VALUE)));
 		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(
 				groupLayout.createSequentialGroup().addComponent(getLblIdentifiantDeConnexion()).addGap(4).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addGap(13).addComponent(getLblPwd()).addGap(4).addComponent(getPasswordField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addGap(18)
-				.addComponent(getBtnConnnexion()).addGap(7).addComponent(getChckbxSeSouvenirDe()).addGap(17).addComponent(getLblSenregistrer()).addGap(105)));
+				.addComponent(getBtnConnnexion()).addGap(7).addComponent(getChckbxSeSouvenirDe()).addGap(18).addComponent(getBtnNewButton()).addGap(99)));
 		setLayout(groupLayout);
 
 	}
@@ -86,20 +87,6 @@ public class IdentificationView extends JPanel
 			lblIdentifiantDeConnexion = new JLabel("Identifiant de connexion");
 		}
 		return lblIdentifiantDeConnexion;
-	}
-
-	private JLabel getLblSenregistrer()
-	{
-		if (lblSenregistrer == null)
-		{
-			lblSenregistrer = new JLabel("S'enregistrer");
-			if (isBrowsingSupported())
-			{
-				makeLinkable(lblSenregistrer, Constants.SRV_URL.concat(Constants.SRV_REGISTER_PAGE), new LinkMouseListener());
-			}
-			lblSenregistrer.setForeground(Color.BLUE);
-		}
-		return lblSenregistrer;
 	}
 
 	public String getLogin()
@@ -223,16 +210,27 @@ public class IdentificationView extends JPanel
 	}
 
 	// WARNING
-	// This method requires that s is a plain string that requires no further escaping
+	// This method requires that s is a plain string that requires no further
+	// escaping
 	private static String linkIfy(String link, String value)
 	{
 		return A_HREF.concat(link).concat(HREF_CLOSED).concat(value).concat(HREF_END);
 	}
 
 	// WARNING
-	// This method requires that s is a plain string that requires no further escaping
+	// This method requires that s is a plain string that requires no further
+	// escaping
 	private static String htmlIfy(String s)
 	{
 		return HTML.concat(s).concat(HTML_END);
+	}
+
+	private JButton getBtnNewButton()
+	{
+		if (btnNewButton == null)
+		{
+			btnNewButton = new JButton("S'enregistrer");
+		}
+		return btnNewButton;
 	}
 }
