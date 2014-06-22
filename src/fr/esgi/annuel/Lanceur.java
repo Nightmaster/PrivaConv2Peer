@@ -4,7 +4,7 @@ import fr.esgi.annuel.ctrl.MasterController;
 
 public class Lanceur
 {
-	private static int nbPersonnages;
+	//private static int nbPersonnages;
 
 	/**
 	* Launch the application.
