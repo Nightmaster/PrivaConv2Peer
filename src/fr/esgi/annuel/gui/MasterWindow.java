@@ -81,9 +81,9 @@ public class MasterWindow extends JFrame
 	{
 		this.controller = controller;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.actualView = "Identification";
 		setJMenuBar(getMnBar());
 		this.contentPane = new IdentificationView();
-		this.actualView = "Identification";
 		this.contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(this.contentPane);
 		this.pack();
