@@ -3,6 +3,7 @@ package fr.esgi.annuel.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -11,6 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
+
 import fr.esgi.annuel.constants.Constants;
 import fr.esgi.annuel.ctrl.MasterController;
 import fr.esgi.util.Outils;
@@ -32,26 +34,26 @@ public class MasterWindow extends JFrame
 			String str = ((JMenuItem) ev.getSource()).getText();
 			if (Constants.QUIT == str)
 				Outils.breakPgm(true);
-			else if (Constants.LAUNCH_CONVERSATION == str)
+			else if (Constants.LAUNCH_CONVERSATION.equals(str))
 				conversationWindow();
-			else if (Constants.ABOUT == str)
+			else if (Constants.ABOUT.equals(str))
 				aboutChoice();
-			else if (Constants.PROFIL == str)
+			else if (Constants.PROFIL.equals(str))
 				profilWindow();
-			else if (Constants.ADD_USER == str)
+			else if (Constants.ADD_USER.equals(str))
 				addUserWindows();
-			else if (Constants.HELP == str)
+			else if (Constants.HELP.equals(str))
 				helpChoice();
 		}
 
 		private void addUserWindows()
 		{
-
+			
 		}
 
 		private void conversationWindow()
 		{
-
+			
 		}
 
 		private void helpChoice()
@@ -61,7 +63,7 @@ public class MasterWindow extends JFrame
 
 		private void profilWindow()
 		{
-
+			
 		}
 	}
 

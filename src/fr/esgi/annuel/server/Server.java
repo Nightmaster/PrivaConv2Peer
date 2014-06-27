@@ -4,18 +4,22 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Date;
 
-public class Server extends Thread{
+import fr.esgi.annuel.message.Message;
+import fr.esgi.annuel.message.MessageQueue;
 
-	ArrayList clientList;
-	static DatagramSocket serverSocket;
-	public Server() {
-		run();
-	}
+public class Server implements Runnable {
 	
+	static DatagramSocket serverSocket;
+	Message mess = new Message();
+
+
+	@Override
 	 public void run(){
+		System.out.println("SERVER STARTED");
 	        try {
-				serverSocket = new DatagramSocket(1111);
+				serverSocket = new DatagramSocket(1112);
 
 	        byte[] receiveData = new byte[1024];
 	        byte[] sendData = new byte[1024];
@@ -23,17 +27,16 @@ public class Server extends Thread{
 	        {	
 	        	 DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
 	              serverSocket.receive(receivePacket);
-	              String s = new String( receivePacket.getData());
-	              System.out.println("Client dit : " + s);
-	              InetAddress IPAddress = receivePacket.getAddress();
-	              boolean found = false;
-	              int port = receivePacket.getPort();
-	              sendData = s.getBytes();
-	              System.out.println("Server Launched");
+	              String s = new String( receivePacket.getData()).substring(0, receivePacket.getLength());
+	              mess.setMessage(s);
+	              mess.setReceiveDate(new Date());
+	      		MessageQueue.addMessageToPrint("stephen", mess);
 	           }
 	        } catch (Exception e) {
 				e.printStackTrace();
 			}
 
 	    }
+	
+	
 }
