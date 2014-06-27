@@ -27,25 +27,6 @@ public class MasterWindow extends JFrame
 			JOptionPane.showMessageDialog(null, "Private Conversations Over P2P v 1.0", "PrivaConv2Peer - Version", JOptionPane.PLAIN_MESSAGE);
 		}
 
-		private void addUserWindows()
-		{
-
-		}
-
-		private void conversationWindow()
-		{
-
-		}
-
-		private void helpChoice()
-		{
-			JOptionPane.showMessageDialog(null, "Menu à venir", "À venir", JOptionPane.INFORMATION_MESSAGE);
-		}
-
-		private void profilWindow()
-		{
-
-		}
 
 		@Override
 		public void actionPerformed(ActionEvent ev)
