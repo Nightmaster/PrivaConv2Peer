@@ -1,5 +1,6 @@
 package fr.esgi.annuel.gui;
 
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -32,7 +33,7 @@ public class MasterWindow extends JFrame
 		public void actionPerformed(ActionEvent ev)
 		{
 			String str = ((JMenuItem) ev.getSource()).getText();
-			if (Constants.QUIT == str)
+			if (Constants.QUIT.equals(str))
 				Outils.breakPgm(true);
 			else if (Constants.LAUNCH_CONVERSATION.equals(str))
 				conversationWindow();
@@ -53,7 +54,8 @@ public class MasterWindow extends JFrame
 
 		private void conversationWindow()
 		{
-			
+			final JFrame frame = new JFrame("toto");
+			// s'il est loggé set visible true
 		}
 
 		private void helpChoice()
@@ -67,7 +69,7 @@ public class MasterWindow extends JFrame
 		}
 	}
 
-	private String actualView;
+	private String actualView = "";
 	private JPanel contentPane;
 	private MasterController controller;
 	private JMenuBar menuBar;
@@ -134,7 +136,7 @@ public class MasterWindow extends JFrame
 			this.mntmAddUser.setMnemonic('A');
 			this.mntmAddUser.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_MASK));
 		}
-		if ("Identification" == actualView)
+		if (actualView.equals("Identification"))
 			this.mntmAddUser.setEnabled(false);
 		return this.mntmAddUser;
 	}
@@ -159,7 +161,7 @@ public class MasterWindow extends JFrame
 			this.mntmDisconnect.addActionListener(new MenuItemListener());
 			this.mntmDisconnect.setMnemonic('D');
 		}
-		if ("Identification" == actualView)
+		if (actualView.equals("Identification"))
 			this.mntmDisconnect.setEnabled(false);
 		return this.mntmDisconnect;
 	}
@@ -173,7 +175,7 @@ public class MasterWindow extends JFrame
 			this.mntmLaunchConv.setMnemonic('O');
 			this.mntmLaunchConv.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_MASK));
 		}
-		if ("Identification" == actualView)
+		if (actualView.equals("Identification"))
 			this.mntmLaunchConv.setEnabled(false);
 		return this.mntmLaunchConv;
 	}
@@ -187,7 +189,7 @@ public class MasterWindow extends JFrame
 			this.mntmProfil.setMnemonic('P');
 			this.mntmProfil.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, KeyEvent.CTRL_MASK));
 		}
-		if ("Identification" == actualView)
+		if (actualView.equals("Identification"))
 			this.mntmProfil.setEnabled(false);
 		return this.mntmProfil;
 	}

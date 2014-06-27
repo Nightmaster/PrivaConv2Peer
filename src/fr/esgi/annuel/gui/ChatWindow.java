@@ -33,7 +33,7 @@ import fr.esgi.annuel.message.Message;
 import fr.esgi.annuel.message.MessageQueue;
 import fr.esgi.annuel.server.Server;
 
-public class ChatView {
+public class ChatWindow extends JFrame {
 
 	protected static final int MAJ_KEY = 16;
 	private JFrame frame;
@@ -58,7 +58,7 @@ public class ChatView {
 				try {
 					new Thread(new Server()).start();
 					new Thread(new Client()).start();
-					ChatView window = new ChatView();
+					ChatWindow window = new ChatWindow();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -70,7 +70,7 @@ public class ChatView {
 	/**
 	 * Create the application.
 	 */
-	public ChatView() {
+	public ChatWindow() {
 		initialize();
 	}
 
