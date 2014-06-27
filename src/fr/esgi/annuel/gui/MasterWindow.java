@@ -1,10 +1,9 @@
 package fr.esgi.annuel.gui;
 
-import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -13,7 +12,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
-
 import fr.esgi.annuel.constants.Constants;
 import fr.esgi.annuel.ctrl.MasterController;
 import fr.esgi.util.Outils;
@@ -26,14 +24,34 @@ public class MasterWindow extends JFrame
 
 		private void aboutChoice()
 		{
-			JOptionPane.showMessageDialog(null, "Private Conversations Over P2P v 0.1", "PrivaConv2Peer - Version", JOptionPane.PLAIN_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Private Conversations Over P2P v 1.0", "PrivaConv2Peer - Version", JOptionPane.PLAIN_MESSAGE);
+		}
+
+		private void addUserWindows()
+		{
+
+		}
+
+		private void conversationWindow()
+		{
+
+		}
+
+		private void helpChoice()
+		{
+			JOptionPane.showMessageDialog(null, "Menu à venir", "À venir", JOptionPane.INFORMATION_MESSAGE);
+		}
+
+		private void profilWindow()
+		{
+
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent ev)
 		{
 			String str = ((JMenuItem) ev.getSource()).getText();
-			if (Constants.QUIT.equals(str))
+			if (Constants.QUIT == str)
 				Outils.breakPgm(true);
 			else if (Constants.LAUNCH_CONVERSATION.equals(str))
 				conversationWindow();
@@ -69,6 +87,7 @@ public class MasterWindow extends JFrame
 		}
 	}
 
+	private boolean userConnected = false;
 	private String actualView = "";
 	private JPanel contentPane;
 	private MasterController controller;
@@ -134,9 +153,10 @@ public class MasterWindow extends JFrame
 			this.mntmAddUser = new JMenuItem(Constants.ADD_USER);
 			this.mntmAddUser.addActionListener(new MenuItemListener());
 			this.mntmAddUser.setMnemonic('A');
-			this.mntmAddUser.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_MASK));
+			this.mntmAddUser.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_MASK));
 		}
 		if (actualView.equals("Identification"))
+		if ("Identification" == this.actualView)
 			this.mntmAddUser.setEnabled(false);
 		return this.mntmAddUser;
 	}
@@ -162,6 +182,7 @@ public class MasterWindow extends JFrame
 			this.mntmDisconnect.setMnemonic('D');
 		}
 		if (actualView.equals("Identification"))
+		if ("Identification" == this.actualView)
 			this.mntmDisconnect.setEnabled(false);
 		return this.mntmDisconnect;
 	}
@@ -173,9 +194,10 @@ public class MasterWindow extends JFrame
 			this.mntmLaunchConv = new JMenuItem(Constants.LAUNCH_CONVERSATION);
 			this.mntmLaunchConv.addActionListener(new MenuItemListener());
 			this.mntmLaunchConv.setMnemonic('O');
-			this.mntmLaunchConv.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_MASK));
+			this.mntmLaunchConv.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
 		}
 		if (actualView.equals("Identification"))
+		if ("Identification" == this.actualView)
 			this.mntmLaunchConv.setEnabled(false);
 		return this.mntmLaunchConv;
 	}
@@ -187,9 +209,10 @@ public class MasterWindow extends JFrame
 			this.mntmProfil = new JMenuItem(Constants.PROFIL);
 			this.mntmProfil.addActionListener(new MenuItemListener());
 			this.mntmProfil.setMnemonic('P');
-			this.mntmProfil.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, KeyEvent.CTRL_MASK));
+			this.mntmProfil.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_MASK));
 		}
 		if (actualView.equals("Identification"))
+		if ("Identification" == this.actualView)
 			this.mntmProfil.setEnabled(false);
 		return this.mntmProfil;
 	}
@@ -201,7 +224,7 @@ public class MasterWindow extends JFrame
 			this.mntmPropos = new JMenuItem(Constants.ABOUT);
 			this.mntmPropos.addActionListener(new MenuItemListener());
 			this.mntmPropos.setMnemonic('A');
-			this.mntmPropos.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_COMMA, KeyEvent.CTRL_MASK));
+			this.mntmPropos.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_COMMA, InputEvent.CTRL_MASK));
 		}
 		return this.mntmPropos;
 	}
@@ -213,15 +236,14 @@ public class MasterWindow extends JFrame
 			this.mntmQuitter = new JMenuItem(Constants.QUIT);
 			this.mntmQuitter.addActionListener(new MenuItemListener());
 			this.mntmQuitter.setMnemonic('Q');
-			this.mntmQuitter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_MASK));
+			this.mntmQuitter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_MASK));
 		}
 		return this.mntmQuitter;
 	}
 
-	public void setView(JPanel gv)
+	public void setView(JPanel panel)
 	{
-		this.contentPane = gv;
-		;
+		this.contentPane = panel;
 	}
 
 }
