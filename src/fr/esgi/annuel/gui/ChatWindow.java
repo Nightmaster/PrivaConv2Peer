@@ -33,7 +33,7 @@ import fr.esgi.annuel.message.Message;
 import fr.esgi.annuel.message.MessageQueue;
 import fr.esgi.annuel.server.Server;
 
-public class ChatWindow extends JFrame {
+public class ChatWindow extends JPanel {
 
 	protected static final int MAJ_KEY = 16;
 	private JFrame frame;

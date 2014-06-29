@@ -2,8 +2,6 @@ package fr.esgi.annuel.server;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.util.ArrayList;
 import java.util.Date;
 
 import fr.esgi.annuel.message.Message;
@@ -22,7 +20,6 @@ public class Server implements Runnable {
 				serverSocket = new DatagramSocket(1112);
 
 	        byte[] receiveData = new byte[1024];
-	        byte[] sendData = new byte[1024];
 	        while(true)
 	        {	
 	        	 DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);

@@ -53,8 +53,13 @@ public class MasterWindow extends JFrame
 
 		private void conversationWindow()
 		{
-			final JFrame frame = new JFrame("toto");
-			// s'il est loggé set visible true
+			contentPane.removeAll();
+			contentPane.repaint();
+			contentPane.revalidate();
+			
+			contentPane.add(new ChatWindow());
+			contentPane.repaint();
+			contentPane.validate();
 		}
 
 		private void helpChoice()

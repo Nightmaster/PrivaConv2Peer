@@ -1,7 +1,5 @@
 package fr.esgi.annuel.client;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -22,13 +20,10 @@ public class Client implements Runnable {
 		try {
 			String pseudo = "stephen";
 			ClientInfo cli = new ClientInfo(pseudo);
-			BufferedReader inFromUser = new BufferedReader(
-					new InputStreamReader(System.in));
 			DatagramSocket clientSocket = new DatagramSocket();
 			 InetAddress IPAddress = InetAddress.getByName("192.168.0.25");
 			//InetAddress IPAddress = cli.clientAdress;
 			byte[] sendData = new byte[1024];
-			byte[] receiveData = new byte[1024];
 
 			while (true) {
 				List<Message> listM = MessageQueue.getAllMessages(cli
