@@ -28,11 +28,11 @@ public class ChatWindow
 {
 
 	protected static final int MAJ_KEY = 16;
+	ClientInfo loged_user;
 	private DefaultListModel<String> contacts;
 	private JButton envoyer;
 	private JFrame frame;
 	private JPanel panel;
-	ClientInfo ci = new ClientInfo("stephen");
 	boolean clearArea = false;
 	String currentInterlocuteur = "";
 	Map<String, String> discution = new HashMap<String, String>();
@@ -43,9 +43,15 @@ public class ChatWindow
 
 	/**
 	 * Create the application.
+	 * @param loged_user 
 	 */
-	public ChatWindow()
+	public ChatWindow(ClientInfo loged_user)
 	{
+		initialize();
+		this.loged_user = loged_user;
+	}
+
+	public ChatWindow() {
 		initialize();
 	}
 
@@ -151,7 +157,7 @@ public class ChatWindow
 			{
 				while (true)
 				{
-					List<Message> listM = MessageQueue.getAllMessagesToPrint(ChatWindow.this.ci.getStrName());
+					List<Message> listM = MessageQueue.getAllMessagesToPrint(ChatWindow.this.loged_user.getLogin());
 					if (listM != null && !listM.isEmpty())
 					{
 						StringBuilder sb = new StringBuilder();
@@ -185,7 +191,7 @@ public class ChatWindow
 				Message mess = new Message();
 				mess.setMessage(ChatWindow.this.textArea.getText());
 				mess.setReceiveDate(new Date());
-				MessageQueue.addMessage(ChatWindow.this.ci.getStrName(), mess);
+				MessageQueue.addMessage(ChatWindow.this.loged_user.getLogin(), mess);
 				ChatWindow.this.textArea.setText("");
 
 			}
@@ -204,7 +210,7 @@ public class ChatWindow
 					Message mess = new Message();
 					mess.setMessage(ChatWindow.this.textArea.getText());
 					mess.setReceiveDate(new Date());
-					MessageQueue.addMessage(ChatWindow.this.ci.getStrName(), mess);
+					MessageQueue.addMessage(ChatWindow.this.loged_user.getLogin(), mess);
 					ChatWindow.this.clearArea = true;
 				}
 				ChatWindow.this.textPane.getVerticalScrollBar().setValue(ChatWindow.this.text.getText().length());

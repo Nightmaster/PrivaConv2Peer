@@ -23,22 +23,25 @@ public class Client implements Runnable
 			String pseudo = "stephen";
 			ClientInfo cli = new ClientInfo(pseudo);
 			DatagramSocket clientSocket = new DatagramSocket();
-			InetAddress IPAddress = InetAddress.getByName("192.168.0.25");
+			InetAddress IPAddress = InetAddress.getByName("localhost");
 			// InetAddress IPAddress = cli.clientAdress;
 			byte[] sendData = new byte[1024];
 
 			while (true)
 			{
-				List<Message> listM = MessageQueue.getAllMessages(cli.getStrName());
+				List<Message> listM = MessageQueue.getAllMessages(cli.getLogin());
 				if (listM != null && !listM.isEmpty())
 					for (Message message : listM)
 					{
 						StringBuilder sb = new StringBuilder();
-						sb.append(cli.strName + " : ");
+						sb.append(cli.login + " : ");
 						sb.append(message.getMessage());
 						sendData = sb.toString().getBytes();
-						DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 1112);
+						DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 1111);
 						clientSocket.send(sendPacket);
+						Message mess = new Message();
+						mess.setMessage(sb.toString());
+						MessageQueue.addMessageToPrint("stephen",mess);
 					}
 			}
 		}

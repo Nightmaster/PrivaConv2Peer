@@ -19,10 +19,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
+
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import fr.esgi.annuel.client.ClientInfo;
 import fr.esgi.annuel.constants.Constants;
+import fr.esgi.annuel.contact.Contact;
+import fr.esgi.annuel.contact.Contacts;
 import fr.esgi.annuel.crypt.PasswordUtilities;
 
 public class IdentificationView extends JPanel
@@ -196,8 +203,19 @@ public class IdentificationView extends JPanel
 							JSONObject json_Obj = new JSONObject(inputLine.toString());
 							if (!json_Obj.getBoolean("error"))
 							{
-								ChatWindow chat_window = new ChatWindow();
-								ChatWindow.main(null);
+								ClientInfo loged_user = new ClientInfo(json_Obj.getString("login"));
+								ChatWindow chat_window = new ChatWindow(loged_user);
+								loged_user.setEmail(json_Obj.getString("email"));
+								loged_user.setLastname(json_Obj.getString("name"));
+								loged_user.setFirstname(json_Obj.getString("firstname"));
+								//liste qui récup les contacts du json
+								JSONArray arr = json_Obj.getJSONArray("friends");
+								for (int i = 0; i < arr.length(); i++){
+									JSONObject j_ob = new JSONObject("friends");
+									String log = j_ob.getString("displayLogin");
+									Contacts.addContact(new Contact(log));
+								}
+								chat_window.main(null);
 
 							}
 
