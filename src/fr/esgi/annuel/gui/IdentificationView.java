@@ -177,34 +177,8 @@ public class IdentificationView extends JPanel
 				{
 					String connect = getLogin();
 					JPasswordField pwd = getPasswordField();
-					List<String> invalid_params = new ArrayList<String>();
-					HashMap<String, Boolean> pwd_test = PasswordUtilities.isStrongEnough(String.copyValueOf(pwd.getPassword()));
-					for (Entry<String, Boolean> entry : pwd_test.entrySet())
-						if (!entry.getValue())
-							invalid_params.add(entry.getKey());
-					if (invalid_params.size() > 0)
-					{
-						StringBuilder sb = new StringBuilder();
-						for (String s : invalid_params)
-						{
-							if (s.equals("Length"))
-								sb.append("Mdp trop court, 8 caractères minimum" + '\n');
-							if (s.equals("Maj letter"))
-								sb.append("Le mot de passe doit contenir une Majuscule" + '\n');
-							if (s.equals("Minus letter"))
-								sb.append("Le mot de passe doit contenir une Minuscule" + '\n');
-							if (s.equals("Well formated"))
-								sb.append("Mot de passe mal formé" + '\n');
-							if (s.equals("Special character"))
-								sb.append("Le mot de passe doit contenir un caractère spécial " + '\n');
-							if (s.equals("Number"))
-								sb.append("Le mot de passe doit contenir un numéro" + '\n');
-						}
-						JOptionPane.showMessageDialog(null, sb.toString(), "Requis", JOptionPane.OK_OPTION);
-					}
-					else
 						try
-					{
+						{
 							String source = "";
 							List<String> Urlparams = createConnectionURL(connect, pwd);
 							URL url = new URL(Urlparams.get(0) + Urlparams.get(1));
