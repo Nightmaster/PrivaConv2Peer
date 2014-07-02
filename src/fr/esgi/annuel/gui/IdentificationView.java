@@ -200,25 +200,20 @@ public class IdentificationView extends JPanel
 							System.out.println(inputLine);
 							in.close();
 
-							JSONObject json_Obj = new JSONObject(inputLine.toString());
-							if (!json_Obj.getBoolean("error"))
+							JSONObject mainObject = new JSONObject(inputLine.toString());
+							if (!mainObject.getBoolean("error"))
 							{
-								ClientInfo loged_user = new ClientInfo(json_Obj.getString("login"));
+								// Récupération des données du client
+								JSONObject userDetails = new JSONObject(mainObject.get("user").toString());
+								ClientInfo loged_user = new ClientInfo(userDetails.getString("login"));
+								loged_user.setEmail(userDetails.getString("email"));
+								loged_user.setFirstname(userDetails.getString("firstname"));
+								loged_user.setLastname("name");
+								
 								ChatWindow chat_window = new ChatWindow(loged_user);
-								loged_user.setEmail(json_Obj.getString("email"));
-								loged_user.setLastname(json_Obj.getString("name"));
-								loged_user.setFirstname(json_Obj.getString("firstname"));
-								//liste qui récup les contacts du json
-								JSONArray arr = json_Obj.getJSONArray("friends");
-								for (int i = 0; i < arr.length(); i++){
-									JSONObject j_ob = new JSONObject("friends");
-									String log = j_ob.getString("displayLogin");
-									Contacts.addContact(new Contact(log));
-								}
+								
 								chat_window.main(null);
-
 							}
-
 					}
 					catch (Exception e1)
 					{

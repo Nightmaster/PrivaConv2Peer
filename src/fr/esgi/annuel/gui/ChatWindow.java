@@ -94,15 +94,11 @@ public class ChatWindow
 		this.contacts = new DefaultListModel<String>();
 		for (String pseudo : Contacts.getAllPseudo())
 			this.contacts.addElement(pseudo);
-		this.contacts.addElement("stephen");
-		this.contacts.addElement("Gael");
-		// TODO : récupérer les éléments à partir de la base de données
 		this.list = new JList<String>(this.contacts);
 		this.list.setPreferredSize(new Dimension(100, 100));
 		this.currentInterlocuteur = this.contacts.firstElement();
 		MouseListener l = new MouseListener()
 		{
-
 			@Override
 			public void mouseClicked(MouseEvent e)
 			{
@@ -112,38 +108,30 @@ public class ChatWindow
 			@Override
 			public void mouseEntered(MouseEvent e)
 			{
-				// TODO Auto-generated method stub
 
 			}
 
 			@Override
 			public void mouseExited(MouseEvent e)
 			{
-				// TODO Auto-generated method stub
 
 			}
 
 			@Override
 			public void mousePressed(MouseEvent e)
 			{
-				// TODO Auto-generated method stub
 
 			}
 
 			@Override
 			public void mouseReleased(MouseEvent e)
 			{
-				// TODO Enregistrer les messages qui sont dans le textPane
 				if (ChatWindow.this.currentInterlocuteur != ChatWindow.this.list.getSelectedValue())
 				{
 					ChatWindow.this.discution.put(ChatWindow.this.currentInterlocuteur, ChatWindow.this.text.getText());
-					// supprimer le textpane en cours
-					// en ajouter un nouveau
 					ChatWindow.this.currentInterlocuteur = ChatWindow.this.list.getSelectedValue();
 					ChatWindow.this.text.setText(ChatWindow.this.discution.get(ChatWindow.this.currentInterlocuteur));
 				}
-				else
-					System.out.println("La fenetre est deja sur " + ChatWindow.this.currentInterlocuteur);
 			}
 		};
 		this.list.addMouseListener(l);
