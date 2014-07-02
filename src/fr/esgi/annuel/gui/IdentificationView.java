@@ -31,6 +31,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
+import org.json.JSONObject;
 import org.omg.CORBA.portable.ResponseHandler;
 
 import sun.net.www.http.HttpClient;
@@ -186,9 +187,19 @@ public class IdentificationView extends JPanel {
 							 while( (input = in.readLine()) != null)
 								 inputLine.append(input);
 								 System.out.println(inputLine);
+								 in.close();
+								 
+								 
+								 
+							JSONObject json_Obj = new JSONObject(inputLine.toString());
+							 if(!json_Obj.getBoolean("error"))
+							 {
+									ChatWindow chat_window = new ChatWindow();
+									chat_window.main(null);
+									
+							 }
 								 
 							 
-							 in.close();
 						} catch (Exception e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();

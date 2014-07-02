@@ -53,13 +53,6 @@ public class MasterWindow extends JFrame
 
 		private void conversationWindow()
 		{
-			contentPane.removeAll();
-			contentPane.repaint();
-			contentPane.revalidate();
-			
-			contentPane.add(new ChatWindow());
-			contentPane.repaint();
-			contentPane.validate();
 		}
 
 		private void helpChoice()
