@@ -35,124 +35,108 @@ public class ProfilView extends JPanel
 				.addGroup(groupLayout.createSequentialGroup().addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE).addGap(19).addComponent(getPwdFieldConfirm(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)));
 		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(
 				groupLayout.createSequentialGroup().addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblNom()).addComponent(getLblAdresseEmail())).addGap(6)
-						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getTextFieldFName(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getTextField_1(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
-						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblPrnom()).addGroup(groupLayout.createSequentialGroup().addGap(5).addComponent(getLblNouveauMotDe()))).addGap(6)
-						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getTextFieldName(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getPwdFieldChange(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
-						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblPseudonyme()).addComponent(getLblConfirmationDuMot())).addGap(11)
-						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getPwdFieldConfirm(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))));
+				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getTextFieldFName(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getTextField_1(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
+				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblPrnom()).addGroup(groupLayout.createSequentialGroup().addGap(5).addComponent(getLblNouveauMotDe()))).addGap(6)
+				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getTextFieldName(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getPwdFieldChange(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
+				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblPseudonyme()).addComponent(getLblConfirmationDuMot())).addGap(11)
+				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getPwdFieldConfirm(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))));
 		setLayout(groupLayout);
 
 	}
 
 	private JLabel getLblAdresseEmail()
 	{
-		if (lblAdresseEmail == null)
-		{
-			lblAdresseEmail = new JLabel("Adresse email");
-		}
-		return lblAdresseEmail;
+		if (this.lblAdresseEmail == null)
+			this.lblAdresseEmail = new JLabel("Adresse email");
+		return this.lblAdresseEmail;
 	}
 
 	private JLabel getLblConfirmationDuMot()
 	{
-		if (lblConfirmationDuMot == null)
-		{
-			lblConfirmationDuMot = new JLabel("Confirmation du mot de passe");
-		}
-		return lblConfirmationDuMot;
+		if (this.lblConfirmationDuMot == null)
+			this.lblConfirmationDuMot = new JLabel("Confirmation du mot de passe");
+		return this.lblConfirmationDuMot;
 	}
 
 	private JLabel getLblNom()
 	{
-		if (lblNom == null)
-		{
-			lblNom = new JLabel("Nom");
-		}
-		return lblNom;
+		if (this.lblNom == null)
+			this.lblNom = new JLabel("Nom");
+		return this.lblNom;
 	}
 
 	private JLabel getLblNouveauMotDe()
 	{
-		if (lblNouveauMotDe == null)
-		{
-			lblNouveauMotDe = new JLabel("Nouveau mot de passe");
-		}
-		return lblNouveauMotDe;
+		if (this.lblNouveauMotDe == null)
+			this.lblNouveauMotDe = new JLabel("Nouveau mot de passe");
+		return this.lblNouveauMotDe;
 	}
 
 	private JLabel getLblPrnom()
 	{
-		if (lblPrnom == null)
-		{
-			lblPrnom = new JLabel("Pr\u00E9nom");
-		}
-		return lblPrnom;
+		if (this.lblPrnom == null)
+			this.lblPrnom = new JLabel("Pr\u00E9nom");
+		return this.lblPrnom;
 	}
 
 	private JLabel getLblPseudonyme()
 	{
-		if (lblPseudonyme == null)
-		{
-			lblPseudonyme = new JLabel("Pseudonyme");
-		}
-		return lblPseudonyme;
+		if (this.lblPseudonyme == null)
+			this.lblPseudonyme = new JLabel("Pseudonyme");
+		return this.lblPseudonyme;
 	}
 
 	private JPasswordField getPwdFieldChange()
 	{
-		if (pwdFieldChange == null)
-		{
-			pwdFieldChange = new JPasswordField();
-		}
-		return pwdFieldChange;
+		if (this.pwdFieldChange == null)
+			this.pwdFieldChange = new JPasswordField();
+		return this.pwdFieldChange;
 	}
 
 	private JPasswordField getPwdFieldConfirm()
 	{
-		if (pwdFieldConfirm == null)
-		{
-			pwdFieldConfirm = new JPasswordField();
-		}
-		return pwdFieldConfirm;
+		if (this.pwdFieldConfirm == null)
+			this.pwdFieldConfirm = new JPasswordField();
+		return this.pwdFieldConfirm;
 	}
 
 	private JTextField getTextField()
 	{
-		if (textField == null)
+		if (this.textField == null)
 		{
-			textField = new JTextField();
-			textField.setColumns(10);
+			this.textField = new JTextField();
+			this.textField.setColumns(10);
 		}
-		return textField;
+		return this.textField;
 	}
 
 	private JTextField getTextField_1()
 	{
-		if (textField_1 == null)
+		if (this.textField_1 == null)
 		{
-			textField_1 = new JTextField();
-			textField_1.setColumns(10);
+			this.textField_1 = new JTextField();
+			this.textField_1.setColumns(10);
 		}
-		return textField_1;
+		return this.textField_1;
 	}
 
 	private JTextField getTextFieldFName()
 	{
-		if (textFieldFName == null)
+		if (this.textFieldFName == null)
 		{
-			textFieldFName = new JTextField();
-			textFieldFName.setColumns(10);
+			this.textFieldFName = new JTextField();
+			this.textFieldFName.setColumns(10);
 		}
-		return textFieldFName;
+		return this.textFieldFName;
 	}
 
 	private JTextField getTextFieldName()
 	{
-		if (textFieldName == null)
+		if (this.textFieldName == null)
 		{
-			textFieldName = new JTextField();
-			textFieldName.setColumns(10);
+			this.textFieldName = new JTextField();
+			this.textFieldName.setColumns(10);
 		}
-		return textFieldName;
+		return this.textFieldName;
 	}
 }

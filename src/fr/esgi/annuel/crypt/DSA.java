@@ -14,6 +14,26 @@ import org.apache.commons.codec.binary.Base64;
 public class DSA
 {
 	/**
+	 * Retourne la clé privée de la paire de clé reçue en entrée
+	 * @param pair {KeyPair}: La paire de clé d'où l'on va extraire la clé privée
+	 * @return {PublicKey} La clé privée extraite de la paire de clé
+	 **/
+	private static PrivateKey getPrivateKey(KeyPair pair)
+	{
+		return pair.getPrivate();
+	}
+
+	/**
+	 * Retourne la clé publique de la paire de clé reçue en entrée
+	 * @param pair {KeyPair}: La paire de clé d'où l'on va extraire la clé publique
+	 * @return {PublicKey} La clé publique extraite de la paire de clé
+	 **/
+	private static PublicKey getPublicKey(KeyPair pair)
+	{
+		return pair.getPublic();
+	}
+
+	/**
 	 * Return a HashMap containing both public and private key, as a String. Private key is crypted with Vigenere alg.
 	 *
 	 * @param length {int}: The length of the key to create
@@ -32,25 +52,5 @@ public class DSA
 		hm.put("publicKey", b64.encode(pubKey.getEncoded()).toString());
 		hm.put("PrivateKey", Vigenere.encrypt(pw, b64.encode(privKey.getEncoded()).toString()));
 		return hm;
-	}
-
-	/**
-	 * Retourne la clé publique de la paire de clé reçue en entrée
-	 * @param pair {KeyPair}: La paire de clé d'où l'on va extraire la clé publique
-	 * @return {PublicKey} La clé publique extraite de la paire de clé
-	 **/
-	private static PublicKey getPublicKey(KeyPair pair)
-	{
-		return pair.getPublic();
-	}
-
-	/**
-	 * Retourne la clé privée de la paire de clé reçue en entrée
-	 * @param pair {KeyPair}: La paire de clé d'où l'on va extraire la clé privée
-	 * @return {PublicKey} La clé privée extraite de la paire de clé
-	 **/
-	private static PrivateKey getPrivateKey(KeyPair pair)
-	{
-		return pair.getPrivate();
 	}
 }

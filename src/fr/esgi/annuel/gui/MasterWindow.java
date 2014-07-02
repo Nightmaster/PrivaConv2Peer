@@ -27,6 +27,23 @@ public class MasterWindow extends JFrame
 			JOptionPane.showMessageDialog(null, "Private Conversations Over P2P v 1.0", "PrivaConv2Peer - Version", JOptionPane.PLAIN_MESSAGE);
 		}
 
+		private void addUserWindows()
+		{
+
+		}
+
+		private void conversationWindow()
+		{}
+
+		private void helpChoice()
+		{
+			JOptionPane.showMessageDialog(null, "Menu à venir", "À venir", JOptionPane.INFORMATION_MESSAGE);
+		}
+
+		private void profilWindow()
+		{
+
+		}
 
 		@Override
 		public void actionPerformed(ActionEvent ev)
@@ -45,28 +62,8 @@ public class MasterWindow extends JFrame
 			else if (Constants.HELP.equals(str))
 				helpChoice();
 		}
-
-		private void addUserWindows()
-		{
-			
-		}
-
-		private void conversationWindow()
-		{
-		}
-
-		private void helpChoice()
-		{
-			JOptionPane.showMessageDialog(null, "Menu à venir", "À venir", JOptionPane.INFORMATION_MESSAGE);
-		}
-
-		private void profilWindow()
-		{
-			
-		}
 	}
 
-	private boolean userConnected = false;
 	private String actualView = "";
 	private JPanel contentPane;
 	private MasterController controller;
@@ -74,6 +71,7 @@ public class MasterWindow extends JFrame
 	private JMenu mnFichier, menu;
 	private JMenuItem mntmLaunchConv, mntmPropos, mntmQuitter, mntmProfil, mntmAddUser, mntmAide, mntmDisconnect;
 	private String pathToFile, gameName;
+	private boolean userConnected = false;
 
 	public MasterWindow(MasterController controller)
 	{
@@ -134,9 +132,9 @@ public class MasterWindow extends JFrame
 			this.mntmAddUser.setMnemonic('A');
 			this.mntmAddUser.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_MASK));
 		}
-		if (actualView.equals("Identification"))
-		if ("Identification" == this.actualView)
-			this.mntmAddUser.setEnabled(false);
+		if (this.actualView.equals("Identification"))
+			if ("Identification" == this.actualView)
+				this.mntmAddUser.setEnabled(false);
 		return this.mntmAddUser;
 	}
 
@@ -160,9 +158,9 @@ public class MasterWindow extends JFrame
 			this.mntmDisconnect.addActionListener(new MenuItemListener());
 			this.mntmDisconnect.setMnemonic('D');
 		}
-		if (actualView.equals("Identification"))
-		if ("Identification" == this.actualView)
-			this.mntmDisconnect.setEnabled(false);
+		if (this.actualView.equals("Identification"))
+			if ("Identification" == this.actualView)
+				this.mntmDisconnect.setEnabled(false);
 		return this.mntmDisconnect;
 	}
 
@@ -175,9 +173,9 @@ public class MasterWindow extends JFrame
 			this.mntmLaunchConv.setMnemonic('O');
 			this.mntmLaunchConv.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
 		}
-		if (actualView.equals("Identification"))
-		if ("Identification" == this.actualView)
-			this.mntmLaunchConv.setEnabled(false);
+		if (this.actualView.equals("Identification"))
+			if ("Identification" == this.actualView)
+				this.mntmLaunchConv.setEnabled(false);
 		return this.mntmLaunchConv;
 	}
 
@@ -190,9 +188,9 @@ public class MasterWindow extends JFrame
 			this.mntmProfil.setMnemonic('P');
 			this.mntmProfil.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_MASK));
 		}
-		if (actualView.equals("Identification"))
-		if ("Identification" == this.actualView)
-			this.mntmProfil.setEnabled(false);
+		if (this.actualView.equals("Identification"))
+			if ("Identification" == this.actualView)
+				this.mntmProfil.setEnabled(false);
 		return this.mntmProfil;
 	}
 
