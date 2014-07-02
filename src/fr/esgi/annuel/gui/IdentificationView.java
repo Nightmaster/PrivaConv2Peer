@@ -7,6 +7,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -189,9 +190,6 @@ public class IdentificationView extends JPanel {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
-						
-						
-						
 					}
 				}
 			});
@@ -202,21 +200,28 @@ public class IdentificationView extends JPanel {
 	protected List<String> createConnectionURL(String connect, JPasswordField pwd)
 			throws Exception {
 		MessageDigest md_pwd = null;
-		byte[] byte_pwd = null;
+		String hashtext = "";
 		try {
+			
 			md_pwd = MessageDigest.getInstance("MD5");
-			byte_pwd = String.copyValueOf(pwd.getPassword()).getBytes("UTF-8");
+			md_pwd.reset();
+			md_pwd.update(String.copyValueOf(pwd.getPassword())
+					.getBytes());
+			byte[] digest = md_pwd.digest();
+			BigInteger bigInt = new BigInteger(1, digest);
+			hashtext = bigInt.toString(16);
+			while (hashtext.length() < 32) {
+				hashtext = "0" + hashtext;
+			}
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		byte_pwd = md_pwd.digest(byte_pwd);
-		String pwd_ = new String(byte_pwd);
 		List<String> url = new ArrayList<String>();
 		String urlConnect = Constants.SRV_URL + ":" + Constants.SRV_PORT + "/"
 				+ Constants.SRV_API + "/" + Constants.SRV_CONNECT_PAGE;
 		String params =   "?" + Constants.PARAM_USER + "=" + connect + "&"
-				+ Constants.PARAM_PWD + "=" + pwd_;
+				+ Constants.PARAM_PWD + "=" + hashtext;
 		
 		url.add(urlConnect);
 		url.add(params);
@@ -360,6 +365,15 @@ public class IdentificationView extends JPanel {
 	private JButton getBtnNewButton() {
 		if (btnNewButton == null) {
 			btnNewButton = new JButton("S'enregistrer");
+			btnNewButton.addActionListener(new ActionListener() {
+				
+				@SuppressWarnings("static-access")
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					RegisterWindow reg_window = new RegisterWindow();
+					reg_window.main(null);
+				}
+			});
 		}
 		return btnNewButton;
 	}
