@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
-
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 
@@ -205,13 +204,22 @@ public class IdentificationView extends JPanel
 							{
 								// Récupération des données du client
 								JSONObject userDetails = new JSONObject(mainObject.get("user").toString());
-								ClientInfo loged_user = new ClientInfo(userDetails.getString("login"));
-								loged_user.setEmail(userDetails.getString("email"));
-								loged_user.setFirstname(userDetails.getString("firstname"));
-								loged_user.setLastname("name");
+								ClientInfo logedUser = new ClientInfo(userDetails.getString("login"));
+								logedUser.setEmail(userDetails.getString("email"));
+								logedUser.setFirstname(userDetails.getString("firstname"));
+								logedUser.setLastname("name");
 								
-								ChatWindow chat_window = new ChatWindow(loged_user);
 								
+								// Récupération de la liste des amis
+								JSONArray listeAmis = (JSONArray) userDetails.get("friends");
+								for(int i = 0; i < listeAmis.length(); i++){
+									System.out.println(listeAmis.get(i));
+								}
+								
+								
+								
+								
+								ChatWindow chat_window = new ChatWindow(logedUser);
 								chat_window.main(null);
 							}
 					}
