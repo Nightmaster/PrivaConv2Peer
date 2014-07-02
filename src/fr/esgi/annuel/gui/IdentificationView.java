@@ -186,6 +186,7 @@ public class IdentificationView extends JPanel {
 							 while( (input = in.readLine()) != null)
 								 inputLine.append(input);
 								 System.out.println(inputLine);
+								 
 							 
 							 in.close();
 						} catch (Exception e1) {
