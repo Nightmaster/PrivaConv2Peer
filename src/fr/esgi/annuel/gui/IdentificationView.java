@@ -15,7 +15,6 @@ import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
@@ -221,7 +220,9 @@ public class IdentificationView extends JPanel
 								
 								ChatWindow chat_window = new ChatWindow(logedUser);
 								chat_window.main(null);
-							}
+						}
+							ChatWindow.main(null);
+						}
 					}
 					catch (Exception e1)
 					{

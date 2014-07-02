@@ -28,7 +28,6 @@ public class ChatWindow
 {
 
 	protected static final int MAJ_KEY = 16;
-	ClientInfo loged_user;
 	private DefaultListModel<String> contacts;
 	private JButton envoyer;
 	private JFrame frame;
@@ -37,22 +36,24 @@ public class ChatWindow
 	String currentInterlocuteur = "";
 	Map<String, String> discution = new HashMap<String, String>();
 	JList<String> list;
+	ClientInfo loged_user;
 	JTextPane text;
 	JTextArea textArea;
 	JScrollPane textPane;
 
+	public ChatWindow()
+	{
+		initialize();
+	}
+
 	/**
 	 * Create the application.
-	 * @param loged_user 
+	 * @param loged_user
 	 */
 	public ChatWindow(ClientInfo loged_user)
 	{
 		initialize();
 		this.loged_user = loged_user;
-	}
-
-	public ChatWindow() {
-		initialize();
 	}
 
 	/**

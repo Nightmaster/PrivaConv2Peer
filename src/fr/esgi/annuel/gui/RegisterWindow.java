@@ -10,18 +10,15 @@ import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
-
 import fr.esgi.annuel.constants.Constants;
 import fr.esgi.annuel.crypt.PasswordUtilities;
 
@@ -318,39 +315,39 @@ public class RegisterWindow
 		GroupLayout gl_top = new GroupLayout(top);
 		gl_top.setHorizontalGroup(gl_top.createParallelGroup(Alignment.LEADING).addGroup(
 				gl_top.createSequentialGroup()
+				.addGroup(
+						gl_top.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_top.createSequentialGroup().addGap(221).addComponent(btnNewButton))
 						.addGroup(
-								gl_top.createParallelGroup(Alignment.LEADING)
-										.addGroup(gl_top.createSequentialGroup().addGap(221).addComponent(btnNewButton))
+								gl_top.createSequentialGroup()
+								.addContainerGap()
+								.addGroup(gl_top.createParallelGroup(Alignment.TRAILING).addComponent(l_password_key_again).addComponent(l_password_key).addComponent(l_password_again).addComponent(l_password).addComponent(l_firstname).addComponent(l_usermail).addComponent(l_pseudo).addComponent(l_lastname).addComponent(lblNewLabel))
+								.addGroup(
+										gl_top.createParallelGroup(Alignment.LEADING)
 										.addGroup(
 												gl_top.createSequentialGroup()
-														.addContainerGap()
-														.addGroup(gl_top.createParallelGroup(Alignment.TRAILING).addComponent(l_password_key_again).addComponent(l_password_key).addComponent(l_password_again).addComponent(l_password).addComponent(l_firstname).addComponent(l_usermail).addComponent(l_pseudo).addComponent(l_lastname).addComponent(lblNewLabel))
+												.addGap(33)
+												.addGroup(
+														gl_top.createParallelGroup(Alignment.LEADING).addComponent(f_lastname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(f_firstname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+														.addComponent(f_mail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(f_pseudo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
 														.addGroup(
-																gl_top.createParallelGroup(Alignment.LEADING)
-																		.addGroup(
-																				gl_top.createSequentialGroup()
-																						.addGap(33)
-																						.addGroup(
-																								gl_top.createParallelGroup(Alignment.LEADING).addComponent(f_lastname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(f_firstname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-																										.addComponent(f_mail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(f_pseudo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-																		.addGroup(
-																				Alignment.TRAILING,
-																				gl_top.createSequentialGroup()
-																						.addGap(33)
-																						.addGroup(
-																								gl_top.createParallelGroup(Alignment.LEADING, false).addComponent(f_password_again, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(f_password, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-																										.addComponent(f_password_key, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(f_password_key_again, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(f_len_key, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
-						.addContainerGap(826, Short.MAX_VALUE)));
+																Alignment.TRAILING,
+																gl_top.createSequentialGroup()
+																.addGap(33)
+																.addGroup(
+																		gl_top.createParallelGroup(Alignment.LEADING, false).addComponent(f_password_again, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(f_password, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+																		.addComponent(f_password_key, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(f_password_key_again, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(f_len_key, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+																		.addContainerGap(826, Short.MAX_VALUE)));
 		gl_top.setVerticalGroup(gl_top.createParallelGroup(Alignment.LEADING).addGroup(
 				gl_top.createSequentialGroup().addGap(21).addGroup(gl_top.createParallelGroup(Alignment.BASELINE).addComponent(l_pseudo).addComponent(f_pseudo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(19)
-						.addGroup(gl_top.createParallelGroup(Alignment.BASELINE).addComponent(f_mail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(l_usermail)).addPreferredGap(ComponentPlacement.UNRELATED)
-						.addGroup(gl_top.createParallelGroup(Alignment.BASELINE).addComponent(f_lastname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(l_lastname)).addGap(9)
-						.addGroup(gl_top.createParallelGroup(Alignment.LEADING).addGroup(gl_top.createSequentialGroup().addGap(8).addComponent(l_firstname)).addComponent(f_firstname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addPreferredGap(ComponentPlacement.UNRELATED)
-						.addGroup(gl_top.createParallelGroup(Alignment.BASELINE).addComponent(f_password, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(l_password)).addGap(9)
-						.addGroup(gl_top.createParallelGroup(Alignment.BASELINE).addComponent(l_password_again).addComponent(f_password_again, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
-						.addGroup(gl_top.createParallelGroup(Alignment.BASELINE).addComponent(l_password_key).addComponent(f_password_key, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
-						.addGroup(gl_top.createParallelGroup(Alignment.BASELINE).addComponent(l_password_key_again).addComponent(f_password_key_again, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(20)
-						.addGroup(gl_top.createParallelGroup(Alignment.BASELINE).addComponent(f_len_key, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(lblNewLabel)).addGap(18).addComponent(btnNewButton).addContainerGap(314, Short.MAX_VALUE)));
+				.addGroup(gl_top.createParallelGroup(Alignment.BASELINE).addComponent(f_mail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(l_usermail)).addPreferredGap(ComponentPlacement.UNRELATED)
+				.addGroup(gl_top.createParallelGroup(Alignment.BASELINE).addComponent(f_lastname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(l_lastname)).addGap(9)
+				.addGroup(gl_top.createParallelGroup(Alignment.LEADING).addGroup(gl_top.createSequentialGroup().addGap(8).addComponent(l_firstname)).addComponent(f_firstname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addPreferredGap(ComponentPlacement.UNRELATED)
+				.addGroup(gl_top.createParallelGroup(Alignment.BASELINE).addComponent(f_password, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(l_password)).addGap(9)
+				.addGroup(gl_top.createParallelGroup(Alignment.BASELINE).addComponent(l_password_again).addComponent(f_password_again, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
+				.addGroup(gl_top.createParallelGroup(Alignment.BASELINE).addComponent(l_password_key).addComponent(f_password_key, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
+				.addGroup(gl_top.createParallelGroup(Alignment.BASELINE).addComponent(l_password_key_again).addComponent(f_password_key_again, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(20)
+				.addGroup(gl_top.createParallelGroup(Alignment.BASELINE).addComponent(f_len_key, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(lblNewLabel)).addGap(18).addComponent(btnNewButton).addContainerGap(314, Short.MAX_VALUE)));
 		top.setLayout(gl_top);
 		fenetre.setVisible(true);
 	}
