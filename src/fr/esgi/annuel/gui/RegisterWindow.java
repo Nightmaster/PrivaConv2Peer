@@ -140,16 +140,16 @@ public class RegisterWindow {
 						sb.append("email invalide" + '\n');
 						nb_invalid++;
 					}
-					if (isValidName(f_firstname.getText()))
-						params.add(f_firstname.getText());
-					else {
-						sb.append("prenom invalide" + '\n');
-						nb_invalid++;
-					}
 					if (isValidName(f_lastname.getText()))
 						params.add(f_lastname.getText());
 					else {
 						sb.append("nom invalide" + '\n');
+						nb_invalid++;
+					}
+					if (isValidName(f_firstname.getText()))
+						params.add(f_firstname.getText());
+					else {
+						sb.append("prenom invalide" + '\n');
 						nb_invalid++;
 					}
 
@@ -237,8 +237,6 @@ public class RegisterWindow {
 					if (nb_invalid == 0) {
 						List<String> url_register = createRegisterURL(params,
 								pwds);
-						System.out.println(url_register.get(0)
-								+ url_register.get(1));
 						URL url = new URL(url_register.get(0)
 								+ url_register.get(1));
 						URLConnection urlConn = (URLConnection) url

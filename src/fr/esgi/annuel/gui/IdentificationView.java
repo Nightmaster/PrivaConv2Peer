@@ -181,10 +181,12 @@ public class IdentificationView extends JPanel {
 							 BufferedReader in = new BufferedReader(
 									 new InputStreamReader(
 											 urlConn.getInputStream()));
-							 String inputLine;
-
-							 while ((inputLine = in.readLine()) != null)
-								 source +=inputLine;
+							 StringBuilder inputLine = new StringBuilder();
+							 String input;
+							 while( (input = in.readLine()) != null)
+								 inputLine.append(input);
+								 System.out.println(inputLine);
+							 
 							 in.close();
 						} catch (Exception e1) {
 							// TODO Auto-generated catch block
