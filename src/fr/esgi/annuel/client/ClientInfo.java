@@ -5,34 +5,10 @@ import java.net.UnknownHostException;
 
 public class ClientInfo
 {
+	public String email;
+	public String firstname;
+	public String lastname;
 	public String login; // Name by which the user logged into the chat room
-	public String email ;
-	public String lastname ;
-	public String firstname ; 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getLastname() {
-		return lastname;
-	}
-
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
-	}
-
-	public String getFirstname() {
-		return firstname;
-	}
-
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
-	}
-
 	InetAddress clientAdress;
 
 	public ClientInfo(String pseudo)
@@ -54,6 +30,21 @@ public class ClientInfo
 		return this.clientAdress;
 	}
 
+	public String getEmail()
+	{
+		return this.email;
+	}
+
+	public String getFirstname()
+	{
+		return this.firstname;
+	}
+
+	public String getLastname()
+	{
+		return this.lastname;
+	}
+
 	public String getLogin()
 	{
 		return this.login;
@@ -62,6 +53,21 @@ public class ClientInfo
 	public void setClientAdress(InetAddress clientAdress)
 	{
 		this.clientAdress = clientAdress;
+	}
+
+	public void setEmail(String email)
+	{
+		this.email = email;
+	}
+
+	public void setFirstname(String firstname)
+	{
+		this.firstname = firstname;
+	}
+
+	public void setLastname(String lastname)
+	{
+		this.lastname = lastname;
 	}
 
 	public void setLogin(String strName)

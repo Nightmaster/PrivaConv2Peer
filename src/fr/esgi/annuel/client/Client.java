@@ -41,7 +41,7 @@ public class Client implements Runnable
 						clientSocket.send(sendPacket);
 						Message mess = new Message();
 						mess.setMessage(sb.toString());
-						MessageQueue.addMessageToPrint("stephen",mess);
+						MessageQueue.addMessageToPrint("stephen", mess);
 					}
 			}
 		}

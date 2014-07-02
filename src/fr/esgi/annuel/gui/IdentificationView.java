@@ -15,22 +15,13 @@ import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
-
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
-
-import org.json.JSONArray;
 import org.json.JSONObject;
-
 import fr.esgi.annuel.client.ClientInfo;
 import fr.esgi.annuel.constants.Constants;
-import fr.esgi.annuel.contact.Contact;
-import fr.esgi.annuel.contact.Contacts;
-import fr.esgi.annuel.crypt.PasswordUtilities;
 
 public class IdentificationView extends JPanel
 {
@@ -119,13 +110,13 @@ public class IdentificationView extends JPanel
 				.addGroup(groupLayout.createSequentialGroup().addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addGap(5).addComponent(getLblPwd())).addComponent(getPasswordField(), GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)).addContainerGap(316, Short.MAX_VALUE))
 				.addGroup(
 						groupLayout
-						.createSequentialGroup()
-						.addGroup(
-								groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblIdentifiantDeConnexion()).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE).addGroup(groupLayout.createSequentialGroup().addGap(23).addComponent(getBtnConnnexion()))
-								.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addComponent(getBtnNewButton()).addComponent(getChckbxSeSouvenirDe()))).addContainerGap(316, Short.MAX_VALUE)));
+								.createSequentialGroup()
+								.addGroup(
+										groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblIdentifiantDeConnexion()).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE).addGroup(groupLayout.createSequentialGroup().addGap(23).addComponent(getBtnConnnexion()))
+												.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addComponent(getBtnNewButton()).addComponent(getChckbxSeSouvenirDe()))).addContainerGap(316, Short.MAX_VALUE)));
 		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(
 				groupLayout.createSequentialGroup().addComponent(getLblIdentifiantDeConnexion()).addGap(4).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addGap(13).addComponent(getLblPwd()).addGap(4).addComponent(getPasswordField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addGap(18)
-						.addComponent(getBtnConnnexion()).addGap(7).addComponent(getChckbxSeSouvenirDe()).addGap(18).addComponent(getBtnNewButton()).addGap(99)));
+				.addComponent(getBtnConnnexion()).addGap(7).addComponent(getChckbxSeSouvenirDe()).addGap(18).addComponent(getBtnNewButton()).addGap(99)));
 		setLayout(groupLayout);
 
 	}
@@ -184,36 +175,36 @@ public class IdentificationView extends JPanel
 				{
 					String connect = getLogin();
 					JPasswordField pwd = getPasswordField();
-						try
+					try
+					{
+						String source = "";
+						List<String> Urlparams = createConnectionURL(connect, pwd);
+						URL url = new URL(Urlparams.get(0) + Urlparams.get(1));
+						URLConnection urlConn = url.openConnection();
+						urlConn.setDoOutput(true);
+
+						BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
+						StringBuilder inputLine = new StringBuilder();
+						String input;
+						while ((input = in.readLine()) != null)
+							inputLine.append(input);
+						System.out.println(inputLine);
+						in.close();
+
+						JSONObject mainObject = new JSONObject(inputLine.toString());
+						if (!mainObject.getBoolean("error"))
 						{
-							String source = "";
-							List<String> Urlparams = createConnectionURL(connect, pwd);
-							URL url = new URL(Urlparams.get(0) + Urlparams.get(1));
-							URLConnection urlConn = url.openConnection();
-							urlConn.setDoOutput(true);
+							// Récupération des données du client
+							JSONObject userDetails = new JSONObject(mainObject.get("user").toString());
+							ClientInfo loged_user = new ClientInfo(userDetails.getString("login"));
+							loged_user.setEmail(userDetails.getString("email"));
+							loged_user.setFirstname(userDetails.getString("firstname"));
+							loged_user.setLastname("name");
 
-							BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
-							StringBuilder inputLine = new StringBuilder();
-							String input;
-							while ((input = in.readLine()) != null)
-								inputLine.append(input);
-							System.out.println(inputLine);
-							in.close();
+							ChatWindow chat_window = new ChatWindow(loged_user);
 
-							JSONObject mainObject = new JSONObject(inputLine.toString());
-							if (!mainObject.getBoolean("error"))
-							{
-								// Récupération des données du client
-								JSONObject userDetails = new JSONObject(mainObject.get("user").toString());
-								ClientInfo loged_user = new ClientInfo(userDetails.getString("login"));
-								loged_user.setEmail(userDetails.getString("email"));
-								loged_user.setFirstname(userDetails.getString("firstname"));
-								loged_user.setLastname("name");
-								
-								ChatWindow chat_window = new ChatWindow(loged_user);
-								
-								chat_window.main(null);
-							}
+							ChatWindow.main(null);
+						}
 					}
 					catch (Exception e1)
 					{
