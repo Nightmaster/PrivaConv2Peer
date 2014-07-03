@@ -18,14 +18,12 @@ public class Client implements Runnable
 	@Override
 	public void run()
 	{
-		System.out.println("CLIENT STARTED");
 		try
 		{
 			// Création du socket client
 			DatagramSocket clientSocket = new DatagramSocket();
 			InetAddress IPAddress = InetAddress.getByName("10.66.126.173");
 			byte[] sendData = new byte[1024];
-
 			while (true)
 			{
 				// Récupération de la liste des messages
