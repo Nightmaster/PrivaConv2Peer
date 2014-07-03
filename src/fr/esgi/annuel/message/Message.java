@@ -2,6 +2,11 @@ package fr.esgi.annuel.message;
 
 import java.util.Date;
 
+/**
+ *
+ * class Message
+ * Elle sert à formater les packets transmis
+ * */
 public class Message
 {
 	String message;

@@ -43,6 +43,7 @@ public class RegisterWindow
 		String hashtextKey = "";
 		try
 		{
+			// hachage du mot de passe du compte
 			mdPwdAccount = MessageDigest.getInstance("MD5");
 			mdPwdAccount.reset();
 			mdPwdAccount.update(String.copyValueOf(pwAccount.getPassword()).getBytes());
@@ -52,6 +53,7 @@ public class RegisterWindow
 			while (hashtext.length() < 32)
 				hashtext = "0" + hashtext;
 
+			// hachage du mot de passe de la clef
 			mdPwdKey = MessageDigest.getInstance("MD5");
 			mdPwdKey.reset();
 			mdPwdKey.update(String.copyValueOf(pwKey.getPassword()).getBytes());
@@ -66,7 +68,7 @@ public class RegisterWindow
 		{
 			e.printStackTrace();
 		}
-
+		// construction de l'URL
 		List<String> url = new ArrayList<String>();
 		String urlConnect = Constants.SRV_URL + ":" + Constants.SRV_PORT + "/" + Constants.SRV_API + "/" + Constants.SRV_REGISTER_PAGE;
 

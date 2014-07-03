@@ -34,6 +34,15 @@ import fr.esgi.annuel.constants.Constants;
 import fr.esgi.annuel.contact.Contact;
 import fr.esgi.annuel.contact.Contacts;
 
+/**
+ *
+ * Class IdentificationView
+ * Elle permet de construire la vue d'identification
+ * et de valider la connexion
+ *
+ * */
+
+
 public class IdentificationView extends JPanel
 {
 	private static class LinkMouseListener extends MouseAdapter
@@ -224,7 +233,8 @@ public class IdentificationView extends JPanel
 								System.out.println(detailFriends.get("displayLogin"));
 								Contacts.addContact(new Contact(detailFriends.getString("displayLogin")));
 							}
-							ChatWindow.main(null);
+							ChatWindow cw = new ChatWindow(logedUser);
+							cw.main(null);
 						}
 					}
 					catch (Exception e1)
@@ -301,7 +311,7 @@ public class IdentificationView extends JPanel
 		String hashtext = "";
 		try
 		{
-
+			// Hachage du mot de passe
 			mdPwd = MessageDigest.getInstance("MD5");
 			mdPwd.reset();
 			mdPwd.update(String.copyValueOf(pwd.getPassword()).getBytes());

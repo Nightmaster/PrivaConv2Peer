@@ -48,6 +48,7 @@ public class ChatWindow
 	JTextPane text;
 	JTextArea textArea;
 	JScrollPane textPane;
+
 	public ChatWindow()
 	{
 		initialize();
@@ -135,6 +136,7 @@ public class ChatWindow
 			@Override
 			public void mouseReleased(MouseEvent e)
 			{
+				// changement de l'affichage lorsque l'utilisateur change d'interlocuteur
 				if (ChatWindow.this.currentInterlocuteur != ChatWindow.this.list.getSelectedValue())
 				{
 					ChatWindow.this.discution.put(ChatWindow.this.currentInterlocuteur, ChatWindow.this.text.getText());
@@ -154,14 +156,15 @@ public class ChatWindow
 			{
 				while (true)
 				{
+					// Récupération des nouveaux messages à afficher chez l'utilisateur
 					List<Message> listM = MessageQueue.getAllMessagesToPrint(logedUser.getLogin());
 					if (listM != null && !listM.isEmpty())
 					{
 						StringBuilder sb = new StringBuilder();
-						sb.append(ChatWindow.this.text.getText());
+						sb.append(text.getText());
 						for (Message message : listM)
 							sb.append(message.getMessage() + "\n");
-						ChatWindow.this.text.setText(sb.toString());
+						text.setText(sb.toString());
 					}
 				}
 			}

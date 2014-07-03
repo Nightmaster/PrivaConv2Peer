@@ -10,7 +10,6 @@ public class Server implements Runnable
 {
 
 	static DatagramSocket serverSocket;
-	Message mess = new Message();
 
 	@Override
 	public void run()
@@ -18,19 +17,31 @@ public class Server implements Runnable
 		System.out.println("SERVER STARTED");
 		try
 		{
-			serverSocket = new DatagramSocket(1111);
+			serverSocket = new DatagramSocket(1112);
 			byte[] receiveData = new byte[1024];
 
 			while (true)
 			{
+				Message mess = new Message();
 				DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-				System.out.println("wait for datas");
 				serverSocket.receive(receivePacket);
 				String s = new String(receivePacket.getData()).substring(0, receivePacket.getLength());
-				System.out.println(s);
-				this.mess.setMessage(s);
-				this.mess.setReceiveDate(new Date());
-				MessageQueue.addMessageToPrint("stefens", this.mess);
+				mess.setMessage(s);
+				String[] splits = s.split(" :");
+				int iterator = 0;
+				String pseudo = "";
+				for(String part : splits)
+				{
+					if (iterator == 0)
+					{
+						pseudo = part;
+						iterator++;
+					}
+				}
+				iterator = 0;
+				mess.setReceiveDate(new Date());
+				System.out.println(pseudo);
+				MessageQueue.addMessageToPrint(pseudo, mess);
 			}
 		}
 		catch (Exception e)

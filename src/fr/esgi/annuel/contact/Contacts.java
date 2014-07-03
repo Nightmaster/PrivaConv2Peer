@@ -5,6 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * Class Contacts
+ * Elle contiendra une liste de contact, de l'utilisateur
+ * Cette liste sera remplie lors de la connexion
+ *
+ * */
 public class Contacts
 {
 	private static final Map<String, Contact> contactList = new HashMap<String, Contact>();
