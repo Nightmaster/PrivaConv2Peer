@@ -19,7 +19,7 @@ public class ProfilView extends JPanel
 	private JPasswordField pwdFieldChange;
 	private JPasswordField pwdFieldConfirm;
 	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField textField1;
 	private JTextField textFieldFName;
 	private JTextField textFieldName;
 
@@ -30,16 +30,16 @@ public class ProfilView extends JPanel
 	{
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addComponent(getLblNom()).addGap(141).addComponent(getLblAdresseEmail()))
-				.addGroup(groupLayout.createSequentialGroup().addComponent(getTextFieldFName(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE).addGap(19).addComponent(getTextField_1(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)).addGroup(groupLayout.createSequentialGroup().addComponent(getLblPrnom()).addGap(126).addComponent(getLblNouveauMotDe()))
+				.addGroup(groupLayout.createSequentialGroup().addComponent(getTextFieldFName(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE).addGap(19).addComponent(getTextField1(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)).addGroup(groupLayout.createSequentialGroup().addComponent(getLblPrnom()).addGap(126).addComponent(getLblNouveauMotDe()))
 				.addGroup(groupLayout.createSequentialGroup().addComponent(getTextFieldName(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE).addGap(19).addComponent(getPwdFieldChange(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)).addGroup(groupLayout.createSequentialGroup().addComponent(getLblPseudonyme()).addGap(101).addComponent(getLblConfirmationDuMot()))
 				.addGroup(groupLayout.createSequentialGroup().addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE).addGap(19).addComponent(getPwdFieldConfirm(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)));
 		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(
 				groupLayout.createSequentialGroup().addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblNom()).addComponent(getLblAdresseEmail())).addGap(6)
-						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getTextFieldFName(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getTextField_1(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
-						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblPrnom()).addGroup(groupLayout.createSequentialGroup().addGap(5).addComponent(getLblNouveauMotDe()))).addGap(6)
-						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getTextFieldName(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getPwdFieldChange(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
-						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblPseudonyme()).addComponent(getLblConfirmationDuMot())).addGap(11)
-						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getPwdFieldConfirm(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))));
+				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getTextFieldFName(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getTextField1(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
+				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblPrnom()).addGroup(groupLayout.createSequentialGroup().addGap(5).addComponent(getLblNouveauMotDe()))).addGap(6)
+				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getTextFieldName(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getPwdFieldChange(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
+				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblPseudonyme()).addComponent(getLblConfirmationDuMot())).addGap(11)
+				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getPwdFieldConfirm(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))));
 		setLayout(groupLayout);
 
 	}
@@ -110,14 +110,14 @@ public class ProfilView extends JPanel
 		return this.textField;
 	}
 
-	private JTextField getTextField_1()
+	private JTextField getTextField1()
 	{
-		if (this.textField_1 == null)
+		if (this.textField1 == null)
 		{
-			this.textField_1 = new JTextField();
-			this.textField_1.setColumns(10);
+			this.textField1 = new JTextField();
+			this.textField1.setColumns(10);
 		}
-		return this.textField_1;
+		return this.textField1;
 	}
 
 	private JTextField getTextFieldFName()

@@ -3,33 +3,33 @@ package fr.esgi.annuel.client;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.List;
 import fr.esgi.annuel.message.Message;
 import fr.esgi.annuel.message.MessageQueue;
 
 public class Client implements Runnable
 {
-
-	public Client()
-	{}
+	ClientInfo cli ;
+	public Client(ClientInfo c)
+	{
+		cli = c;
+	}
 
 	@Override
 	public void run()
 	{
 		System.out.println("CLIENT STARTED");
-
+		List<Message> listM = new ArrayList<Message>();
 		try
 		{
-			String pseudo = "stephen";
-			ClientInfo cli = new ClientInfo(pseudo);
 			DatagramSocket clientSocket = new DatagramSocket();
-			InetAddress IPAddress = InetAddress.getByName("localhost");
-			// InetAddress IPAddress = cli.clientAdress;
+			InetAddress IPAddress = InetAddress.getByName("10.66.126.173");
 			byte[] sendData = new byte[1024];
 
 			while (true)
 			{
-				List<Message> listM = MessageQueue.getAllMessages(cli.getLogin());
+				listM = MessageQueue.getAllMessages(cli.getLogin());
 				if (listM != null && !listM.isEmpty())
 					for (Message message : listM)
 					{
@@ -37,11 +37,12 @@ public class Client implements Runnable
 						sb.append(cli.login + " : ");
 						sb.append(message.getMessage());
 						sendData = sb.toString().getBytes();
-						DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 1111);
+						System.out.println("Sending data");
+						DatagramPacket sendPacket = new DatagramPacket(
+								sendData, sendData.length, IPAddress, 1111);
 						clientSocket.send(sendPacket);
-						Message mess = new Message();
-						mess.setMessage(sb.toString());
-						MessageQueue.addMessageToPrint("stephen", mess);
+
+						System.out.println("data sent");
 					}
 			}
 		}

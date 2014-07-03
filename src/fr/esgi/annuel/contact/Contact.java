@@ -12,7 +12,6 @@ public class Contact
 
 	public String getPseudo()
 	{
-		// TODO Auto-generated method stub
 		return this.pseudo;
 	}
 	// contact info

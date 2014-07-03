@@ -18,17 +18,19 @@ public class Server implements Runnable
 		System.out.println("SERVER STARTED");
 		try
 		{
-			serverSocket = new DatagramSocket(1112);
-
+			serverSocket = new DatagramSocket(1111);
 			byte[] receiveData = new byte[1024];
+
 			while (true)
 			{
 				DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+				System.out.println("wait for datas");
 				serverSocket.receive(receivePacket);
 				String s = new String(receivePacket.getData()).substring(0, receivePacket.getLength());
+				System.out.println(s);
 				this.mess.setMessage(s);
 				this.mess.setReceiveDate(new Date());
-				MessageQueue.addMessageToPrint("stephen", this.mess);
+				MessageQueue.addMessageToPrint("stefens", this.mess);
 			}
 		}
 		catch (Exception e)

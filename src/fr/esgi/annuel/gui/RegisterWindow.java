@@ -16,8 +16,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import javax.swing.*;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import fr.esgi.annuel.constants.Constants;
 import fr.esgi.annuel.crypt.PasswordUtilities;
@@ -26,31 +35,31 @@ public class RegisterWindow
 {
 	protected static List<String> createRegisterURL(List<String> details, List<JPasswordField> pwd) throws Exception
 	{
-		JPasswordField pw_account = pwd.get(0);
-		JPasswordField pw_key = pwd.get(1);
-		MessageDigest md_pwd_account = null;
-		MessageDigest md_pwd_key = null;
+		JPasswordField pwAccount = pwd.get(0);
+		JPasswordField pwKey = pwd.get(1);
+		MessageDigest mdPwdAccount = null;
+		MessageDigest mdPwdKey = null;
 		String hashtext = "";
-		String hashtext_key = "";
+		String hashtextKey = "";
 		try
 		{
-			md_pwd_account = MessageDigest.getInstance("MD5");
-			md_pwd_account.reset();
-			md_pwd_account.update(String.copyValueOf(pw_account.getPassword()).getBytes());
-			byte[] digest = md_pwd_account.digest();
+			mdPwdAccount = MessageDigest.getInstance("MD5");
+			mdPwdAccount.reset();
+			mdPwdAccount.update(String.copyValueOf(pwAccount.getPassword()).getBytes());
+			byte[] digest = mdPwdAccount.digest();
 			BigInteger bigInt = new BigInteger(1, digest);
 			hashtext = bigInt.toString(16);
 			while (hashtext.length() < 32)
 				hashtext = "0" + hashtext;
 
-			md_pwd_key = MessageDigest.getInstance("MD5");
-			md_pwd_key.reset();
-			md_pwd_key.update(String.copyValueOf(pw_key.getPassword()).getBytes());
-			byte[] digest_key = md_pwd_key.digest();
-			BigInteger bigInt_key = new BigInteger(1, digest_key);
-			hashtext_key = bigInt_key.toString(16);
-			while (hashtext_key.length() < 32)
-				hashtext_key = "0" + hashtext_key;
+			mdPwdKey = MessageDigest.getInstance("MD5");
+			mdPwdKey.reset();
+			mdPwdKey.update(String.copyValueOf(pwKey.getPassword()).getBytes());
+			byte[] digestKey = mdPwdKey.digest();
+			BigInteger bigIntKey = new BigInteger(1, digestKey);
+			hashtextKey = bigIntKey.toString(16);
+			while (hashtextKey.length() < 32)
+				hashtextKey = "0" + hashtextKey;
 
 		}
 		catch (NoSuchAlgorithmException e)
@@ -61,7 +70,7 @@ public class RegisterWindow
 		List<String> url = new ArrayList<String>();
 		String urlConnect = Constants.SRV_URL + ":" + Constants.SRV_PORT + "/" + Constants.SRV_API + "/" + Constants.SRV_REGISTER_PAGE;
 
-		String params = "?" + Constants.PARAM_USER + "=" + details.get(0) + "&" + Constants.PARAM_EMAIL + "=" + details.get(1) + "&" + Constants.PARAM_FIRSTNAME + "=" + details.get(2) + "&" + Constants.PARAM_NAME + "=" + details.get(3) + "&" + Constants.PARAM_PWD + "=" + hashtext + "&" + Constants.PARAM_PWD_KEY + "=" + hashtext_key + "&" + Constants.PARAM_LENGTH + "=" + details.get(4);
+		String params = "?" + Constants.PARAM_USER + "=" + details.get(0) + "&" + Constants.PARAM_EMAIL + "=" + details.get(1) + "&" + Constants.PARAM_FIRSTNAME + "=" + details.get(2) + "&" + Constants.PARAM_NAME + "=" + details.get(3) + "&" + Constants.PARAM_PWD + "=" + hashtext + "&" + Constants.PARAM_PWD_KEY + "=" + hashtextKey + "&" + Constants.PARAM_LENGTH + "=" + details.get(4);
 
 		url.add(urlConnect);
 		url.add(params);
@@ -98,27 +107,27 @@ public class RegisterWindow
 
 		final JFrame fenetre = new JFrame();
 
-		final JLabel l_pseudo = new JLabel("Pseudo : ");
-		final JLabel l_usermail = new JLabel("Email : ");
-		final JLabel l_lastname = new JLabel("Nom : ");
-		final JLabel l_firstname = new JLabel("Prénom : ");
-		final JLabel l_password = new JLabel("Mot de passe : ");
-		final JLabel l_password_again = new JLabel("Resaisir mot de passe : ");
-		final JLabel l_password_key = new JLabel("Mot de passe clef: ");
-		final JLabel l_password_key_again = new JLabel("Resaisir mot de passe clef : ");
-		final JComboBox<Integer> f_len_key = new JComboBox<Integer>();
+		final JLabel lPseudo = new JLabel("Pseudo : ");
+		final JLabel lUsermail = new JLabel("Email : ");
+		final JLabel lLastname = new JLabel("Nom : ");
+		final JLabel lFirstname = new JLabel("Prénom : ");
+		final JLabel lPassword = new JLabel("Mot de passe : ");
+		final JLabel lPasswordAgain = new JLabel("Resaisir mot de passe : ");
+		final JLabel lPasswordKey = new JLabel("Mot de passe clef: ");
+		final JLabel lPasswordKeyAgain = new JLabel("Resaisir mot de passe clef : ");
+		final JComboBox<Integer> fLenKey = new JComboBox<Integer>();
 
-		final JTextField f_pseudo = new JTextField("");
-		final JTextField f_mail = new JTextField("");
-		f_mail.setToolTipText("");
-		final JTextField f_lastname = new JTextField("");
-		final JTextField f_firstname = new JTextField("");
-		final JPasswordField f_password = new JPasswordField();
-		f_password.setToolTipText("<html>\r\n<pre>\r\nLe mot de passe doit \u00EAtre d'au moins 8 caract\u00E8res et \u00EAtre compos\u00E9 de :\r\n\t- Au moins 1 majuscule\r\n\t- Au moins 1 minuscule\r\n\t- Au moins 1 chiffre\r\n\t- Au moins 1 caract\u00E8re sp\u00E9cial\r\n</pre>\r\n</html>");
-		final JPasswordField f_password_again = new JPasswordField();
-		final JPasswordField f_password_key = new JPasswordField();
-		f_password_key.setToolTipText("Mot de passe servant \u00E0 crypter votre paire de clefs RSA\r\nCe mot de passe doit \u00EAtre diff\u00E9rent de celui de connexion (pour des raisons de s\u00E9curit\u00E9)");
-		final JPasswordField f_password_key_again = new JPasswordField();
+		final JTextField fPseudo = new JTextField("");
+		final JTextField fMail = new JTextField("");
+		fMail.setToolTipText("");
+		final JTextField fLastname = new JTextField("");
+		final JTextField fFirstname = new JTextField("");
+		final JPasswordField fPassword = new JPasswordField();
+		fPassword.setToolTipText("<html>\r\n<pre>\r\nLe mot de passe doit \u00EAtre d'au moins 8 caract\u00E8res et \u00EAtre compos\u00E9 de :\r\n\t- Au moins 1 majuscule\r\n\t- Au moins 1 minuscule\r\n\t- Au moins 1 chiffre\r\n\t- Au moins 1 caract\u00E8re sp\u00E9cial\r\n</pre>\r\n</html>");
+		final JPasswordField fPasswordAgain = new JPasswordField();
+		final JPasswordField fPasswordKey = new JPasswordField();
+		fPasswordKey.setToolTipText("Mot de passe servant \u00E0 crypter votre paire de clefs RSA\r\nCe mot de passe doit \u00EAtre diff\u00E9rent de celui de connexion (pour des raisons de s\u00E9curit\u00E9)");
+		final JPasswordField fPasswordKeyAgain = new JPasswordField();
 
 		fenetre.setTitle("Inscription");
 		fenetre.setSize(613, 557);
@@ -131,37 +140,37 @@ public class RegisterWindow
 		top.setBounds(0, 39, 1184, 750);
 		Font police = new Font("Arial", Font.BOLD, 14);
 		fenetre.getContentPane().setLayout(null);
-		f_pseudo.setFont(police);
-		f_pseudo.setPreferredSize(new Dimension(150, 30));
-		f_pseudo.setForeground(Color.BLUE);
+		fPseudo.setFont(police);
+		fPseudo.setPreferredSize(new Dimension(150, 30));
+		fPseudo.setForeground(Color.BLUE);
 
-		f_mail.setFont(police);
-		f_mail.setPreferredSize(new Dimension(150, 30));
-		f_mail.setForeground(Color.BLUE);
+		fMail.setFont(police);
+		fMail.setPreferredSize(new Dimension(150, 30));
+		fMail.setForeground(Color.BLUE);
 
-		f_lastname.setFont(police);
-		f_lastname.setPreferredSize(new Dimension(150, 30));
-		f_lastname.setForeground(Color.BLUE);
+		fLastname.setFont(police);
+		fLastname.setPreferredSize(new Dimension(150, 30));
+		fLastname.setForeground(Color.BLUE);
 
-		f_firstname.setFont(police);
-		f_firstname.setPreferredSize(new Dimension(150, 30));
-		f_firstname.setForeground(Color.BLUE);
+		fFirstname.setFont(police);
+		fFirstname.setPreferredSize(new Dimension(150, 30));
+		fFirstname.setForeground(Color.BLUE);
 
-		f_password.setFont(police);
-		f_password.setPreferredSize(new Dimension(150, 30));
-		f_password.setForeground(Color.BLUE);
+		fPassword.setFont(police);
+		fPassword.setPreferredSize(new Dimension(150, 30));
+		fPassword.setForeground(Color.BLUE);
 
-		f_password_again.setFont(police);
-		f_password_again.setPreferredSize(new Dimension(150, 30));
-		f_password_again.setForeground(Color.BLUE);
+		fPasswordAgain.setFont(police);
+		fPasswordAgain.setPreferredSize(new Dimension(150, 30));
+		fPasswordAgain.setForeground(Color.BLUE);
 
-		f_password_key.setFont(police);
-		f_password_key.setPreferredSize(new Dimension(150, 30));
-		f_password_key.setForeground(Color.BLUE);
+		fPasswordKey.setFont(police);
+		fPasswordKey.setPreferredSize(new Dimension(150, 30));
+		fPasswordKey.setForeground(Color.BLUE);
 
-		f_password_key_again.setFont(police);
-		f_password_key_again.setPreferredSize(new Dimension(150, 30));
-		f_password_key_again.setForeground(Color.BLUE);
+		fPasswordKeyAgain.setFont(police);
+		fPasswordKeyAgain.setPreferredSize(new Dimension(150, 30));
+		fPasswordKeyAgain.setForeground(Color.BLUE);
 
 		fenetre.getContentPane().add(top);
 
@@ -178,48 +187,48 @@ public class RegisterWindow
 					List<String> params = new ArrayList<String>();
 					List<JPasswordField> pwds = new ArrayList<JPasswordField>();
 					StringBuilder sb = new StringBuilder();
-					int nb_invalid = 0;
-					HashMap<String, Boolean> test_mdp = PasswordUtilities.isStrongEnough(String.copyValueOf(f_password.getPassword()));
-					HashMap<String, Boolean> test_mdp_key = PasswordUtilities.isStrongEnough(String.copyValueOf(f_password_key.getPassword()));
-					List<String> invalid_params_mdp = new ArrayList<String>();
-					List<String> invalid_params_mdp_key = new ArrayList<String>();
+					int nbInvalid = 0;
+					HashMap<String, Boolean> testMdp = PasswordUtilities.isStrongEnough(String.copyValueOf(fPassword.getPassword()));
+					HashMap<String, Boolean> testMdpKey = PasswordUtilities.isStrongEnough(String.copyValueOf(fPasswordKey.getPassword()));
+					List<String> invalidParamsMdp = new ArrayList<String>();
+					List<String> invalidParamsMdpKey = new ArrayList<String>();
 
-					if (isValidPseudo(f_pseudo.getText()))
-						params.add(f_pseudo.getText());
+					if (isValidPseudo(fPseudo.getText()))
+						params.add(fPseudo.getText());
 					else
 					{
 						sb.append("Pseudo invalide" + '\n');
-						nb_invalid++ ;
+						nbInvalid++ ;
 					}
-					if (isValidEmail(f_mail.getText()))
-						params.add(f_mail.getText());
+					if (isValidEmail(fMail.getText()))
+						params.add(fMail.getText());
 					else
 					{
 						sb.append("email invalide" + '\n');
-						nb_invalid++ ;
+						nbInvalid++ ;
 					}
-					if (isValidName(f_lastname.getText()))
-						params.add(f_lastname.getText());
+					if (isValidName(fLastname.getText()))
+						params.add(fLastname.getText());
 					else
 					{
 						sb.append("nom invalide" + '\n');
-						nb_invalid++ ;
+						nbInvalid++ ;
 					}
-					if (isValidName(f_firstname.getText()))
-						params.add(f_firstname.getText());
+					if (isValidName(fFirstname.getText()))
+						params.add(fFirstname.getText());
 					else
 					{
 						sb.append("prenom invalide" + '\n');
-						nb_invalid++ ;
+						nbInvalid++ ;
 					}
 
-					for (Entry<String, Boolean> entry : test_mdp.entrySet())
+					for (Entry<String, Boolean> entry : testMdp.entrySet())
 						if (!entry.getValue())
-							invalid_params_mdp.add(entry.getKey());
-					if (invalid_params_mdp.size() > 0)
+							invalidParamsMdp.add(entry.getKey());
+					if (invalidParamsMdp.size() > 0)
 					{
 						StringBuilder sbmdp = new StringBuilder();
-						for (String s : invalid_params_mdp)
+						for (String s : invalidParamsMdp)
 						{
 							if (s.equals("Length"))
 								sbmdp.append("Mdp trop court, 8 caractères minimum" + '\n');
@@ -234,18 +243,18 @@ public class RegisterWindow
 							if (s.equals("Number"))
 								sbmdp.append("Le mot de passe doit contenir un numéro" + '\n');
 						}
-						nb_invalid++ ;
+						nbInvalid++ ;
 						JOptionPane.showMessageDialog(null, sbmdp.toString(), "Requis", JOptionPane.OK_OPTION);
 
 					}
 
-					for (Entry<String, Boolean> entry : test_mdp_key.entrySet())
+					for (Entry<String, Boolean> entry : testMdpKey.entrySet())
 						if (!entry.getValue())
-							invalid_params_mdp_key.add(entry.getKey());
-					if (invalid_params_mdp_key.size() > 0)
+							invalidParamsMdpKey.add(entry.getKey());
+					if (invalidParamsMdpKey.size() > 0)
 					{
 						StringBuilder sbmdp = new StringBuilder();
-						for (String s : invalid_params_mdp_key)
+						for (String s : invalidParamsMdpKey)
 						{
 							if (s.equals("Length"))
 								sbmdp.append("Mdp trop court, 8 caractères minimum" + '\n');
@@ -260,33 +269,33 @@ public class RegisterWindow
 							if (s.equals("Number"))
 								sbmdp.append("Le mot de passe doit contenir un numéro" + '\n');
 						}
-						nb_invalid++ ;
+						nbInvalid++ ;
 						JOptionPane.showMessageDialog(null, sbmdp.toString(), "Requis", JOptionPane.OK_OPTION);
 
 					}
 
-					if (String.copyValueOf(f_password.getPassword()).equals(String.copyValueOf(f_password_again.getPassword())) && !String.copyValueOf(f_password_key.getPassword()).equals(String.copyValueOf(f_password.getPassword())))
-						pwds.add(f_password);
+					if (String.copyValueOf(fPassword.getPassword()).equals(String.copyValueOf(fPasswordAgain.getPassword())) && !String.copyValueOf(fPasswordKey.getPassword()).equals(String.copyValueOf(fPassword.getPassword())))
+						pwds.add(fPassword);
 					else
 					{
 						sb.append("Mot de passe invalide" + '\n');
-						nb_invalid++ ;
+						nbInvalid++ ;
 					}
 
-					if (String.copyValueOf(f_password_key.getPassword()).equals(String.copyValueOf(f_password_key_again.getPassword())) && !String.copyValueOf(f_password_key.getPassword()).equals(String.copyValueOf(f_password.getPassword())))
-						pwds.add(f_password_key);
+					if (String.copyValueOf(fPasswordKey.getPassword()).equals(String.copyValueOf(fPasswordKeyAgain.getPassword())) && !String.copyValueOf(fPasswordKey.getPassword()).equals(String.copyValueOf(fPassword.getPassword())))
+						pwds.add(fPasswordKey);
 					else
 					{
 						sb.append("Mot de passe de la clef invalide" + '\n');
-						nb_invalid++ ;
+						nbInvalid++ ;
 					}
 
-					params.add(f_len_key.getSelectedItem().toString());
+					params.add(fLenKey.getSelectedItem().toString());
 
-					if (nb_invalid == 0)
+					if (nbInvalid == 0)
 					{
-						List<String> url_register = createRegisterURL(params, pwds);
-						URL url = new URL(url_register.get(0) + url_register.get(1));
+						List<String> urlRegister = createRegisterURL(params, pwds);
+						URL url = new URL(urlRegister.get(0) + urlRegister.get(1));
 						URLConnection urlConn = url.openConnection();
 						urlConn.setDoOutput(true);
 
@@ -300,55 +309,54 @@ public class RegisterWindow
 				}
 				catch (Exception e1)
 				{
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 
 			}
 		});
 
-		f_len_key.setModel(new DefaultComboBoxModel<Integer>(new Integer[] {1024, 2048, 4096}));
-		f_len_key.setToolTipText("<html>\r\nLongueur de clefs de cryptage :<br>\r\n\t- 1024 : peu s\u00E9curis\u00E9, mais traitement rapide <br>\r\n  \t- 2048 : bon rapport s\u00E9curit\u00E9 / vitesse de traitement <br>\r\n  \t- 4096 : tr\u00E8s s\u00E9curis\u00E9, mais vitesse de traitement plus lente <br>\r\n</html>");
+		fLenKey.setModel(new DefaultComboBoxModel<Integer>(new Integer[] {1024, 2048, 4096}));
+		fLenKey.setToolTipText("<html>\r\nLongueur de clefs de cryptage :<br>\r\n\t- 1024 : peu s\u00E9curis\u00E9, mais traitement rapide <br>\r\n  \t- 2048 : bon rapport s\u00E9curit\u00E9 / vitesse de traitement <br>\r\n  \t- 4096 : tr\u00E8s s\u00E9curis\u00E9, mais vitesse de traitement plus lente <br>\r\n</html>");
 
 		JLabel lblNewLabel = new JLabel("Longueur clef :");
 
-		GroupLayout gl_top = new GroupLayout(top);
-		gl_top.setHorizontalGroup(gl_top.createParallelGroup(Alignment.LEADING).addGroup(
-				gl_top.createSequentialGroup()
+		GroupLayout glTop = new GroupLayout(top);
+		glTop.setHorizontalGroup(glTop.createParallelGroup(Alignment.LEADING).addGroup(
+				glTop.createSequentialGroup()
 				.addGroup(
-						gl_top.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_top.createSequentialGroup().addGap(221).addComponent(btnNewButton))
+						glTop.createParallelGroup(Alignment.LEADING)
+						.addGroup(glTop.createSequentialGroup().addGap(221).addComponent(btnNewButton))
 						.addGroup(
-								gl_top.createSequentialGroup()
+								glTop.createSequentialGroup()
 								.addContainerGap()
-								.addGroup(gl_top.createParallelGroup(Alignment.TRAILING).addComponent(l_password_key_again).addComponent(l_password_key).addComponent(l_password_again).addComponent(l_password).addComponent(l_firstname).addComponent(l_usermail).addComponent(l_pseudo).addComponent(l_lastname).addComponent(lblNewLabel))
+								.addGroup(glTop.createParallelGroup(Alignment.TRAILING).addComponent(lPasswordKeyAgain).addComponent(lPasswordKey).addComponent(lPasswordAgain).addComponent(lPassword).addComponent(lFirstname).addComponent(lUsermail).addComponent(lPseudo).addComponent(lLastname).addComponent(lblNewLabel))
 								.addGroup(
-										gl_top.createParallelGroup(Alignment.LEADING)
+										glTop.createParallelGroup(Alignment.LEADING)
 										.addGroup(
-												gl_top.createSequentialGroup()
+												glTop.createSequentialGroup()
 												.addGap(33)
 												.addGroup(
-														gl_top.createParallelGroup(Alignment.LEADING).addComponent(f_lastname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(f_firstname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-														.addComponent(f_mail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(f_pseudo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+														glTop.createParallelGroup(Alignment.LEADING).addComponent(fLastname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(fFirstname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+														.addComponent(fMail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(fPseudo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
 														.addGroup(
 																Alignment.TRAILING,
-																gl_top.createSequentialGroup()
+																glTop.createSequentialGroup()
 																.addGap(33)
 																.addGroup(
-																		gl_top.createParallelGroup(Alignment.LEADING, false).addComponent(f_password_again, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(f_password, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-																		.addComponent(f_password_key, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(f_password_key_again, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(f_len_key, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+																		glTop.createParallelGroup(Alignment.LEADING, false).addComponent(fPasswordAgain, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(fPassword, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+																		.addComponent(fPasswordKey, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(fPasswordKeyAgain, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(fLenKey, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
 																		.addContainerGap(826, Short.MAX_VALUE)));
-		gl_top.setVerticalGroup(gl_top.createParallelGroup(Alignment.LEADING).addGroup(
-				gl_top.createSequentialGroup().addGap(21).addGroup(gl_top.createParallelGroup(Alignment.BASELINE).addComponent(l_pseudo).addComponent(f_pseudo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(19)
-				.addGroup(gl_top.createParallelGroup(Alignment.BASELINE).addComponent(f_mail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(l_usermail)).addPreferredGap(ComponentPlacement.UNRELATED)
-				.addGroup(gl_top.createParallelGroup(Alignment.BASELINE).addComponent(f_lastname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(l_lastname)).addGap(9)
-				.addGroup(gl_top.createParallelGroup(Alignment.LEADING).addGroup(gl_top.createSequentialGroup().addGap(8).addComponent(l_firstname)).addComponent(f_firstname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addPreferredGap(ComponentPlacement.UNRELATED)
-				.addGroup(gl_top.createParallelGroup(Alignment.BASELINE).addComponent(f_password, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(l_password)).addGap(9)
-				.addGroup(gl_top.createParallelGroup(Alignment.BASELINE).addComponent(l_password_again).addComponent(f_password_again, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
-				.addGroup(gl_top.createParallelGroup(Alignment.BASELINE).addComponent(l_password_key).addComponent(f_password_key, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
-				.addGroup(gl_top.createParallelGroup(Alignment.BASELINE).addComponent(l_password_key_again).addComponent(f_password_key_again, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(20)
-				.addGroup(gl_top.createParallelGroup(Alignment.BASELINE).addComponent(f_len_key, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(lblNewLabel)).addGap(18).addComponent(btnNewButton).addContainerGap(314, Short.MAX_VALUE)));
-		top.setLayout(gl_top);
+		glTop.setVerticalGroup(glTop.createParallelGroup(Alignment.LEADING).addGroup(
+				glTop.createSequentialGroup().addGap(21).addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(lPseudo).addComponent(fPseudo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(19)
+				.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(fMail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(lUsermail)).addPreferredGap(ComponentPlacement.UNRELATED)
+				.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(fLastname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(lLastname)).addGap(9)
+				.addGroup(glTop.createParallelGroup(Alignment.LEADING).addGroup(glTop.createSequentialGroup().addGap(8).addComponent(lFirstname)).addComponent(fFirstname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addPreferredGap(ComponentPlacement.UNRELATED)
+				.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(fPassword, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(lPassword)).addGap(9)
+				.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(lPasswordAgain).addComponent(fPasswordAgain, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
+				.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(lPasswordKey).addComponent(fPasswordKey, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
+				.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(lPasswordKeyAgain).addComponent(fPasswordKeyAgain, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(20)
+				.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(fLenKey, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(lblNewLabel)).addGap(18).addComponent(btnNewButton).addContainerGap(314, Short.MAX_VALUE)));
+		top.setLayout(glTop);
 		fenetre.setVisible(true);
 	}
 }

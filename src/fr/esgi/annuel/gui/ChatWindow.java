@@ -14,8 +14,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.swing.*;
+import javax.swing.DefaultListModel;
+import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import fr.esgi.annuel.client.Client;
 import fr.esgi.annuel.client.ClientInfo;
@@ -36,11 +44,10 @@ public class ChatWindow
 	String currentInterlocuteur = "";
 	Map<String, String> discution = new HashMap<String, String>();
 	JList<String> list;
-	ClientInfo loged_user;
+	static ClientInfo logedUser  = new ClientInfo("");
 	JTextPane text;
 	JTextArea textArea;
 	JScrollPane textPane;
-
 	public ChatWindow()
 	{
 		initialize();
@@ -48,12 +55,12 @@ public class ChatWindow
 
 	/**
 	 * Create the application.
-	 * @param loged_user
+	 * @param logedUser
 	 */
-	public ChatWindow(ClientInfo loged_user)
+	public ChatWindow(ClientInfo logedUser)
 	{
 		initialize();
-		this.loged_user = loged_user;
+		this.logedUser.setLogin(logedUser.getLogin());
 	}
 
 	/**
@@ -69,7 +76,7 @@ public class ChatWindow
 				try
 				{
 					new Thread(new Server()).start();
-					new Thread(new Client()).start();
+					new Thread(new Client(logedUser)).start();
 					ChatWindow window = new ChatWindow();
 					window.frame.setVisible(true);
 				}
@@ -94,10 +101,11 @@ public class ChatWindow
 		this.frame.getContentPane().setLayout(new BorderLayout(10, 10));
 		this.contacts = new DefaultListModel<String>();
 		for (String pseudo : Contacts.getAllPseudo())
-			this.contacts.addElement(pseudo);
+			contacts.addElement(pseudo);
 		this.list = new JList<String>(this.contacts);
 		this.list.setPreferredSize(new Dimension(100, 100));
-		this.currentInterlocuteur = this.contacts.firstElement();
+		if(this.contacts.size()>0)
+			this.currentInterlocuteur = this.contacts.firstElement();
 		MouseListener l = new MouseListener()
 		{
 			@Override
@@ -146,7 +154,7 @@ public class ChatWindow
 			{
 				while (true)
 				{
-					List<Message> listM = MessageQueue.getAllMessagesToPrint(ChatWindow.this.loged_user.getLogin());
+					List<Message> listM = MessageQueue.getAllMessagesToPrint(logedUser.getLogin());
 					if (listM != null && !listM.isEmpty())
 					{
 						StringBuilder sb = new StringBuilder();
@@ -166,10 +174,10 @@ public class ChatWindow
 		this.textArea = new JTextArea();
 		this.textArea.setColumns(30);
 		this.envoyer = new JButton("Envoyer");
-		GroupLayout gl_panel = new GroupLayout(this.panel);
-		gl_panel.setHorizontalGroup(gl_panel.createParallelGroup(Alignment.LEADING).addGroup(gl_panel.createSequentialGroup().addComponent(this.textArea, GroupLayout.PREFERRED_SIZE, 323, GroupLayout.PREFERRED_SIZE).addPreferredGap(ComponentPlacement.RELATED).addComponent(this.envoyer, GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)));
-		gl_panel.setVerticalGroup(gl_panel.createParallelGroup(Alignment.LEADING).addComponent(this.textArea, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE).addComponent(this.envoyer, GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE));
-		this.panel.setLayout(gl_panel);
+		GroupLayout glPanel = new GroupLayout(this.panel);
+		glPanel.setHorizontalGroup(glPanel.createParallelGroup(Alignment.LEADING).addGroup(glPanel.createSequentialGroup().addComponent(this.textArea, GroupLayout.PREFERRED_SIZE, 323, GroupLayout.PREFERRED_SIZE).addPreferredGap(ComponentPlacement.RELATED).addComponent(this.envoyer, GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)));
+		glPanel.setVerticalGroup(glPanel.createParallelGroup(Alignment.LEADING).addComponent(this.textArea, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE).addComponent(this.envoyer, GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE));
+		this.panel.setLayout(glPanel);
 
 		this.envoyer.addActionListener(new ActionListener()
 		{
@@ -180,7 +188,7 @@ public class ChatWindow
 				Message mess = new Message();
 				mess.setMessage(ChatWindow.this.textArea.getText());
 				mess.setReceiveDate(new Date());
-				MessageQueue.addMessage(ChatWindow.this.loged_user.getLogin(), mess);
+				MessageQueue.addMessage(logedUser.getLogin(), mess);
 				ChatWindow.this.textArea.setText("");
 
 			}
@@ -199,7 +207,7 @@ public class ChatWindow
 					Message mess = new Message();
 					mess.setMessage(ChatWindow.this.textArea.getText());
 					mess.setReceiveDate(new Date());
-					MessageQueue.addMessage(ChatWindow.this.loged_user.getLogin(), mess);
+					MessageQueue.addMessage(logedUser.getLogin(), mess);
 					ChatWindow.this.clearArea = true;
 				}
 				ChatWindow.this.textPane.getVerticalScrollBar().setValue(ChatWindow.this.text.getText().length());
@@ -217,9 +225,7 @@ public class ChatWindow
 
 			@Override
 			public void keyTyped(KeyEvent e)
-			{
-				// TODO Auto-generated method stub
-			}
+			{}
 		});
 	}
 }

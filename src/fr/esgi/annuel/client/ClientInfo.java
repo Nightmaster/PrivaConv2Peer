@@ -20,7 +20,6 @@ public class ClientInfo
 		}
 		catch (UnknownHostException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -16,19 +16,23 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
-import javax.swing.*;
+import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.SwingWorker;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import fr.esgi.annuel.client.ClientInfo;
 import fr.esgi.annuel.constants.Constants;
 import fr.esgi.annuel.contact.Contact;
 import fr.esgi.annuel.contact.Contacts;
-import fr.esgi.annuel.crypt.PasswordUtilities;
 
 public class IdentificationView extends JPanel
 {
@@ -123,7 +127,7 @@ public class IdentificationView extends JPanel
 								.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addComponent(getBtnNewButton()).addComponent(getChckbxSeSouvenirDe()))).addContainerGap(316, Short.MAX_VALUE)));
 		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(
 				groupLayout.createSequentialGroup().addComponent(getLblIdentifiantDeConnexion()).addGap(4).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addGap(13).addComponent(getLblPwd()).addGap(4).addComponent(getPasswordField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addGap(18)
-						.addComponent(getBtnConnnexion()).addGap(7).addComponent(getChckbxSeSouvenirDe()).addGap(18).addComponent(getBtnNewButton()).addGap(99)));
+				.addComponent(getBtnConnnexion()).addGap(7).addComponent(getChckbxSeSouvenirDe()).addGap(18).addComponent(getBtnNewButton()).addGap(99)));
 		setLayout(groupLayout);
 
 	}
@@ -182,52 +186,52 @@ public class IdentificationView extends JPanel
 				{
 					String connect = getLogin();
 					JPasswordField pwd = getPasswordField();
-						try
+					try
+					{
+						String source = "";
+						List<String> Urlparams = createConnectionURL(connect, pwd);
+						URL url = new URL(Urlparams.get(0) + Urlparams.get(1));
+						URLConnection urlConn = url.openConnection();
+						urlConn.setDoOutput(true);
+
+						BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
+						StringBuilder inputLine = new StringBuilder();
+						String input;
+						while ((input = in.readLine()) != null)
+							inputLine.append(input);
+						System.out.println(inputLine);
+						in.close();
+
+						JSONObject mainObject = new JSONObject(inputLine.toString());
+						if (!mainObject.getBoolean("error"))
 						{
-							String source = "";
-							List<String> Urlparams = createConnectionURL(connect, pwd);
-							URL url = new URL(Urlparams.get(0) + Urlparams.get(1));
-							URLConnection urlConn = url.openConnection();
-							urlConn.setDoOutput(true);
+							// Récupération des données du client
+							JSONObject userDetails = new JSONObject(mainObject.get("user").toString());
+							JSONArray friendsList;
+							JSONObject detailFriends;
+							ClientInfo logedUser = new ClientInfo(userDetails.getString("login"));
+							logedUser.setEmail(userDetails.getString("email"));
+							logedUser.setFirstname(userDetails.getString("firstname"));
+							logedUser.setLastname(userDetails.getString("name"));
+							logedUser.setLogin(userDetails.getString("login"));
 
-							BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
-							StringBuilder inputLine = new StringBuilder();
-							String input;
-							while ((input = in.readLine()) != null)
-								inputLine.append(input);
-							System.out.println(inputLine);
-							in.close();
 
-							JSONObject mainObject = new JSONObject(inputLine.toString());
-							if (!mainObject.getBoolean("error"))
+							// Récupération de la liste des amis
+							friendsList = new JSONArray(mainObject.get("friends").toString());
+							for( int i = 0; i < friendsList.length() ;i++)
 							{
-								// Récupération des données du client
-								JSONObject userDetails = new JSONObject(mainObject.get("user").toString());
-								ClientInfo logedUser = new ClientInfo(userDetails.getString("login"));
-								logedUser.setEmail(userDetails.getString("email"));
-								logedUser.setFirstname(userDetails.getString("firstname"));
-								logedUser.setLastname("name");
-								
-								
-								// Récupération de la liste des amis
-								JSONArray listeAmis = (JSONArray) userDetails.get("friends");
-								for(int i = 0; i < listeAmis.length(); i++){
-									System.out.println(listeAmis.get(i));
-								}
-								
-								
-								
-								
-								ChatWindow chat_window = new ChatWindow(logedUser);
-								chat_window.main(null);
-						}
+								detailFriends = new JSONObject(friendsList.get(i).toString());
+								System.out.println(detailFriends.get("displayLogin"));
+								Contacts.addContact(new Contact(detailFriends.getString("displayLogin")));
+							}
 							ChatWindow.main(null);
 						}
 					}
 					catch (Exception e1)
 					{
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
+						JOptionPane.showMessageDialog(null, "Echec de connexion", "Failure", JOptionPane.OK_OPTION);
+
 					}
 				}
 			});
@@ -243,11 +247,9 @@ public class IdentificationView extends JPanel
 			this.btnNewButton.addActionListener(new ActionListener()
 			{
 
-				@SuppressWarnings("static-access")
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					RegisterWindow reg_window = new RegisterWindow();
 					RegisterWindow.main(null);
 				}
 			});
@@ -295,15 +297,15 @@ public class IdentificationView extends JPanel
 
 	protected List<String> createConnectionURL(String connect, JPasswordField pwd) throws Exception
 	{
-		MessageDigest md_pwd = null;
+		MessageDigest mdPwd = null;
 		String hashtext = "";
 		try
 		{
 
-			md_pwd = MessageDigest.getInstance("MD5");
-			md_pwd.reset();
-			md_pwd.update(String.copyValueOf(pwd.getPassword()).getBytes());
-			byte[] digest = md_pwd.digest();
+			mdPwd = MessageDigest.getInstance("MD5");
+			mdPwd.reset();
+			mdPwd.update(String.copyValueOf(pwd.getPassword()).getBytes());
+			byte[] digest = mdPwd.digest();
 			BigInteger bigInt = new BigInteger(1, digest);
 			hashtext = bigInt.toString(16);
 			while (hashtext.length() < 32)
@@ -311,7 +313,6 @@ public class IdentificationView extends JPanel
 		}
 		catch (NoSuchAlgorithmException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		List<String> url = new ArrayList<String>();
