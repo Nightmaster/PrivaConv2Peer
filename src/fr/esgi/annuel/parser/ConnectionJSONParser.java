@@ -4,7 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class JSONConnection
+public class ConnectionJSONParser
 {
 	boolean error, connection;
 	int validity;
@@ -12,7 +12,7 @@ public class JSONConnection
 	User user;
 	Friend[] fl;
 
-	public JSONConnection(JSONObject json) throws JSONException
+	public ConnectionJSONParser(JSONObject json) throws JSONException
 	{
 		JSONArray ask = json.getJSONArray("askFriend"), fList = json.getJSONArray("friends");
 		this.error = json.getBoolean("error");
