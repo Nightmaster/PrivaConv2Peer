@@ -17,16 +17,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import javax.swing.GroupLayout;
+import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-import javax.swing.SwingWorker;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import fr.esgi.annuel.client.ClientInfo;
@@ -41,7 +33,6 @@ import fr.esgi.annuel.contact.Contacts;
  * et de valider la connexion
  *
  * */
-
 
 public class IdentificationView extends JPanel
 {
@@ -130,13 +121,13 @@ public class IdentificationView extends JPanel
 				.addGroup(groupLayout.createSequentialGroup().addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addGap(5).addComponent(getLblPwd())).addComponent(getPasswordField(), GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)).addContainerGap(316, Short.MAX_VALUE))
 				.addGroup(
 						groupLayout
-						.createSequentialGroup()
-						.addGroup(
-								groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblIdentifiantDeConnexion()).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE).addGroup(groupLayout.createSequentialGroup().addGap(23).addComponent(getBtnConnnexion()))
-								.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addComponent(getBtnNewButton()).addComponent(getChckbxSeSouvenirDe()))).addContainerGap(316, Short.MAX_VALUE)));
+								.createSequentialGroup()
+								.addGroup(
+										groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblIdentifiantDeConnexion()).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE).addGroup(groupLayout.createSequentialGroup().addGap(23).addComponent(getBtnConnnexion()))
+												.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addComponent(getBtnNewButton()).addComponent(getChckbxSeSouvenirDe()))).addContainerGap(316, Short.MAX_VALUE)));
 		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(
 				groupLayout.createSequentialGroup().addComponent(getLblIdentifiantDeConnexion()).addGap(4).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addGap(13).addComponent(getLblPwd()).addGap(4).addComponent(getPasswordField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addGap(18)
-				.addComponent(getBtnConnnexion()).addGap(7).addComponent(getChckbxSeSouvenirDe()).addGap(18).addComponent(getBtnNewButton()).addGap(99)));
+						.addComponent(getBtnConnnexion()).addGap(7).addComponent(getChckbxSeSouvenirDe()).addGap(18).addComponent(getBtnNewButton()).addGap(99)));
 		setLayout(groupLayout);
 
 	}
@@ -224,17 +215,16 @@ public class IdentificationView extends JPanel
 							logedUser.setLastname(userDetails.getString("name"));
 							logedUser.setLogin(userDetails.getString("login"));
 
-
 							// Récupération de la liste des amis
 							friendsList = new JSONArray(mainObject.get("friends").toString());
-							for( int i = 0; i < friendsList.length() ;i++)
+							for (int i = 0; i < friendsList.length(); i++ )
 							{
 								detailFriends = new JSONObject(friendsList.get(i).toString());
 								System.out.println(detailFriends.get("displayLogin"));
 								Contacts.addContact(new Contact(detailFriends.getString("displayLogin")));
 							}
 							ChatWindow cw = new ChatWindow(logedUser);
-							cw.main(null);
+							ChatWindow.main(null);
 						}
 					}
 					catch (Exception e1)

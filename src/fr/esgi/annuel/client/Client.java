@@ -9,10 +9,11 @@ import fr.esgi.annuel.message.MessageQueue;
 
 public class Client implements Runnable
 {
-	ClientInfo cli ;
+	ClientInfo cli;
+
 	public Client(ClientInfo c)
 	{
-		cli = c;
+		this.cli = c;
 	}
 
 	@Override
@@ -27,17 +28,16 @@ public class Client implements Runnable
 			while (true)
 			{
 				// Récupération de la liste des messages
-				List<Message> listM = MessageQueue.getAllMessages(cli.getLogin());
+				List<Message> listM = MessageQueue.getAllMessages(this.cli.getLogin());
 				if (listM != null && !listM.isEmpty())
 					for (Message message : listM)
 					{
 						StringBuilder sb = new StringBuilder();
-						sb.append(cli.getLogin() + " : ");
+						sb.append(this.cli.getLogin() + " : ");
 						sb.append(message.getMessage());
 						sendData = sb.toString().getBytes();
 						// envoi du packet contenant le message à transmettre
-						DatagramPacket sendPacket = new DatagramPacket(
-								sendData, sendData.length, IPAddress, 1112);
+						DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 1112);
 						clientSocket.send(sendPacket);
 					}
 			}

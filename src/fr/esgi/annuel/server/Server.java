@@ -29,14 +29,12 @@ public class Server implements Runnable
 				String[] splits = s.split(" :");
 				int iterator = 0;
 				String pseudo = "";
-				for(String part : splits)
-				{
+				for (String part : splits)
 					if (iterator == 0)
 					{
 						pseudo = part;
-						iterator++;
+						iterator++ ;
 					}
-				}
 				iterator = 0;
 				mess.setReceiveDate(new Date());
 				System.out.println(pseudo);

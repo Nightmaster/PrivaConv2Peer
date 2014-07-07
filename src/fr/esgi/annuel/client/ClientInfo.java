@@ -2,6 +2,7 @@ package fr.esgi.annuel.client;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+
 /**
  * Class ClientInfo
  * Elle contiendra les informations de l'utilisateur

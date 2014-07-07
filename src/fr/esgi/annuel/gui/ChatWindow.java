@@ -14,16 +14,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.swing.DefaultListModel;
-import javax.swing.GroupLayout;
+import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import fr.esgi.annuel.client.Client;
 import fr.esgi.annuel.client.ClientInfo;
@@ -36,6 +28,7 @@ public class ChatWindow
 {
 
 	protected static final int MAJ_KEY = 16;
+	static ClientInfo logedUser = new ClientInfo("");
 	private DefaultListModel<String> contacts;
 	private JButton envoyer;
 	private JFrame frame;
@@ -44,7 +37,6 @@ public class ChatWindow
 	String currentInterlocuteur = "";
 	Map<String, String> discution = new HashMap<String, String>();
 	JList<String> list;
-	static ClientInfo logedUser  = new ClientInfo("");
 	JTextPane text;
 	JTextArea textArea;
 	JScrollPane textPane;
@@ -61,7 +53,7 @@ public class ChatWindow
 	public ChatWindow(ClientInfo logedUser)
 	{
 		initialize();
-		this.logedUser.setLogin(logedUser.getLogin());
+		ChatWindow.logedUser.setLogin(logedUser.getLogin());
 	}
 
 	/**
@@ -102,10 +94,10 @@ public class ChatWindow
 		this.frame.getContentPane().setLayout(new BorderLayout(10, 10));
 		this.contacts = new DefaultListModel<String>();
 		for (String pseudo : Contacts.getAllPseudo())
-			contacts.addElement(pseudo);
+			this.contacts.addElement(pseudo);
 		this.list = new JList<String>(this.contacts);
 		this.list.setPreferredSize(new Dimension(100, 100));
-		if(this.contacts.size()>0)
+		if (this.contacts.size() > 0)
 			this.currentInterlocuteur = this.contacts.firstElement();
 		MouseListener l = new MouseListener()
 		{
@@ -161,10 +153,10 @@ public class ChatWindow
 					if (listM != null && !listM.isEmpty())
 					{
 						StringBuilder sb = new StringBuilder();
-						sb.append(text.getText());
+						sb.append(ChatWindow.this.text.getText());
 						for (Message message : listM)
 							sb.append(message.getMessage() + "\n");
-						text.setText(sb.toString());
+						ChatWindow.this.text.setText(sb.toString());
 					}
 				}
 			}
