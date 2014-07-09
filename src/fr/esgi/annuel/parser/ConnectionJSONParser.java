@@ -25,6 +25,36 @@ public class ConnectionJSONParser
 		for (int i = 0; i < fList.length(); i++ )
 			this.fl[i] = new Friend(fList.getJSONObject(i));
 	}
+	
+	public Friend[] getFriendList()
+	{
+		return this.fl;
+	}
+	
+	public User getUserInfos()
+	{
+		return this.user;
+	}
+	
+	public boolean isError()
+	{
+		return this.error;
+	}
+	
+	public boolean isConnectionValidated()
+	{
+		return this.connection;
+	}
+	
+	public int getValidity()
+	{
+		return this.validity;
+	}
+	
+	public String[] getAskList()
+	{
+		return this.askFriendship;
+	}
 }
 
 class Friend
@@ -51,7 +81,7 @@ class Friend
 
 class User
 {
-	public String login, email, name, firstname;
+	String login, email, name, firstname;
 
 	public User(JSONObject json) throws JSONException
 	{
