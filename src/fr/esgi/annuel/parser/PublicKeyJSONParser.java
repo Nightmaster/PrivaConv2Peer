@@ -8,7 +8,7 @@ public class PublicKeyJSONParser
 {
 	private boolean error;
 	private int httpCode = 200;
-	private UserPrivateKeyInfos user = null;
+	private UserPrivateKeyInfos userInfos = null;
 	private String displayMessage = null;
 
 	/**
@@ -26,7 +26,7 @@ public class PublicKeyJSONParser
 			this.httpCode = json.getInt("httpErrorCode");
 		}
 		else
-			this.user = new UserPrivateKeyInfos(json.getJSONObject("user"));
+			this.userInfos = new UserPrivateKeyInfos(json.getJSONObject("user"));
 	}
 
 	public String getDisplayMessage()
@@ -37,6 +37,11 @@ public class PublicKeyJSONParser
 	public int getHttpCode()
 	{
 		return this.httpCode;
+	}
+
+	public UserPrivateKeyInfos getUserInfos()
+	{
+		return this.userInfos;
 	}
 
 	public boolean isError()
