@@ -3,111 +3,85 @@ package fr.esgi.annuel.parser;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import fr.esgi.annuel.parser.subclasses.Friend;
+import fr.esgi.annuel.parser.subclasses.UserInfos;
 
 public class ConnectionJSONParser
 {
-	boolean error, connection;
-	int validity;
-	String[] askFriendship;
-	User user;
-	Friend[] fl;
+	private boolean error, connection;
+	private int validity, httpCode = 200;
+	private String displayMessage = null;
+	private String[] askFriendship;
+	private UserInfos userInfos;
+	private Friend[] fl;
 
+	/**
+	* This class is made to parse the JSON returned by the server's web service when a connection action is done
+	*
+	* @param json {JSONObject}: the JSON returned by the server's web service
+	* @throws JSONException Can throw exceptions because of illegal arguments
+	**/
 	public ConnectionJSONParser(JSONObject json) throws JSONException
 	{
-		JSONArray ask = json.getJSONArray("askFriend"), fList = json.getJSONArray("friends");
+		JSONArray ask = null, fList = null;
 		this.error = json.getBoolean("error");
+		if (true == this.error)
+		{
+			this.displayMessage = json.getString("displayMessage");
+			this.httpCode = json.getInt("httpErrorCode");
+		}
+		else
+		{
+			ask = json.getJSONArray("askFriend");
+			fList = json.getJSONArray("friends");
+			this.askFriendship = new String[ask.length()];
+			for (int i = 0; i < ask.length(); i++ )
+				this.askFriendship[i] = ask.get(i).toString();
+			this.userInfos = new UserInfos(json.getJSONObject("user"));
+			this.fl = new Friend[fList.length()];
+			for (int i = 0; i < fList.length(); i++ )
+				this.fl[i] = new Friend(fList.getJSONObject(i));
+		}
 		this.connection = json.getBoolean("connection");
-		this.askFriendship = new String[ask.length()];
-		for (int i = 0; i < ask.length(); i++ )
-			this.askFriendship[i] = ask.get(i).toString();
-		this.user = new User(json.getJSONObject("user"));
-		this.fl = new Friend[fList.length()];
-		for (int i = 0; i < fList.length(); i++ )
-			this.fl[i] = new Friend(fList.getJSONObject(i));
 	}
-	
-	public Friend[] getFriendList()
-	{
-		return this.fl;
-	}
-	
-	public User getUserInfos()
-	{
-		return this.user;
-	}
-	
-	public boolean isError()
-	{
-		return this.error;
-	}
-	
-	public boolean isConnectionValidated()
-	{
-		return this.connection;
-	}
-	
-	public int getValidity()
-	{
-		return this.validity;
-	}
-	
+
 	public String[] getAskList()
 	{
 		return this.askFriendship;
 	}
-}
 
-class Friend
-{
-	String username;
-	boolean connected;
-
-	public Friend(JSONObject json) throws JSONException
+	public String getDisplayMessage()
 	{
-		this.username = json.getString("displayLogin");
-		this.connected = json.getBoolean("connected");
+		return this.displayMessage;
 	}
 
-	public String getUsername()
+	public Friend[] getFriendList()
 	{
-		return this.username;
+		return this.fl;
 	}
 
-	public boolean isConnected()
+	public int getHttpCode()
 	{
-		return this.connected;
-	}
-}
-
-class User
-{
-	String login, email, name, firstname;
-
-	public User(JSONObject json) throws JSONException
-	{
-		this.email = json.getString("email");
-		this.email = json.getString("email");
-		this.name = json.getString("name");
-		this.firstname = json.getString("firstname");
+		return this.httpCode;
 	}
 
-	public String getEmail()
+	public UserInfos getUserInfos()
 	{
-		return this.email;
+		return this.userInfos;
 	}
 
-	public String getFirstname()
+	public int getValidity()
 	{
-		return this.firstname;
+		return this.validity;
 	}
 
-	public String getLogin()
+	public boolean isConnectionValidated()
 	{
-		return this.login;
+		return this.connection;
 	}
 
-	public String getName()
+	public boolean isError()
 	{
-		return this.name;
+		return this.error;
 	}
 }

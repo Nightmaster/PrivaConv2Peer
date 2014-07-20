@@ -1,21 +1,24 @@
 package fr.esgi.annuel.parser;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class AddFriendJSONParser
+public class ClientIPJSONParser
 {
-	private boolean error, invitationSent = false;
+	private boolean error;
 	private int httpCode = 200;
+	private InetAddress ipAdress = null;
 	private String displayMessage = null;
 
 	/**
-	* This class is made to parse the JSON returned by the server's web service when a add friend action is done
+	* This class is made to parse the JSON returned by the server's web service when a user IP demand is done
 	*
 	* @param json {JSONObject}: the JSON returned by the server's web service
 	* @throws JSONException Can throw exceptions because of illegal arguments
 	**/
-	public AddFriendJSONParser(JSONObject json) throws JSONException
+	public ClientIPJSONParser(JSONObject json) throws JSONException
 	{
 		this.error = json.getBoolean("error");
 		if (true == this.error)
@@ -23,8 +26,14 @@ public class AddFriendJSONParser
 			this.displayMessage = json.getString("displayMessage");
 			this.httpCode = json.getInt("httpErrorCode");
 		}
-		else
-			this.invitationSent = json.getBoolean("invitationSent");
+		try
+		{
+			this.ipAdress = InetAddress.getByName(json.getString("ip"));
+		}
+		catch (UnknownHostException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public String getDisplayMessage()
@@ -37,13 +46,13 @@ public class AddFriendJSONParser
 		return this.httpCode;
 	}
 
+	public InetAddress getIpAdress()
+	{
+		return this.ipAdress;
+	}
+
 	public boolean isError()
 	{
 		return this.error;
-	}
-
-	public boolean isInvitationSent()
-	{
-		return this.invitationSent;
 	}
 }
