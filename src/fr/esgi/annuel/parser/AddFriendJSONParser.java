@@ -3,7 +3,7 @@ package fr.esgi.annuel.parser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class AddFriendJSONParser
+class AddFriendJSONParser
 {
 	private boolean error, invitationSent = false;
 	private int httpCode = 200;

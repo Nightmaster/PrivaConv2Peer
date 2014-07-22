@@ -3,7 +3,7 @@ package fr.esgi.annuel.parser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class AnswerRequestJSONParser
+class AnswerRequestJSONParser
 {
 	private boolean error;
 	private int httpCode = 200;

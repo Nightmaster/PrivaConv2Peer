@@ -10,7 +10,7 @@ import fr.esgi.annuel.parser.subclasses.UserInfos;
  *
  * @author Nightmaster
  **/
-public class SearchJSONParser
+class SearchJSONParser
 {
 	private boolean error;
 	private int httpCode = 200;

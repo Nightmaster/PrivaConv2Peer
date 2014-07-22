@@ -4,7 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import fr.esgi.annuel.parser.subclasses.UserPrivateKeyInfos;
 
-public class PublicKeyJSONParser
+class PublicKeyJSONParser
 {
 	private boolean error;
 	private int httpCode = 200;

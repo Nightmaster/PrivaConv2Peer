@@ -6,7 +6,7 @@ import org.json.JSONObject;
 import fr.esgi.annuel.parser.subclasses.Friend;
 import fr.esgi.annuel.parser.subclasses.UserInfos;
 
-public class ConnectionJSONParser
+class ConnectionJSONParser
 {
 	private boolean error, connection;
 	private int validity, httpCode = 200;

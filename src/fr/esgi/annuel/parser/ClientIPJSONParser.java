@@ -5,8 +5,7 @@ import java.net.UnknownHostException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ClientIPJSONParser
-{
+class ClientIPJSONParser {
 	private boolean error;
 	private int httpCode = 200;
 	private InetAddress ipAdress = null;

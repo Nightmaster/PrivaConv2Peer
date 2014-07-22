@@ -6,7 +6,7 @@ import org.json.JSONObject;
 import fr.esgi.annuel.parser.subclasses.Friend;
 import fr.esgi.annuel.parser.subclasses.UserInfos;
 
-public class StayAliveJSONParser
+class StayAliveJSONParser
 {
 	private boolean error, statusOk;
 	private int httpCode = 200, validity;
