@@ -8,7 +8,7 @@ import fr.esgi.annuel.parser.subclasses.UserInfos;
 /**
  * Parse search JSON
  *
- * @author Nightmaster
+ * @author Gael B.
  **/
 class SearchJSONParser
 {
