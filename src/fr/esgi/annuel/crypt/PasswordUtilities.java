@@ -17,11 +17,11 @@ public class PasswordUtilities
 	{
 		boolean res = false;
 		int i = 0;
-		CharSequence c;
+		char c;
 		do
 		{
 			c = Constants.SPEC_CHARS[i];
-			if (pw.contains(c))
+			if (-1 != pw.indexOf(c))
 				res = true;
 			i++ ;
 		}while (true != res && Constants.SPEC_CHARS.length > i); // Tant que res est faux ET que i < longueur de SPEC_CHAR

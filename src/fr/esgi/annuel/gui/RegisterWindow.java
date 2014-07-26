@@ -78,10 +78,14 @@ public class RegisterWindow
 			return false;
 	}
 
-	protected static boolean isValidName(String text)
+	protected static boolean isValidName(String text, boolean isFisrtame)
 	{
-
-		if (text.matches("^[a-zA-Z-]*$") && text.length() > 1)
+		if (true == isFisrtame)
+			if (text.matches("^[-a-zA-Z]*$") && text.length() > 1)
+				return true;
+			else
+				return false;
+		else if (text.matches("^[-a-zA-Z ]*$") && text.length() > 1)
 			return true;
 		else
 			return false;
@@ -95,32 +99,49 @@ public class RegisterWindow
 			return false;
 	}
 
+	protected static void pwInformations(List<String> invalidParamsMdp, int invalid)
+	{
+		StringBuilder sbmdp = new StringBuilder();
+		for (String s : invalidParamsMdp)
+		{
+			if (s.equals("Length"))
+				sbmdp.append("Le mot de passe est trop court. Il doit faire au moins 8 caractères de long." + '\n');
+			if (s.equals("Maj letter"))
+				sbmdp.append("Le mot de passe doit contenir au moins une majuscule." + '\n');
+			if (s.equals("Minus letter"))
+				sbmdp.append("Le mot de passe doit contenir au moins une minuscule." + '\n');
+			if (s.equals("Well formated"))
+				sbmdp.append("Mot de passe incorrect. Il ne peut contenir que les caractères suivants:" + stringFromCharSequence(Constants.SPEC_CHARS) + '\n');
+			if (s.equals("Special character"))
+				sbmdp.append("Le mot de passe doit contenir au moins un caractère spécial parmi les suivants:" + stringFromCharSequence(Constants.SPEC_CHARS) + '\n');
+			if (s.equals("Number"))
+				sbmdp.append("Le mot de passe doit contenir au moins un numéro." + '\n');
+		}
+		invalid++ ;
+		JOptionPane.showMessageDialog(null, sbmdp.toString(), "Requis", JOptionPane.OK_OPTION);
+	}
+
+	protected static String stringFromCharSequence(char[] charSeq)
+	{
+		String res = new String();
+		for (char c : charSeq)
+			res += c;
+		return res;
+	}
+
 	public static void main(String[] args)
 	{
 
 		final JFrame fenetre = new JFrame();
 
-		final JLabel lPseudo = new JLabel("Pseudo : ");
-		final JLabel lUsermail = new JLabel("Email : ");
-		final JLabel lLastname = new JLabel("Nom : ");
-		final JLabel lFirstname = new JLabel("Prénom : ");
-		final JLabel lPassword = new JLabel("Mot de passe : ");
-		final JLabel lPasswordAgain = new JLabel("Resaisir mot de passe : ");
-		final JLabel lPasswordKey = new JLabel("Mot de passe clef: ");
-		final JLabel lPasswordKeyAgain = new JLabel("Resaisir mot de passe clef : ");
+		final JLabel lPseudo = new JLabel("Pseudo : "), lUsermail = new JLabel("Email : "), lLastname = new JLabel("Nom : "), lFirstname = new JLabel("Prénom : "), lPassword = new JLabel("Mot de passe : "), lPasswordAgain = new JLabel("Resaisir mot de passe : "), lPasswordKey = new JLabel("Mot de passe clef: "), lPasswordKeyAgain = new JLabel("Resaisir mot de passe clef : ");
 		final JComboBox<Integer> fLenKey = new JComboBox<Integer>();
 
-		final JTextField fPseudo = new JTextField("");
-		final JTextField fMail = new JTextField("");
+		final JTextField fPseudo = new JTextField(""), fMail = new JTextField(""), fLastname = new JTextField(""), fFirstname = new JTextField("");
 		fMail.setToolTipText("");
-		final JTextField fLastname = new JTextField("");
-		final JTextField fFirstname = new JTextField("");
-		final JPasswordField fPassword = new JPasswordField();
+		final JPasswordField fPassword = new JPasswordField(), fPasswordAgain = new JPasswordField(), fPasswordKey = new JPasswordField(), fPasswordKeyAgain = new JPasswordField();
 		fPassword.setToolTipText("<html>\r\n<pre>\r\nLe mot de passe doit \u00EAtre d'au moins 8 caract\u00E8res et \u00EAtre compos\u00E9 de :\r\n\t- Au moins 1 majuscule\r\n\t- Au moins 1 minuscule\r\n\t- Au moins 1 chiffre\r\n\t- Au moins 1 caract\u00E8re sp\u00E9cial\r\n</pre>\r\n</html>");
-		final JPasswordField fPasswordAgain = new JPasswordField();
-		final JPasswordField fPasswordKey = new JPasswordField();
 		fPasswordKey.setToolTipText("Mot de passe servant \u00E0 crypter votre paire de clefs RSA\r\nCe mot de passe doit \u00EAtre diff\u00E9rent de celui de connexion (pour des raisons de s\u00E9curit\u00E9)");
-		final JPasswordField fPasswordKeyAgain = new JPasswordField();
 
 		fenetre.setTitle("Inscription");
 		fenetre.setSize(613, 557);
@@ -171,7 +192,6 @@ public class RegisterWindow
 
 		btnNewButton.addActionListener(new ActionListener()
 		{
-
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
@@ -181,37 +201,35 @@ public class RegisterWindow
 					List<JPasswordField> pwds = new ArrayList<JPasswordField>();
 					StringBuilder sb = new StringBuilder();
 					int nbInvalid = 0;
-					HashMap<String, Boolean> testMdp = PasswordUtilities.isStrongEnough(String.copyValueOf(fPassword.getPassword()));
-					HashMap<String, Boolean> testMdpKey = PasswordUtilities.isStrongEnough(String.copyValueOf(fPasswordKey.getPassword()));
-					List<String> invalidParamsMdp = new ArrayList<String>();
-					List<String> invalidParamsMdpKey = new ArrayList<String>();
+					HashMap<String, Boolean> testMdp = PasswordUtilities.isStrongEnough(String.copyValueOf(fPassword.getPassword())), testMdpKey = PasswordUtilities.isStrongEnough(String.copyValueOf(fPasswordKey.getPassword()));
+					List<String> invalidParamsMdp = new ArrayList<String>(), invalidParamsMdpKey = new ArrayList<String>();
 
 					if (isValidPseudo(fPseudo.getText()))
 						params.add(fPseudo.getText());
 					else
 					{
-						sb.append("Pseudo invalide" + '\n');
+						sb.append("Pseudo invalide. Il doit faire au moins 3 caractères et ne peut contenir que des caractères alphanumériques, des chiffres et les 2 caractères suivants: \"-\" & \"_\"." + '\n');
 						nbInvalid++ ;
 					}
 					if (isValidEmail(fMail.getText()))
 						params.add(fMail.getText());
 					else
 					{
-						sb.append("email invalide" + '\n');
+						sb.append("Email invalide. Veuillez le vérifier." + '\n');
 						nbInvalid++ ;
 					}
-					if (isValidName(fLastname.getText()))
+					if (isValidName(fLastname.getText(), false))
 						params.add(fLastname.getText());
 					else
 					{
-						sb.append("nom invalide" + '\n');
+						sb.append("Nom invalide. Il doit faire au moins 3 caractères et ne peut contenir que des caractères alphanumériques, des chiffres et les 3 caractères suivants: \"-\", \"_\" & \" \"." + '\n');
 						nbInvalid++ ;
 					}
-					if (isValidName(fFirstname.getText()))
+					if (isValidName(fFirstname.getText(), true))
 						params.add(fFirstname.getText());
 					else
 					{
-						sb.append("prenom invalide" + '\n');
+						sb.append("Prénom invalide. Il ne peut pas contenir de caractère espace." + '\n');
 						nbInvalid++ ;
 					}
 
@@ -219,53 +237,13 @@ public class RegisterWindow
 						if (!entry.getValue())
 							invalidParamsMdp.add(entry.getKey());
 					if (invalidParamsMdp.size() > 0)
-					{
-						StringBuilder sbmdp = new StringBuilder();
-						for (String s : invalidParamsMdp)
-						{
-							if (s.equals("Length"))
-								sbmdp.append("Mdp trop court, 8 caractères minimum" + '\n');
-							if (s.equals("Maj letter"))
-								sbmdp.append("Le mot de passe doit contenir une Majuscule" + '\n');
-							if (s.equals("Minus letter"))
-								sbmdp.append("Le mot de passe doit contenir une Minuscule" + '\n');
-							if (s.equals("Well formated"))
-								sbmdp.append("Mot de passe mal formé" + '\n');
-							if (s.equals("Special character"))
-								sbmdp.append("Le mot de passe doit contenir un caractère spécial " + '\n');
-							if (s.equals("Number"))
-								sbmdp.append("Le mot de passe doit contenir un numéro" + '\n');
-						}
-						nbInvalid++ ;
-						JOptionPane.showMessageDialog(null, sbmdp.toString(), "Requis", JOptionPane.OK_OPTION);
-
-					}
+						pwInformations(invalidParamsMdp, nbInvalid);
 
 					for (Entry<String, Boolean> entry : testMdpKey.entrySet())
 						if (!entry.getValue())
 							invalidParamsMdpKey.add(entry.getKey());
 					if (invalidParamsMdpKey.size() > 0)
-					{
-						StringBuilder sbmdp = new StringBuilder();
-						for (String s : invalidParamsMdpKey)
-						{
-							if (s.equals("Length"))
-								sbmdp.append("Mdp trop court, 8 caractères minimum" + '\n');
-							if (s.equals("Maj letter"))
-								sbmdp.append("Le mot de passe doit contenir une Majuscule" + '\n');
-							if (s.equals("Minus letter"))
-								sbmdp.append("Le mot de passe doit contenir une Minuscule" + '\n');
-							if (s.equals("Well formated"))
-								sbmdp.append("Mot de passe mal formé" + '\n');
-							if (s.equals("Special character"))
-								sbmdp.append("Le mot de passe doit contenir un caractère spécial " + '\n');
-							if (s.equals("Number"))
-								sbmdp.append("Le mot de passe doit contenir un numéro" + '\n');
-						}
-						nbInvalid++ ;
-						JOptionPane.showMessageDialog(null, sbmdp.toString(), "Requis", JOptionPane.OK_OPTION);
-
-					}
+						pwInformations(invalidParamsMdp, nbInvalid);
 
 					if (String.copyValueOf(fPassword.getPassword()).equals(String.copyValueOf(fPasswordAgain.getPassword())) && !String.copyValueOf(fPasswordKey.getPassword()).equals(String.copyValueOf(fPassword.getPassword())))
 						pwds.add(fPassword);
