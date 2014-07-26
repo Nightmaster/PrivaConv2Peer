@@ -5,16 +5,16 @@ import org.json.JSONObject;
 
 class AnswerRequestJSONParser
 {
+	private String displayMessage = null, friendshipStatus = null;
 	private boolean error;
 	private int httpCode = 200;
-	private String displayMessage = null, friendshipStatus = null;
 
 	/**
-	* This class is made to parse the JSON returned by the server's web service when a answering action to a friendship demand is done
-	*
-	* @param json {JSONObject}: the JSON returned by the server's web service
-	* @throws JSONException Can throw exceptions because of illegal arguments
-	**/
+	 * This class is made to parse the JSON returned by the server's web service when a answering action to a friendship demand is done
+	 *
+	 * @param json {JSONObject}: the JSON returned by the server's web service
+	 * @throws JSONException Can throw exceptions because of illegal arguments
+	 **/
 	public AnswerRequestJSONParser(JSONObject json) throws JSONException
 	{
 		this.error = json.getBoolean("error");

@@ -8,19 +8,19 @@ import fr.esgi.annuel.parser.subclasses.UserInfos;
 
 class ConnectionJSONParser
 {
-	private boolean error, connection;
-	private int validity, httpCode = 200;
-	private String displayMessage = null;
 	private String[] askFriendship;
-	private UserInfos userInfos;
+	private String displayMessage = null;
+	private boolean error, connection;
 	private Friend[] fl;
+	private UserInfos userInfos;
+	private int validity, httpCode = 200;
 
 	/**
-	* This class is made to parse the JSON returned by the server's web service when a connection action is done
-	*
-	* @param json {JSONObject}: the JSON returned by the server's web service
-	* @throws JSONException Can throw exceptions because of illegal arguments
-	**/
+	 * This class is made to parse the JSON returned by the server's web service when a connection action is done
+	 *
+	 * @param json {JSONObject}: the JSON returned by the server's web service
+	 * @throws JSONException Can throw exceptions because of illegal arguments
+	 **/
 	public ConnectionJSONParser(JSONObject json) throws JSONException
 	{
 		JSONArray ask = null, fList = null;

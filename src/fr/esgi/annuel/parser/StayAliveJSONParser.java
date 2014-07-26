@@ -8,19 +8,19 @@ import fr.esgi.annuel.parser.subclasses.UserInfos;
 
 class StayAliveJSONParser
 {
-	private boolean error, statusOk;
-	private int httpCode = 200, validity;
-	private String displayMessage = null;
 	private String[] askFriendship;
-	private UserInfos userInfos;
+	private String displayMessage = null;
+	private boolean error, statusOk;
 	private Friend[] fl;
+	private int httpCode = 200, validity;
+	private UserInfos userInfos;
 
 	/**
-	* This class is made to parse the JSON returned by the server's web service when a stay alive action is performed
-	*
-	* @param json {JSONObject}: the JSON returned by the server's web service
-	* @throws JSONException Can throw exceptions because of illegal arguments
-	**/
+	 * This class is made to parse the JSON returned by the server's web service when a stay alive action is performed
+	 *
+	 * @param json {JSONObject}: the JSON returned by the server's web service
+	 * @throws JSONException Can throw exceptions because of illegal arguments
+	 **/
 	public StayAliveJSONParser(JSONObject json) throws JSONException
 	{
 		JSONArray ask = null, fList = null;

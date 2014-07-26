@@ -5,17 +5,17 @@ import org.json.JSONObject;
 
 class SimpleJSONParser
 {
+	private String displayMessage = null;
 	private boolean error, status;
 	private int httpCode = 200;
-	private String displayMessage = null;
 
 	/**
-	* This parser is made to return informations on simple actions: action is done or not. If the action is not done, because of an error, then it's possible to get informations on it
-	*
-	* @param json {JSONObject}: the JSON returned by the server's web service
-	* @param action {String}: the name of the current action
-	* @throws JSONException Can throw exceptions because of illegal arguments
-	**/
+	 * This parser is made to return informations on simple actions: action is done or not. If the action is not done, because of an error, then it's possible to get informations on it
+	 *
+	 * @param json {JSONObject}: the JSON returned by the server's web service
+	 * @param action {String}: the name of the current action
+	 * @throws JSONException Can throw exceptions because of illegal arguments
+	 **/
 	public SimpleJSONParser(JSONObject json, String action) throws JSONException
 	{
 		if ("registration" != action.toLowerCase() && "disconnection" != action.toLowerCase())

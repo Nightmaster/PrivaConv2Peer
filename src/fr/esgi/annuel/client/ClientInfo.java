@@ -11,11 +11,11 @@ import java.net.UnknownHostException;
  * */
 public class ClientInfo
 {
+	InetAddress clientAdress;
 	public String email;
 	public String firstname;
 	public String lastname;
 	public String login; // Name by which the user logged into the chat room
-	InetAddress clientAdress;
 
 	public ClientInfo(String pseudo)
 	{

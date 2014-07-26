@@ -5,16 +5,16 @@ import org.json.JSONObject;
 
 class AddFriendJSONParser
 {
+	private String displayMessage = null;
 	private boolean error, invitationSent = false;
 	private int httpCode = 200;
-	private String displayMessage = null;
 
 	/**
-	* This class is made to parse the JSON returned by the server's web service when a add friend action is done
-	*
-	* @param json {JSONObject}: the JSON returned by the server's web service
-	* @throws JSONException Can throw exceptions because of illegal arguments
-	**/
+	 * This class is made to parse the JSON returned by the server's web service when a add friend action is done
+	 *
+	 * @param json {JSONObject}: the JSON returned by the server's web service
+	 * @throws JSONException Can throw exceptions because of illegal arguments
+	 **/
 	public AddFriendJSONParser(JSONObject json) throws JSONException
 	{
 		this.error = json.getBoolean("error");

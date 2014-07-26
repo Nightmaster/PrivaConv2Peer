@@ -5,8 +5,8 @@ import org.json.JSONObject;
 
 public class Friend
 {
-	private String username;
 	private boolean connected;
+	private String username;
 
 	public Friend(JSONObject json) throws JSONException
 	{

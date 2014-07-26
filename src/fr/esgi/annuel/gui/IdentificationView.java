@@ -85,6 +85,35 @@ public class IdentificationView extends JPanel
 
 	}
 
+	protected List<String> createConnectionURL(String connect, JPasswordField pwd) throws Exception
+	{
+		MessageDigest mdPwd = null;
+		String hashtext = "";
+		try
+		{
+			// Hachage du mot de passe
+			mdPwd = MessageDigest.getInstance("MD5");
+			mdPwd.reset();
+			mdPwd.update(String.copyValueOf(pwd.getPassword()).getBytes());
+			byte[] digest = mdPwd.digest();
+			BigInteger bigInt = new BigInteger(1, digest);
+			hashtext = bigInt.toString(16);
+			while (hashtext.length() < 32)
+				hashtext = "0" + hashtext;
+		}
+		catch (NoSuchAlgorithmException e)
+		{
+			e.printStackTrace();
+		}
+		List<String> url = new ArrayList<String>();
+		String urlConnect = Constants.SRV_URL + ":" + Constants.SRV_PORT + "/" + Constants.SRV_API + "/" + Constants.SRV_CONNECT_PAGE;
+		String params = "?" + Constants.PARAM_USER + "=" + connect + "&" + Constants.PARAM_PWD + "=" + hashtext;
+
+		url.add(urlConnect);
+		url.add(params);
+		return url;
+	}
+
 	private JButton getBtnConnnexion()
 	{
 		if (this.btnConnnexion == null)
@@ -205,35 +234,6 @@ public class IdentificationView extends JPanel
 			this.textField.setColumns(10);
 		}
 		return this.textField;
-	}
-
-	protected List<String> createConnectionURL(String connect, JPasswordField pwd) throws Exception
-	{
-		MessageDigest mdPwd = null;
-		String hashtext = "";
-		try
-		{
-			// Hachage du mot de passe
-			mdPwd = MessageDigest.getInstance("MD5");
-			mdPwd.reset();
-			mdPwd.update(String.copyValueOf(pwd.getPassword()).getBytes());
-			byte[] digest = mdPwd.digest();
-			BigInteger bigInt = new BigInteger(1, digest);
-			hashtext = bigInt.toString(16);
-			while (hashtext.length() < 32)
-				hashtext = "0" + hashtext;
-		}
-		catch (NoSuchAlgorithmException e)
-		{
-			e.printStackTrace();
-		}
-		List<String> url = new ArrayList<String>();
-		String urlConnect = Constants.SRV_URL + ":" + Constants.SRV_PORT + "/" + Constants.SRV_API + "/" + Constants.SRV_CONNECT_PAGE;
-		String params = "?" + Constants.PARAM_USER + "=" + connect + "&" + Constants.PARAM_PWD + "=" + hashtext;
-
-		url.add(urlConnect);
-		url.add(params);
-		return url;
 	}
 
 	public String getLogin()

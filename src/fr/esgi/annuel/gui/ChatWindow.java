@@ -27,12 +27,8 @@ import fr.esgi.annuel.server.Server;
 public class ChatWindow
 {
 
-	protected static final int MAJ_KEY = 16;
 	static ClientInfo logedUser = new ClientInfo("");
-	private DefaultListModel<String> contacts;
-	private JButton envoyer;
-	private JFrame frame;
-	private JPanel panel;
+	protected static final int MAJ_KEY = 16;
 	boolean clearArea = false;
 	String currentInterlocuteur = "";
 	Map<String, String> discution = new HashMap<String, String>();
@@ -40,6 +36,10 @@ public class ChatWindow
 	JTextPane text;
 	JTextArea textArea;
 	JScrollPane textPane;
+	private DefaultListModel<String> contacts;
+	private JButton envoyer;
+	private JFrame frame;
+	private JPanel panel;
 
 	public ChatWindow()
 	{

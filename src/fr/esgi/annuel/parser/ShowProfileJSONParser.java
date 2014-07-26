@@ -6,17 +6,17 @@ import fr.esgi.annuel.parser.subclasses.UserInfos;
 
 class ShowProfileJSONParser
 {
+	private String displayMessage = null;
 	private boolean error;
 	private int httpCode = 200;
-	private String displayMessage = null;
 	private UserInfos profile = null;
 
 	/**
-	* This class is made to parse the JSON returned by the server's web service when a demand for all informations on a friend is performed
-	*
-	* @param json {JSONObject}: the JSON returned by the server's web service
-	* @throws JSONException Can throw exceptions because of illegal arguments
-	**/
+	 * This class is made to parse the JSON returned by the server's web service when a demand for all informations on a friend is performed
+	 *
+	 * @param json {JSONObject}: the JSON returned by the server's web service
+	 * @throws JSONException Can throw exceptions because of illegal arguments
+	 **/
 	public ShowProfileJSONParser(JSONObject json) throws JSONException
 	{
 		this.error = json.getBoolean("error");

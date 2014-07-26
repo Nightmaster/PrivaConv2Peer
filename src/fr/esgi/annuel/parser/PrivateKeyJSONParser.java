@@ -5,16 +5,16 @@ import org.json.JSONObject;
 
 class PrivateKeyJSONParser
 {
+	private String displayMessage = null, privateKey;
 	private boolean error;
 	private int httpCode = 200;
-	private String displayMessage = null, privateKey;
 
 	/**
-	* This class is made to parse the JSON returned by the server's web service when the private key is asked to the server
-	*
-	* @param json {JSONObject}: the JSON returned by the server's web service
-	* @throws JSONException Can throw exceptions because of illegal arguments
-	**/
+	 * This class is made to parse the JSON returned by the server's web service when the private key is asked to the server
+	 *
+	 * @param json {JSONObject}: the JSON returned by the server's web service
+	 * @throws JSONException Can throw exceptions because of illegal arguments
+	 **/
 	public PrivateKeyJSONParser(JSONObject json) throws JSONException
 	{
 		this.error = json.getBoolean("error");

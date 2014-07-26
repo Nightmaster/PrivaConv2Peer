@@ -294,39 +294,39 @@ public class RegisterWindow
 		GroupLayout glTop = new GroupLayout(top);
 		glTop.setHorizontalGroup(glTop.createParallelGroup(Alignment.LEADING).addGroup(
 				glTop.createSequentialGroup()
+				.addGroup(
+						glTop.createParallelGroup(Alignment.LEADING)
+						.addGroup(glTop.createSequentialGroup().addGap(221).addComponent(btnNewButton))
 						.addGroup(
-								glTop.createParallelGroup(Alignment.LEADING)
-										.addGroup(glTop.createSequentialGroup().addGap(221).addComponent(btnNewButton))
+								glTop.createSequentialGroup()
+								.addContainerGap()
+								.addGroup(glTop.createParallelGroup(Alignment.TRAILING).addComponent(lPasswordKeyAgain).addComponent(lPasswordKey).addComponent(lPasswordAgain).addComponent(lPassword).addComponent(lFirstname).addComponent(lUsermail).addComponent(lPseudo).addComponent(lLastname).addComponent(lblNewLabel))
+								.addGroup(
+										glTop.createParallelGroup(Alignment.LEADING)
 										.addGroup(
 												glTop.createSequentialGroup()
-														.addContainerGap()
-														.addGroup(glTop.createParallelGroup(Alignment.TRAILING).addComponent(lPasswordKeyAgain).addComponent(lPasswordKey).addComponent(lPasswordAgain).addComponent(lPassword).addComponent(lFirstname).addComponent(lUsermail).addComponent(lPseudo).addComponent(lLastname).addComponent(lblNewLabel))
+												.addGap(33)
+												.addGroup(
+														glTop.createParallelGroup(Alignment.LEADING).addComponent(fLastname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(fFirstname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+														.addComponent(fMail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(fPseudo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
 														.addGroup(
-																glTop.createParallelGroup(Alignment.LEADING)
-																		.addGroup(
-																				glTop.createSequentialGroup()
-																						.addGap(33)
-																						.addGroup(
-																								glTop.createParallelGroup(Alignment.LEADING).addComponent(fLastname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(fFirstname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-																										.addComponent(fMail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(fPseudo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-																		.addGroup(
-																				Alignment.TRAILING,
-																				glTop.createSequentialGroup()
-																						.addGap(33)
-																						.addGroup(
-																								glTop.createParallelGroup(Alignment.LEADING, false).addComponent(fPasswordAgain, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(fPassword, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-																										.addComponent(fPasswordKey, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(fPasswordKeyAgain, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(fLenKey, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
-						.addContainerGap(826, Short.MAX_VALUE)));
+																Alignment.TRAILING,
+																glTop.createSequentialGroup()
+																.addGap(33)
+																.addGroup(
+																		glTop.createParallelGroup(Alignment.LEADING, false).addComponent(fPasswordAgain, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(fPassword, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+																		.addComponent(fPasswordKey, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(fPasswordKeyAgain, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(fLenKey, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+																		.addContainerGap(826, Short.MAX_VALUE)));
 		glTop.setVerticalGroup(glTop.createParallelGroup(Alignment.LEADING).addGroup(
 				glTop.createSequentialGroup().addGap(21).addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(lPseudo).addComponent(fPseudo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(19)
-						.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(fMail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(lUsermail)).addPreferredGap(ComponentPlacement.UNRELATED)
-						.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(fLastname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(lLastname)).addGap(9)
-						.addGroup(glTop.createParallelGroup(Alignment.LEADING).addGroup(glTop.createSequentialGroup().addGap(8).addComponent(lFirstname)).addComponent(fFirstname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addPreferredGap(ComponentPlacement.UNRELATED)
-						.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(fPassword, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(lPassword)).addGap(9)
-						.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(lPasswordAgain).addComponent(fPasswordAgain, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
-						.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(lPasswordKey).addComponent(fPasswordKey, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
-						.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(lPasswordKeyAgain).addComponent(fPasswordKeyAgain, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(20)
-						.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(fLenKey, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(lblNewLabel)).addGap(18).addComponent(btnNewButton).addContainerGap(314, Short.MAX_VALUE)));
+				.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(fMail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(lUsermail)).addPreferredGap(ComponentPlacement.UNRELATED)
+				.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(fLastname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(lLastname)).addGap(9)
+				.addGroup(glTop.createParallelGroup(Alignment.LEADING).addGroup(glTop.createSequentialGroup().addGap(8).addComponent(lFirstname)).addComponent(fFirstname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addPreferredGap(ComponentPlacement.UNRELATED)
+				.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(fPassword, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(lPassword)).addGap(9)
+				.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(lPasswordAgain).addComponent(fPasswordAgain, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
+				.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(lPasswordKey).addComponent(fPasswordKey, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
+				.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(lPasswordKeyAgain).addComponent(fPasswordKeyAgain, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(20)
+				.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(fLenKey, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(lblNewLabel)).addGap(18).addComponent(btnNewButton).addContainerGap(314, Short.MAX_VALUE)));
 		top.setLayout(glTop);
 		fenetre.setVisible(true);
 	}

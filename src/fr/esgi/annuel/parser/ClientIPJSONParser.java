@@ -5,18 +5,19 @@ import java.net.UnknownHostException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-class ClientIPJSONParser {
+class ClientIPJSONParser
+{
+	private String displayMessage = null;
 	private boolean error;
 	private int httpCode = 200;
 	private InetAddress ipAdress = null;
-	private String displayMessage = null;
 
 	/**
-	* This class is made to parse the JSON returned by the server's web service when a user IP demand is done
-	*
-	* @param json {JSONObject}: the JSON returned by the server's web service
-	* @throws JSONException Can throw exceptions because of illegal arguments
-	**/
+	 * This class is made to parse the JSON returned by the server's web service when a user IP demand is done
+	 *
+	 * @param json {JSONObject}: the JSON returned by the server's web service
+	 * @throws JSONException Can throw exceptions because of illegal arguments
+	 **/
 	public ClientIPJSONParser(JSONObject json) throws JSONException
 	{
 		this.error = json.getBoolean("error");
