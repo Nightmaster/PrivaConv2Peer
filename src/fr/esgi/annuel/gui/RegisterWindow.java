@@ -190,6 +190,7 @@ public class RegisterWindow
 
 		JButton btnNewButton = new JButton("S'enregistrer");
 
+		// TODO déplacer ce code dans la master Window
 		btnNewButton.addActionListener(new ActionListener()
 		{
 			@Override
@@ -282,14 +283,13 @@ public class RegisterWindow
 				{
 					e1.printStackTrace();
 				}
-
 			}
 		});
 
 		fLenKey.setModel(new DefaultComboBoxModel<Integer>(new Integer[] {1024, 2048, 4096}));
 		fLenKey.setToolTipText("<html>\r\nLongueur de clefs de cryptage :<br>\r\n\t- 1024 : peu s\u00E9curis\u00E9, mais traitement rapide <br>\r\n  \t- 2048 : bon rapport s\u00E9curit\u00E9 / vitesse de traitement <br>\r\n  \t- 4096 : tr\u00E8s s\u00E9curis\u00E9, mais vitesse de traitement plus lente <br>\r\n</html>");
 
-		JLabel lblNewLabel = new JLabel("Longueur clef :");
+		JLabel lblNewLabel = new JLabel();
 
 		GroupLayout glTop = new GroupLayout(top);
 		glTop.setHorizontalGroup(glTop.createParallelGroup(Alignment.LEADING).addGroup(

@@ -1,6 +1,5 @@
 package fr.esgi.annuel.gui;
 
-import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -39,12 +38,10 @@ import fr.esgi.annuel.contact.Contacts;
 public class IdentificationView extends JPanel
 {
 	private static final long serialVersionUID = -3948992383967747160L;
-	private JButton btnConnnexion;
-	private JButton btnNewButton;
+	private JButton btnConnnexion, btnNewButton;
 	private JCheckBox chckbxSeSouvenirDe;
 
-	private JLabel lblIdentifiantDeConnexion;
-	private JLabel lblPwd;
+	private JLabel lblIdentifiantDeConnexion, lblPwd;
 
 	private JPasswordField passwordField;
 
@@ -62,56 +59,15 @@ public class IdentificationView extends JPanel
 				.addGroup(groupLayout.createSequentialGroup().addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addGap(5).addComponent(getLblPwd())).addComponent(getPasswordField(), GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)).addContainerGap(316, Short.MAX_VALUE))
 				.addGroup(
 						groupLayout
-						.createSequentialGroup()
-						.addGroup(
-								groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblIdentifiantDeConnexion()).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE).addGroup(groupLayout.createSequentialGroup().addGap(23).addComponent(getBtnConnnexion()))
-								.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addComponent(getBtnNewButton()).addComponent(getChckbxSeSouvenirDe()))).addContainerGap(316, Short.MAX_VALUE)));
+								.createSequentialGroup()
+								.addGroup(
+										groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblIdentifiantDeConnexion()).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE).addGroup(groupLayout.createSequentialGroup().addGap(23).addComponent(getBtnConnnexion()))
+												.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addComponent(getBtnNewButton()).addComponent(getChckbxSeSouvenirDe()))).addContainerGap(316, Short.MAX_VALUE)));
 		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(
 				groupLayout.createSequentialGroup().addComponent(getLblIdentifiantDeConnexion()).addGap(4).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addGap(13).addComponent(getLblPwd()).addGap(4).addComponent(getPasswordField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addGap(18)
-				.addComponent(getBtnConnnexion()).addGap(7).addComponent(getChckbxSeSouvenirDe()).addGap(18).addComponent(getBtnNewButton()).addGap(99)));
+						.addComponent(getBtnConnnexion()).addGap(7).addComponent(getChckbxSeSouvenirDe()).addGap(18).addComponent(getBtnNewButton()).addGap(99)));
 		setLayout(groupLayout);
 
-	}
-
-	private static boolean isBrowsingSupported()
-	{
-		if (!Desktop.isDesktopSupported())
-			return false;
-		boolean result = false;
-		Desktop desktop = java.awt.Desktop.getDesktop();
-		if (desktop.isSupported(Desktop.Action.BROWSE))
-			result = true;
-		return result;
-
-	}
-
-	protected List<String> createConnectionURL(String connect, JPasswordField pwd) throws Exception
-	{
-		MessageDigest mdPwd = null;
-		String hashtext = "";
-		try
-		{
-			// Hachage du mot de passe
-			mdPwd = MessageDigest.getInstance("MD5");
-			mdPwd.reset();
-			mdPwd.update(String.copyValueOf(pwd.getPassword()).getBytes());
-			byte[] digest = mdPwd.digest();
-			BigInteger bigInt = new BigInteger(1, digest);
-			hashtext = bigInt.toString(16);
-			while (hashtext.length() < 32)
-				hashtext = "0" + hashtext;
-		}
-		catch (NoSuchAlgorithmException e)
-		{
-			e.printStackTrace();
-		}
-		List<String> url = new ArrayList<String>();
-		String urlConnect = Constants.SRV_URL + ":" + Constants.SRV_PORT + "/" + Constants.SRV_API + "/" + Constants.SRV_CONNECT_PAGE;
-		String params = "?" + Constants.PARAM_USER + "=" + connect + "&" + Constants.PARAM_PWD + "=" + hashtext;
-
-		url.add(urlConnect);
-		url.add(params);
-		return url;
 	}
 
 	private JButton getBtnConnnexion()
@@ -234,6 +190,35 @@ public class IdentificationView extends JPanel
 			this.textField.setColumns(10);
 		}
 		return this.textField;
+	}
+
+	protected List<String> createConnectionURL(String connect, JPasswordField pwd) throws Exception
+	{
+		MessageDigest mdPwd = null;
+		String hashtext = "";
+		try
+		{
+			// Hachage du mot de passe
+			mdPwd = MessageDigest.getInstance("MD5");
+			mdPwd.reset();
+			mdPwd.update(String.copyValueOf(pwd.getPassword()).getBytes());
+			byte[] digest = mdPwd.digest();
+			BigInteger bigInt = new BigInteger(1, digest);
+			hashtext = bigInt.toString(16);
+			while (hashtext.length() < 32)
+				hashtext = "0" + hashtext;
+		}
+		catch (NoSuchAlgorithmException e)
+		{
+			e.printStackTrace();
+		}
+		List<String> url = new ArrayList<String>();
+		String urlConnect = Constants.SRV_URL + ":" + Constants.SRV_PORT + "/" + Constants.SRV_API + "/" + Constants.SRV_CONNECT_PAGE;
+		String params = "?" + Constants.PARAM_USER + "=" + connect + "&" + Constants.PARAM_PWD + "=" + hashtext;
+
+		url.add(urlConnect);
+		url.add(params);
+		return url;
 	}
 
 	public String getLogin()
