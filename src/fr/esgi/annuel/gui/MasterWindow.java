@@ -22,25 +22,25 @@ public class MasterWindow extends JFrame
 	private class MenuItemListener implements ActionListener
 	{
 
-		private void aboutChoice()
+		private final void aboutChoice()
 		{
 			JOptionPane.showMessageDialog(null, "Private Conversations Over P2P v 1.0", "PrivaConv2Peer - Version", JOptionPane.PLAIN_MESSAGE);
 		}
 
-		private void addUserWindows()
+		private final void addUserWindows()
 		{
 
 		}
 
-		private void conversationWindow()
+		private final void conversationWindow()
 		{}
 
-		private void helpChoice()
+		private final void helpChoice()
 		{
 			JOptionPane.showMessageDialog(null, "Menu à venir", "À venir", JOptionPane.INFORMATION_MESSAGE);
 		}
 
-		private void profilWindow()
+		private final void profilWindow()
 		{
 
 		}
@@ -49,7 +49,7 @@ public class MasterWindow extends JFrame
 		public void actionPerformed(ActionEvent ev)
 		{
 			String str = ((JMenuItem) ev.getSource()).getText();
-			if (Constants.QUIT == str)
+			if (Constants.QUIT.equals(str))
 				Outils.breakPgm(true);
 			else if (Constants.LAUNCH_CONVERSATION.equals(str))
 				conversationWindow();
@@ -70,7 +70,6 @@ public class MasterWindow extends JFrame
 	private JMenuBar menuBar;
 	private JMenu mnFichier, menu;
 	private JMenuItem mntmLaunchConv, mntmPropos, mntmQuitter, mntmProfil, mntmAddUser, mntmAide, mntmDisconnect;
-	private String pathToFile, gameName;
 	private boolean userConnected = false;
 
 	public MasterWindow(MasterController controller)
@@ -79,7 +78,7 @@ public class MasterWindow extends JFrame
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.actualView = "Identification";
 		setJMenuBar(getMnBar());
-		this.contentPane = new IdentificationView();
+		this.contentPane = new IdentificationView(controller);
 		this.contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(this.contentPane);
 		this.pack();
@@ -221,6 +220,8 @@ public class MasterWindow extends JFrame
 	public void setView(JPanel panel)
 	{
 		this.contentPane = panel;
+		this.repaint();
+		this.pack();
 	}
 
 }

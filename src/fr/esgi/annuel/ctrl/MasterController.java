@@ -1,12 +1,33 @@
 package fr.esgi.annuel.ctrl;
 
 import java.awt.EventQueue;
+import javax.swing.JPanel;
+import fr.esgi.annuel.constants.Views;
+import fr.esgi.annuel.gui.IdentificationView;
 import fr.esgi.annuel.gui.MasterWindow;
+import fr.esgi.annuel.gui.ProfilView;
+import fr.esgi.annuel.gui.RegisterView;
 
-public class MasterController
+public final class MasterController
 {
+	private static MasterWindow window;
+	private JPanel identificationView = new IdentificationView(this), registerView = new RegisterView(this), profileView = new ProfilView(this);
+
 	public MasterController()
 	{}
+
+	public void changeView(String viewName)
+	{
+		Views view = Views.getViewByName(viewName);
+		if (Views.IDENTIFICATION.equals(view))
+			window.setView(this.identificationView);
+		else if (Views.REGISTER.equals(view))
+			window.setView(this.registerView);
+		else if (Views.PROFILE.equals(view))
+			window.setView(this.profileView);
+		// else if (Views.CHAT.equals(view))
+		// window.setView();
+	}
 
 	public void launch()
 	{
@@ -28,7 +49,7 @@ public class MasterController
 			{
 				try
 				{
-					MasterWindow window = new MasterWindow(new MasterController());
+					window = new MasterWindow(new MasterController());
 					window.setVisible(true);
 				}
 				catch (Exception e)
@@ -38,4 +59,5 @@ public class MasterController
 			}
 		});
 	}
+
 }

@@ -26,6 +26,7 @@ import fr.esgi.annuel.client.ClientInfo;
 import fr.esgi.annuel.constants.Constants;
 import fr.esgi.annuel.contact.Contact;
 import fr.esgi.annuel.contact.Contacts;
+import fr.esgi.annuel.ctrl.MasterController;
 
 /**
  *
@@ -38,7 +39,7 @@ import fr.esgi.annuel.contact.Contacts;
 public class IdentificationView extends JPanel
 {
 	private static final long serialVersionUID = -3948992383967747160L;
-	private JButton btnConnnexion, btnNewButton;
+	private JButton btnConnnexion, btnRegister;
 	private JCheckBox chckbxSeSouvenirDe;
 
 	private JLabel lblIdentifiantDeConnexion, lblPwd;
@@ -46,11 +47,12 @@ public class IdentificationView extends JPanel
 	private JPasswordField passwordField;
 
 	private JTextField textField;
+	private MasterController controller;
 
 	/**
 	 * Create the panel.
 	 **/
-	public IdentificationView()
+	public IdentificationView(MasterController controller)
 	{
 		setLayout(null);
 		GroupLayout groupLayout = new GroupLayout(this);
@@ -62,10 +64,10 @@ public class IdentificationView extends JPanel
 								.createSequentialGroup()
 								.addGroup(
 										groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblIdentifiantDeConnexion()).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE).addGroup(groupLayout.createSequentialGroup().addGap(23).addComponent(getBtnConnnexion()))
-												.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addComponent(getBtnNewButton()).addComponent(getChckbxSeSouvenirDe()))).addContainerGap(316, Short.MAX_VALUE)));
+												.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addComponent(getBtnRegister()).addComponent(getChckbxSeSouvenirDe()))).addContainerGap(316, Short.MAX_VALUE)));
 		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(
 				groupLayout.createSequentialGroup().addComponent(getLblIdentifiantDeConnexion()).addGap(4).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addGap(13).addComponent(getLblPwd()).addGap(4).addComponent(getPasswordField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addGap(18)
-						.addComponent(getBtnConnnexion()).addGap(7).addComponent(getChckbxSeSouvenirDe()).addGap(18).addComponent(getBtnNewButton()).addGap(99)));
+						.addComponent(getBtnConnnexion()).addGap(7).addComponent(getChckbxSeSouvenirDe()).addGap(18).addComponent(getBtnRegister()).addGap(99)));
 		setLayout(groupLayout);
 
 	}
@@ -136,22 +138,22 @@ public class IdentificationView extends JPanel
 		return this.btnConnnexion;
 	}
 
-	private JButton getBtnNewButton()
+	private JButton getBtnRegister()
 	{
-		if (this.btnNewButton == null)
+		if (this.btnRegister == null)
 		{
-			this.btnNewButton = new JButton("S'enregistrer");
-			this.btnNewButton.addActionListener(new ActionListener()
+			this.btnRegister = new JButton("S'enregistrer");
+			this.btnRegister.addActionListener(new ActionListener()
 			{
 
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					RegisterWindow.main(null);
+					IdentificationView.this.controller.changeView("register");
 				}
 			});
 		}
-		return this.btnNewButton;
+		return this.btnRegister;
 	}
 
 	private JCheckBox getChckbxSeSouvenirDe()

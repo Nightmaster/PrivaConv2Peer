@@ -6,6 +6,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import fr.esgi.annuel.ctrl.MasterController;
 
 @SuppressWarnings("serial")
 public class ProfilView extends JPanel
@@ -13,11 +14,12 @@ public class ProfilView extends JPanel
 	private JLabel lblAdresseEmail, lblConfirmationDuMot, lblNom, lblNouveauMotDe, lblPrnom, lblPseudonyme;
 	private JPasswordField pwdFieldChange, pwdFieldConfirm;
 	private JTextField textField, textField1, textFieldFName, textFieldName;
+	private MasterController controller;
 
 	/**
 	 * Create the panel.
 	 */
-	public ProfilView()
+	public ProfilView(MasterController controller)
 	{
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addComponent(getLblNom()).addGap(141).addComponent(getLblAdresseEmail()))
@@ -26,11 +28,11 @@ public class ProfilView extends JPanel
 				.addGroup(groupLayout.createSequentialGroup().addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE).addGap(19).addComponent(getPwdFieldConfirm(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)));
 		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(
 				groupLayout.createSequentialGroup().addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblNom()).addComponent(getLblAdresseEmail())).addGap(6)
-				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getTextFieldFName(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getTextField1(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
-				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblPrnom()).addGroup(groupLayout.createSequentialGroup().addGap(5).addComponent(getLblNouveauMotDe()))).addGap(6)
-				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getTextFieldName(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getPwdFieldChange(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
-				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblPseudonyme()).addComponent(getLblConfirmationDuMot())).addGap(11)
-				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getPwdFieldConfirm(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))));
+						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getTextFieldFName(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getTextField1(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
+						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblPrnom()).addGroup(groupLayout.createSequentialGroup().addGap(5).addComponent(getLblNouveauMotDe()))).addGap(6)
+						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getTextFieldName(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getPwdFieldChange(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
+						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblPseudonyme()).addComponent(getLblConfirmationDuMot())).addGap(11)
+						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getPwdFieldConfirm(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))));
 		setLayout(groupLayout);
 
 	}
