@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
 import fr.esgi.annuel.constants.Constants;
+import fr.esgi.annuel.constants.Views;
 import fr.esgi.annuel.ctrl.MasterController;
 import fr.esgi.util.Outils;
 
@@ -76,11 +77,9 @@ public class MasterWindow extends JFrame
 	{
 		this.controller = controller;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.actualView = "Identification";
-		setJMenuBar(getMnBar());
-		this.contentPane = new IdentificationView(controller);
-		this.contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(this.contentPane);
+		JPanel panel = new IdentificationView(controller);
+		setView(panel, Views.IDENTIFICATION);
+		this.controller.setActualPanel(panel);
 		this.pack();
 	}
 
@@ -132,7 +131,7 @@ public class MasterWindow extends JFrame
 			this.mntmAddUser.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_MASK));
 		}
 		if (this.actualView.equals("Identification"))
-			if ("Identification" == this.actualView)
+			if (Views.IDENTIFICATION.getName().equals(this.actualView))
 				this.mntmAddUser.setEnabled(false);
 		return this.mntmAddUser;
 	}
@@ -158,7 +157,7 @@ public class MasterWindow extends JFrame
 			this.mntmDisconnect.setMnemonic('D');
 		}
 		if (this.actualView.equals("Identification"))
-			if ("Identification" == this.actualView)
+			if (Views.IDENTIFICATION.getName().equals(this.actualView))
 				this.mntmDisconnect.setEnabled(false);
 		return this.mntmDisconnect;
 	}
@@ -173,7 +172,7 @@ public class MasterWindow extends JFrame
 			this.mntmLaunchConv.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
 		}
 		if (this.actualView.equals("Identification"))
-			if ("Identification" == this.actualView)
+			if (Views.IDENTIFICATION.getName().equals(this.actualView))
 				this.mntmLaunchConv.setEnabled(false);
 		return this.mntmLaunchConv;
 	}
@@ -188,7 +187,7 @@ public class MasterWindow extends JFrame
 			this.mntmProfil.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_MASK));
 		}
 		if (this.actualView.equals("Identification"))
-			if ("Identification" == this.actualView)
+			if (Views.IDENTIFICATION.getName().equals(this.actualView))
 				this.mntmProfil.setEnabled(false);
 		return this.mntmProfil;
 	}
@@ -217,11 +216,22 @@ public class MasterWindow extends JFrame
 		return this.mntmQuitter;
 	}
 
-	public void setView(JPanel panel)
+	/**
+	 * @param userConnected le userConnected à définir
+	 **/
+	public final void setConnectionStatus(boolean userConnected)
+	{
+		this.userConnected = userConnected;
+	}
+
+	public final void setView(JPanel panel, Views view)
 	{
 		this.contentPane = panel;
+		this.contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(this.contentPane);
+		this.actualView = view.getName();
+		setJMenuBar(getMnBar());
 		this.repaint();
 		this.pack();
 	}
-
 }

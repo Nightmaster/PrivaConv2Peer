@@ -20,10 +20,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import org.jdesktop.xswingx.PromptSupport;
+import org.jdesktop.xswingx.PromptSupport.FocusBehavior;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import fr.esgi.annuel.client.ClientInfo;
 import fr.esgi.annuel.constants.Constants;
+import fr.esgi.annuel.constants.Views;
 import fr.esgi.annuel.contact.Contact;
 import fr.esgi.annuel.contact.Contacts;
 import fr.esgi.annuel.ctrl.MasterController;
@@ -38,15 +41,72 @@ import fr.esgi.annuel.ctrl.MasterController;
 
 public class IdentificationView extends JPanel
 {
+	private final class BtnListener implements ActionListener
+	{
+
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			String connect = getLogin();
+			JPasswordField pwd = getPasswordField();
+			try
+			{
+				String source = "";
+				List<String> Urlparams = createConnectionURL(connect, pwd);
+				URL url = new URL(Urlparams.get(0) + Urlparams.get(1));
+				URLConnection urlConn = url.openConnection();
+				urlConn.setDoOutput(true);
+
+				BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
+				StringBuilder inputLine = new StringBuilder();
+				String input;
+				while ((input = in.readLine()) != null)
+					inputLine.append(input);
+				System.out.println(inputLine);
+				in.close();
+
+				JSONObject mainObject = new JSONObject(inputLine.toString());
+				if (!mainObject.getBoolean("error"))
+				{
+					// Récupération des données du client
+					JSONObject userDetails = new JSONObject(mainObject.get("user").toString()), detailFriends;
+					JSONArray friendsList;
+					ClientInfo logedUser = new ClientInfo(userDetails.getString("login"));
+					logedUser.setEmail(userDetails.getString("email"));
+					logedUser.setFirstname(userDetails.getString("firstname"));
+					logedUser.setLastname(userDetails.getString("name"));
+					logedUser.setLogin(userDetails.getString("login"));
+
+					// Récupération de la liste des amis
+					friendsList = new JSONArray(mainObject.get("friends").toString());
+					for (int i = 0; i < friendsList.length(); i++ )
+					{
+						detailFriends = new JSONObject(friendsList.get(i).toString());
+						System.out.println(detailFriends.get("displayLogin"));
+						Contacts.addContact(new Contact(detailFriends.getString("displayLogin")));
+					}
+					ChatWindow cw = new ChatWindow(logedUser);
+					ChatWindow.main(null);
+				}
+			}
+			catch (Exception e1)
+			{
+				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Echec de connexion", "Failure", JOptionPane.OK_OPTION);
+
+			}
+		}
+	}
+
 	private static final long serialVersionUID = -3948992383967747160L;
+
 	private JButton btnConnnexion, btnRegister;
 	private JCheckBox chckbxSeSouvenirDe;
-
 	private JLabel lblIdentifiantDeConnexion, lblPwd;
-
 	private JPasswordField passwordField;
 
 	private JTextField textField;
+
 	private MasterController controller;
 
 	/**
@@ -54,6 +114,7 @@ public class IdentificationView extends JPanel
 	 **/
 	public IdentificationView(MasterController controller)
 	{
+		this.controller = controller;
 		setLayout(null);
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(groupLayout
@@ -61,15 +122,14 @@ public class IdentificationView extends JPanel
 				.addGroup(groupLayout.createSequentialGroup().addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addGap(5).addComponent(getLblPwd())).addComponent(getPasswordField(), GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)).addContainerGap(316, Short.MAX_VALUE))
 				.addGroup(
 						groupLayout
-								.createSequentialGroup()
-								.addGroup(
-										groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblIdentifiantDeConnexion()).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE).addGroup(groupLayout.createSequentialGroup().addGap(23).addComponent(getBtnConnnexion()))
-												.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addComponent(getBtnRegister()).addComponent(getChckbxSeSouvenirDe()))).addContainerGap(316, Short.MAX_VALUE)));
+						.createSequentialGroup()
+						.addGroup(
+								groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblIdentifiantDeConnexion()).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE).addGroup(groupLayout.createSequentialGroup().addGap(23).addComponent(getBtnConnnexion()))
+								.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addComponent(getBtnRegister()).addComponent(getChckbxSeSouvenirDe()))).addContainerGap(316, Short.MAX_VALUE)));
 		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(
 				groupLayout.createSequentialGroup().addComponent(getLblIdentifiantDeConnexion()).addGap(4).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addGap(13).addComponent(getLblPwd()).addGap(4).addComponent(getPasswordField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addGap(18)
-						.addComponent(getBtnConnnexion()).addGap(7).addComponent(getChckbxSeSouvenirDe()).addGap(18).addComponent(getBtnRegister()).addGap(99)));
+				.addComponent(getBtnConnnexion()).addGap(7).addComponent(getChckbxSeSouvenirDe()).addGap(18).addComponent(getBtnRegister()).addGap(99)));
 		setLayout(groupLayout);
-
 	}
 
 	private JButton getBtnConnnexion()
@@ -77,63 +137,7 @@ public class IdentificationView extends JPanel
 		if (this.btnConnnexion == null)
 		{
 			this.btnConnnexion = new JButton("Connnexion");
-			this.btnConnnexion.addActionListener(new ActionListener()
-			{
-
-				@Override
-				public void actionPerformed(ActionEvent e)
-				{
-					String connect = getLogin();
-					JPasswordField pwd = getPasswordField();
-					try
-					{
-						String source = "";
-						List<String> Urlparams = createConnectionURL(connect, pwd);
-						URL url = new URL(Urlparams.get(0) + Urlparams.get(1));
-						URLConnection urlConn = url.openConnection();
-						urlConn.setDoOutput(true);
-
-						BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
-						StringBuilder inputLine = new StringBuilder();
-						String input;
-						while ((input = in.readLine()) != null)
-							inputLine.append(input);
-						System.out.println(inputLine);
-						in.close();
-
-						JSONObject mainObject = new JSONObject(inputLine.toString());
-						if (!mainObject.getBoolean("error"))
-						{
-							// Récupération des données du client
-							JSONObject userDetails = new JSONObject(mainObject.get("user").toString());
-							JSONArray friendsList;
-							JSONObject detailFriends;
-							ClientInfo logedUser = new ClientInfo(userDetails.getString("login"));
-							logedUser.setEmail(userDetails.getString("email"));
-							logedUser.setFirstname(userDetails.getString("firstname"));
-							logedUser.setLastname(userDetails.getString("name"));
-							logedUser.setLogin(userDetails.getString("login"));
-
-							// Récupération de la liste des amis
-							friendsList = new JSONArray(mainObject.get("friends").toString());
-							for (int i = 0; i < friendsList.length(); i++ )
-							{
-								detailFriends = new JSONObject(friendsList.get(i).toString());
-								System.out.println(detailFriends.get("displayLogin"));
-								Contacts.addContact(new Contact(detailFriends.getString("displayLogin")));
-							}
-							ChatWindow cw = new ChatWindow(logedUser);
-							ChatWindow.main(null);
-						}
-					}
-					catch (Exception e1)
-					{
-						e1.printStackTrace();
-						JOptionPane.showMessageDialog(null, "Echec de connexion", "Failure", JOptionPane.OK_OPTION);
-
-					}
-				}
-			});
+			this.btnConnnexion.addActionListener(new BtnListener());
 		}
 		return this.btnConnnexion;
 	}
@@ -149,7 +153,7 @@ public class IdentificationView extends JPanel
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					IdentificationView.this.controller.changeView("register");
+					IdentificationView.this.controller.changeView(Views.REGISTER, null);
 				}
 			});
 		}
@@ -180,16 +184,26 @@ public class IdentificationView extends JPanel
 	private JPasswordField getPasswordField()
 	{
 		if (this.passwordField == null)
+		{
 			this.passwordField = new JPasswordField();
+			PromptSupport.setPrompt("Mot de passe", this.passwordField);
+			PromptSupport.setFocusBehavior(FocusBehavior.SHOW_PROMPT, this.passwordField);
+		}
 		return this.passwordField;
+	}
+
+	private String getPw()
+	{
+		return String.valueOf(getPasswordField().getPassword());
 	}
 
 	private JTextField getTextField()
 	{
 		if (this.textField == null)
 		{
-			this.textField = new JTextField();
-			this.textField.setColumns(10);
+			this.textField = new JTextField(10);
+			PromptSupport.setPrompt("Pseudo ou @ mail", this.textField);
+			PromptSupport.setFocusBehavior(FocusBehavior.SHOW_PROMPT, this.textField);
 		}
 		return this.textField;
 	}
@@ -226,10 +240,5 @@ public class IdentificationView extends JPanel
 	public String getLogin()
 	{
 		return getTextField().getText();
-	}
-
-	public String getPw()
-	{
-		return String.valueOf(getPasswordField().getPassword());
 	}
 }

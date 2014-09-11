@@ -1,6 +1,5 @@
 package fr.esgi.annuel.gui;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -19,10 +18,10 @@ import java.util.Map.Entry;
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import org.jdesktop.xswingx.PromptSupport;
 import fr.esgi.annuel.constants.Constants;
 import fr.esgi.annuel.crypt.PasswordUtilities;
 import fr.esgi.annuel.ctrl.MasterController;
-import fr.esgi.util.TextPrompt;
 
 public class RegisterView extends JPanel
 {
@@ -165,11 +164,15 @@ public class RegisterView extends JPanel
 		}
 	}
 
+	/**
+	 *
+	 **/
+	private static final long serialVersionUID = 4899250229943737308L;
+
 	private JLabel lPseudo, lUserEmail, lLastname, lFirstname, lPassword, lPasswordAgain, lPasswordKey, lPasswordKeyAgain, lKeyLength;
 	private JComboBox<Integer> fLenKey;
 	private JTextField fPseudo, fEmail, fLastname, fFirstname;
 	private JPasswordField fPassword, fPasswordAgain, fPasswordKey, fPasswordKeyAgain;
-	private TextPrompt tpPseudo, tpUserEmail, tpLastname, tpFirstname, tpPassword, tpPasswordAgain, tpPasswordKey, tpPasswordKeyAgain;
 	private JButton btnRegister;
 	private MasterController controller;
 
@@ -187,7 +190,6 @@ public class RegisterView extends JPanel
 		setPasswordField(getFieldPasswordAgain());
 		setPasswordField(getFieldPasswordKey());
 		setPasswordField(getFieldPasswordKeyAgain());
-		this.fEmail.setToolTipText("");
 		this.fPassword.setToolTipText("<html>\r\n<pre>\r\nLe mot de passe doit \u00EAtre d'au moins 8 caract\u00E8res et \u00EAtre compos\u00E9 de :\r\n\t- Au moins 1 majuscule\r\n\t- Au moins 1 minuscule\r\n\t- Au moins 1 chiffre\r\n\t- Au moins 1 caract\u00E8re sp\u00E9cial\r\n</pre>\r\n</html>");
 		this.fPasswordKey.setToolTipText("Mot de passe servant \u00E0 crypter votre paire de clefs RSA\r\nCe mot de passe doit \u00EAtre diff\u00E9rent de celui de connexion (pour des raisons de s\u00E9curit\u00E9)");
 		this.setBounds(0, 39, 1184, 750);
@@ -311,34 +313,34 @@ public class RegisterView extends JPanel
 		return this.btnRegister;
 	}
 
-	private TextPrompt getFieldEmail()
+	private JTextField getFieldEmail()
 	{
 		if (null == this.fEmail)
 		{
 			this.fEmail = new JTextField("");
-			this.tpUserEmail = new TextPrompt("addresse@exemple.com", this.fEmail);
+			PromptSupport.setPrompt("addresse@exemple.com", this.fEmail);
 		}
-		return this.tpUserEmail;
+		return this.fEmail;
 	}
 
-	private TextPrompt getFieldFirstname()
+	private JTextField getFieldFirstname()
 	{
 		if (null == this.fFirstname)
 		{
 			this.fFirstname = new JTextField("");
-			this.tpFirstname = new TextPrompt("Votre prénom", this.fFirstname);
+			PromptSupport.setPrompt("Votre prénom", this.fFirstname);
 		}
-		return this.tpFirstname;
+		return this.fFirstname;
 	}
 
-	private TextPrompt getFieldLastname()
+	private JTextField getFieldLastname()
 	{
 		if (null == this.fLastname)
 		{
 			this.fLastname = new JTextField("");
-			this.tpLastname = new TextPrompt("Votre prénom", this.fLastname);
+			PromptSupport.setPrompt("Votre prénom", this.fLastname);
 		}
-		return this.tpLastname;
+		return this.fLastname;
 	}
 
 	private JComboBox<Integer> getFieldLengthKey()
@@ -380,14 +382,14 @@ public class RegisterView extends JPanel
 		return this.fPasswordKeyAgain;
 	}
 
-	private TextPrompt getFieldPseudo()
+	private JTextField getFieldPseudo()
 	{
 		if (null == this.fPseudo)
 		{
 			this.fPseudo = new JTextField("");
-			this.tpPseudo = new TextPrompt("Votre pseudonyme", this.fPseudo);
+			PromptSupport.setPrompt("Votre pseudonyme", this.fPseudo);
 		}
-		return this.tpPseudo;
+		return this.fPseudo;
 	}
 
 	private JLabel getLabelFirstname()
@@ -458,14 +460,12 @@ public class RegisterView extends JPanel
 		Font police = new Font("Arial", Font.BOLD, 14);
 		pf.setFont(police);
 		pf.setPreferredSize(new Dimension(150, 30));
-		pf.setForeground(Color.BLUE);
 	}
 
-	private void setTextField(TextPrompt tf)
+	private void setTextField(JTextField tf)
 	{
 		Font police = new Font("Arial", Font.BOLD, 14);
 		tf.setFont(police);
 		tf.setPreferredSize(new Dimension(150, 30));
-		tf.setForeground(Color.BLUE);
 	}
 }

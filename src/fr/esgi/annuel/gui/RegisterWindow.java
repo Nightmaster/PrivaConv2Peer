@@ -16,9 +16,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import javax.swing.*;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 import fr.esgi.annuel.constants.Constants;
 import fr.esgi.annuel.crypt.PasswordUtilities;
 
@@ -135,11 +141,28 @@ public class RegisterWindow
 		final JFrame fenetre = new JFrame();
 
 		final JLabel lPseudo = new JLabel("Pseudo : "), lUsermail = new JLabel("Email : "), lLastname = new JLabel("Nom : "), lFirstname = new JLabel("Prénom : "), lPassword = new JLabel("Mot de passe : "), lPasswordAgain = new JLabel("Resaisir mot de passe : "), lPasswordKey = new JLabel("Mot de passe clef: "), lPasswordKeyAgain = new JLabel("Resaisir mot de passe clef : ");
+		lLastname.setBounds(113, 119, 31, 14);
+		lPseudo.setBounds(99, 29, 45, 14);
+		lUsermail.setBounds(110, 78, 34, 14);
+		lFirstname.setBounds(98, 158, 46, 14);
+		lPassword.setBounds(70, 199, 74, 14);
+		lPasswordAgain.setBounds(30, 238, 114, 14);
+		lPasswordKey.setBounds(53, 279, 91, 14);
+		lPasswordKeyAgain.setBounds(10, 320, 134, 14);
 		final JComboBox<Integer> fLenKey = new JComboBox<Integer>();
+		fLenKey.setBounds(177, 362, 150, 22);
 
 		final JTextField fPseudo = new JTextField(""), fMail = new JTextField(""), fLastname = new JTextField(""), fFirstname = new JTextField("");
+		fPseudo.setBounds(177, 21, 150, 30);
+		fMail.setBounds(177, 70, 150, 30);
+		fFirstname.setBounds(177, 150, 150, 30);
+		fLastname.setBounds(177, 111, 150, 30);
 		fMail.setToolTipText("");
 		final JPasswordField fPassword = new JPasswordField(), fPasswordAgain = new JPasswordField(), fPasswordKey = new JPasswordField(), fPasswordKeyAgain = new JPasswordField();
+		fPasswordKeyAgain.setBounds(177, 312, 150, 30);
+		fPasswordKey.setBounds(177, 271, 150, 30);
+		fPassword.setBounds(177, 191, 150, 30);
+		fPasswordAgain.setBounds(177, 230, 150, 30);
 		fPassword.setToolTipText("<html>\r\n<pre>\r\nLe mot de passe doit \u00EAtre d'au moins 8 caract\u00E8res et \u00EAtre compos\u00E9 de :\r\n\t- Au moins 1 majuscule\r\n\t- Au moins 1 minuscule\r\n\t- Au moins 1 chiffre\r\n\t- Au moins 1 caract\u00E8re sp\u00E9cial\r\n</pre>\r\n</html>");
 		fPasswordKey.setToolTipText("Mot de passe servant \u00E0 crypter votre paire de clefs RSA\r\nCe mot de passe doit \u00EAtre diff\u00E9rent de celui de connexion (pour des raisons de s\u00E9curit\u00E9)");
 
@@ -151,7 +174,7 @@ public class RegisterWindow
 
 		fenetre.setBackground(Color.white);
 		JPanel top = new JPanel();
-		top.setBounds(0, 39, 1184, 750);
+		top.setBounds(0, 0, 341, 433);
 		Font police = new Font("Arial", Font.BOLD, 14);
 		fenetre.getContentPane().setLayout(null);
 		fPseudo.setFont(police);
@@ -189,6 +212,7 @@ public class RegisterWindow
 		fenetre.getContentPane().add(top);
 
 		JButton btnNewButton = new JButton("S'enregistrer");
+		btnNewButton.setBounds(221, 402, 93, 23);
 
 		// TODO déplacer ce code dans la master Window
 		btnNewButton.addActionListener(new ActionListener()
@@ -290,44 +314,27 @@ public class RegisterWindow
 		fLenKey.setToolTipText("<html>\r\nLongueur de clefs de cryptage :<br>\r\n\t- 1024 : peu s\u00E9curis\u00E9, mais traitement rapide <br>\r\n  \t- 2048 : bon rapport s\u00E9curit\u00E9 / vitesse de traitement <br>\r\n  \t- 4096 : tr\u00E8s s\u00E9curis\u00E9, mais vitesse de traitement plus lente <br>\r\n</html>");
 
 		JLabel lblNewLabel = new JLabel();
-
-		GroupLayout glTop = new GroupLayout(top);
-		glTop.setHorizontalGroup(glTop.createParallelGroup(Alignment.LEADING).addGroup(
-				glTop.createSequentialGroup()
-				.addGroup(
-						glTop.createParallelGroup(Alignment.LEADING)
-						.addGroup(glTop.createSequentialGroup().addGap(221).addComponent(btnNewButton))
-						.addGroup(
-								glTop.createSequentialGroup()
-								.addContainerGap()
-								.addGroup(glTop.createParallelGroup(Alignment.TRAILING).addComponent(lPasswordKeyAgain).addComponent(lPasswordKey).addComponent(lPasswordAgain).addComponent(lPassword).addComponent(lFirstname).addComponent(lUsermail).addComponent(lPseudo).addComponent(lLastname).addComponent(lblNewLabel))
-								.addGroup(
-										glTop.createParallelGroup(Alignment.LEADING)
-										.addGroup(
-												glTop.createSequentialGroup()
-												.addGap(33)
-												.addGroup(
-														glTop.createParallelGroup(Alignment.LEADING).addComponent(fLastname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(fFirstname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-														.addComponent(fMail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(fPseudo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-														.addGroup(
-																Alignment.TRAILING,
-																glTop.createSequentialGroup()
-																.addGap(33)
-																.addGroup(
-																		glTop.createParallelGroup(Alignment.LEADING, false).addComponent(fPasswordAgain, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(fPassword, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-																		.addComponent(fPasswordKey, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(fPasswordKeyAgain, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(fLenKey, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
-																		.addContainerGap(826, Short.MAX_VALUE)));
-		glTop.setVerticalGroup(glTop.createParallelGroup(Alignment.LEADING).addGroup(
-				glTop.createSequentialGroup().addGap(21).addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(lPseudo).addComponent(fPseudo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(19)
-				.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(fMail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(lUsermail)).addPreferredGap(ComponentPlacement.UNRELATED)
-				.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(fLastname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(lLastname)).addGap(9)
-				.addGroup(glTop.createParallelGroup(Alignment.LEADING).addGroup(glTop.createSequentialGroup().addGap(8).addComponent(lFirstname)).addComponent(fFirstname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addPreferredGap(ComponentPlacement.UNRELATED)
-				.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(fPassword, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(lPassword)).addGap(9)
-				.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(lPasswordAgain).addComponent(fPasswordAgain, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
-				.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(lPasswordKey).addComponent(fPasswordKey, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
-				.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(lPasswordKeyAgain).addComponent(fPasswordKeyAgain, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(20)
-				.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(fLenKey, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(lblNewLabel)).addGap(18).addComponent(btnNewButton).addContainerGap(314, Short.MAX_VALUE)));
-		top.setLayout(glTop);
+		lblNewLabel.setBounds(144, 362, 0, 0);
+		top.setLayout(null);
+		top.add(btnNewButton);
+		top.add(lPasswordKeyAgain);
+		top.add(lPasswordKey);
+		top.add(lPasswordAgain);
+		top.add(lPassword);
+		top.add(lFirstname);
+		top.add(lUsermail);
+		top.add(lPseudo);
+		top.add(lLastname);
+		top.add(lblNewLabel);
+		top.add(fLastname);
+		top.add(fFirstname);
+		top.add(fMail);
+		top.add(fPseudo);
+		top.add(fPasswordAgain);
+		top.add(fPassword);
+		top.add(fPasswordKey);
+		top.add(fPasswordKeyAgain);
+		top.add(fLenKey);
 		fenetre.setVisible(true);
 	}
 }
