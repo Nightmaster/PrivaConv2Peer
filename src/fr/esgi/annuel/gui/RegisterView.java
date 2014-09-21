@@ -1,5 +1,8 @@
 package fr.esgi.annuel.gui;
 
+import static org.jdesktop.xswingx.PromptSupport.setFocusBehavior;
+import static org.jdesktop.xswingx.PromptSupport.setPrompt;
+import static org.jdesktop.xswingx.PromptSupport.FocusBehavior.SHOW_PROMPT;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.math.BigInteger;
@@ -15,8 +18,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import org.jdesktop.xswingx.PromptSupport;
-import org.jdesktop.xswingx.PromptSupport.FocusBehavior;
 import fr.esgi.annuel.constants.Constants;
 import fr.esgi.annuel.constants.RegEx;
 import fr.esgi.annuel.ctrl.MasterController;
@@ -157,8 +158,8 @@ public class RegisterView extends JPanel
 		if (this.fEmail == null)
 		{
 			this.fEmail = new JTextField(10);
-			PromptSupport.setPrompt("exemple@site.tld", this.fEmail);
-			PromptSupport.setFocusBehavior(FocusBehavior.SHOW_PROMPT, this.fEmail);
+			setPrompt("exemple@site.tld", this.fEmail);
+			setFocusBehavior(SHOW_PROMPT, this.fEmail);
 			this.fEmail.setBounds(134, 35, 95, 22);
 		}
 		return this.fEmail;
@@ -169,8 +170,8 @@ public class RegisterView extends JPanel
 		if (this.fFirstname == null)
 		{
 			this.fFirstname = new JTextField(10);
-			PromptSupport.setPrompt("Votre prénom", this.fFirstname);
-			PromptSupport.setFocusBehavior(FocusBehavior.SHOW_PROMPT, this.fFirstname);
+			setPrompt("Votre prénom", this.fFirstname);
+			setFocusBehavior(SHOW_PROMPT, this.fFirstname);
 			this.fFirstname.setBounds(134, 89, 95, 22);
 		}
 		return this.fFirstname;
@@ -181,8 +182,8 @@ public class RegisterView extends JPanel
 		if (this.fLastname == null)
 		{
 			this.fLastname = new JTextField(10);
-			PromptSupport.setPrompt("Votre nom", this.fLastname);
-			PromptSupport.setFocusBehavior(FocusBehavior.SHOW_PROMPT, this.fLastname);
+			setPrompt("Votre nom", this.fLastname);
+			setFocusBehavior(SHOW_PROMPT, this.fLastname);
 			this.fLastname.setBounds(134, 62, 95, 22);
 		}
 		return this.fLastname;
@@ -204,8 +205,8 @@ public class RegisterView extends JPanel
 		if (this.fPassword == null)
 		{
 			this.fPassword = new JPasswordField();
-			PromptSupport.setPrompt("Mot de passe de session", this.fPassword);
-			PromptSupport.setFocusBehavior(FocusBehavior.SHOW_PROMPT, this.fPassword);
+			setPrompt("Mot de passe de session", this.fPassword);
+			setFocusBehavior(SHOW_PROMPT, this.fPassword);
 			this.fPassword.setBounds(134, 116, 95, 20);
 		}
 		return this.fPassword;
@@ -216,8 +217,8 @@ public class RegisterView extends JPanel
 		if (this.fPasswordAgain == null)
 		{
 			this.fPasswordAgain = new JPasswordField();
-			PromptSupport.setPrompt("Mot de passe de session", this.fPasswordAgain);
-			PromptSupport.setFocusBehavior(FocusBehavior.SHOW_PROMPT, this.fPasswordAgain);
+			setPrompt("Mot de passe de session", this.fPasswordAgain);
+			setFocusBehavior(SHOW_PROMPT, this.fPasswordAgain);
 			this.fPasswordAgain.setBounds(134, 143, 95, 20);
 		}
 		return this.fPasswordAgain;
@@ -228,8 +229,8 @@ public class RegisterView extends JPanel
 		if (this.fPasswordKey == null)
 		{
 			this.fPasswordKey = new JPasswordField();
-			PromptSupport.setPrompt("Mot de passe de la clé", this.fPasswordKey);
-			PromptSupport.setFocusBehavior(FocusBehavior.SHOW_PROMPT, this.fPasswordKey);
+			setPrompt("Mot de passe de la clé", this.fPasswordKey);
+			setFocusBehavior(SHOW_PROMPT, this.fPasswordKey);
 		}
 		return this.fPasswordKey;
 	}
@@ -239,8 +240,8 @@ public class RegisterView extends JPanel
 		if (this.fPasswordKeyAgain == null)
 		{
 			this.fPasswordKeyAgain = new JPasswordField();
-			PromptSupport.setPrompt("Mot de passe de la clé", this.fPasswordKey);
-			PromptSupport.setFocusBehavior(FocusBehavior.SHOW_PROMPT, this.fPasswordKey);
+			setPrompt("Mot de passe de la clé", this.fPasswordKey);
+			setFocusBehavior(SHOW_PROMPT, this.fPasswordKey);
 		}
 		return this.fPasswordKeyAgain;
 	}
@@ -250,8 +251,8 @@ public class RegisterView extends JPanel
 		if (this.fPseudo == null)
 		{
 			this.fPseudo = new JTextField(10);
-			PromptSupport.setPrompt("Pseudonyme", this.fPseudo);
-			PromptSupport.setFocusBehavior(FocusBehavior.SHOW_PROMPT, this.fPseudo);
+			setPrompt("Pseudonyme", this.fPseudo);
+			setFocusBehavior(SHOW_PROMPT, this.fPseudo);
 			this.fPseudo.setBounds(134, 8, 95, 22);
 		}
 		return this.fPseudo;
