@@ -7,12 +7,12 @@ import fr.esgi.annuel.constants.Views;
 import fr.esgi.annuel.gui.IdentificationView;
 import fr.esgi.annuel.gui.MasterWindow;
 import fr.esgi.annuel.gui.ProfilView;
-import fr.esgi.annuel.gui.RegView;
+import fr.esgi.annuel.gui.RegisterView;
 
 public final class MasterController
 {
 	private static MasterWindow window;
-	private final JPanel identificationView = new IdentificationView(this), registerView = new RegView(this), profileView = new ProfilView(this);
+	private final JPanel identificationView = new IdentificationView(this), registerView = new RegisterView(this), profileView = new ProfilView(this);
 	private static JPanel actualPanel;
 
 	public final void changeView(Views view, Map<String, Object> map)

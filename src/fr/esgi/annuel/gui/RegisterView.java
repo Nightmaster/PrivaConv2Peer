@@ -2,247 +2,84 @@ package fr.esgi.annuel.gui;
 
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.math.BigInteger;
-import java.net.URL;
-import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
-import javax.swing.*;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 import org.jdesktop.xswingx.PromptSupport;
+import org.jdesktop.xswingx.PromptSupport.FocusBehavior;
 import fr.esgi.annuel.constants.Constants;
-import fr.esgi.annuel.crypt.PasswordUtilities;
+import fr.esgi.annuel.constants.RegEx;
 import fr.esgi.annuel.ctrl.MasterController;
 
 public class RegisterView extends JPanel
 {
-	private class BtnListener implements ActionListener
+
+	private enum FieldType
 	{
-		private HashMap<String, Boolean> testMdp, testMdpKey;
-		private List params, pwds, invalidParamsMdp, invalidParamsMdpKey;
+		PSEUDO, EMAIL, FIRSTNAME, LASTNAME, PASSWORD;
 
-		@Override
-		public void actionPerformed(ActionEvent e)
+		public final static FieldType getValue(String fieldType)
 		{
-			this.params = new ArrayList<String>();
-			this.pwds = new ArrayList<JPasswordField>();
-			StringBuilder sb = new StringBuilder();
-			int nbInvalid = 0;
-			this.testMdp = PasswordUtilities.isStrongEnough(String.copyValueOf(getFieldPassword().getPassword()));
-			this.testMdpKey = PasswordUtilities.isStrongEnough(String.copyValueOf(getFieldPasswordKey().getPassword()));
-			this.invalidParamsMdp = new ArrayList<String>();
-			this.invalidParamsMdpKey = new ArrayList<String>();
-
-			if (isValidPseudo(getFieldPseudo().getText()))
-				this.params.add(getFieldPseudo().getText());
-			else
-			{
-				sb.append("Pseudo invalide" + '\n');
-				nbInvalid++ ;
-			}
-			if (isValidEmail(getFieldEmail().getText()))
-				this.params.add(getFieldEmail().getText());
-			else
-			{
-				sb.append("email invalide" + '\n');
-				nbInvalid++ ;
-			}
-			if (isValidName(getFieldLastname().getText()))
-				this.params.add(getFieldLastname().getText());
-			else
-			{
-				sb.append("nom invalide" + '\n');
-				nbInvalid++ ;
-			}
-			if (isValidName(getFieldFirstname().getText()))
-				this.params.add(getFieldFirstname().getText());
-			else
-			{
-				sb.append("prenom invalide" + '\n');
-				nbInvalid++ ;
-			}
-
-			for (Entry<String, Boolean> entry : this.testMdp.entrySet())
-				if (!entry.getValue())
-					this.invalidParamsMdp.add(entry.getKey());
-			if (this.invalidParamsMdp.size() > 0)
-			{
-				StringBuilder sbmdp = new StringBuilder();
-				for (String s : (ArrayList<String>) this.invalidParamsMdp)
-				{
-					if (s.equals("Length"))
-						sbmdp.append("Mdp trop court, 8 caractères minimum" + '\n');
-					if (s.equals("Maj letter"))
-						sbmdp.append("Le mot de passe doit contenir une Majuscule" + '\n');
-					if (s.equals("Minus letter"))
-						sbmdp.append("Le mot de passe doit contenir une Minuscule" + '\n');
-					if (s.equals("Well formated"))
-						sbmdp.append("Mot de passe mal formé" + '\n');
-					if (s.equals("Special character"))
-						sbmdp.append("Le mot de passe doit contenir un caractère spécial " + '\n');
-					if (s.equals("Number"))
-						sbmdp.append("Le mot de passe doit contenir un numéro" + '\n');
-				}
-				nbInvalid++ ;
-				JOptionPane.showMessageDialog(null, sbmdp.toString(), "Requis", JOptionPane.OK_OPTION);
-
-			}
-
-			for (Entry<String, Boolean> entry : this.testMdpKey.entrySet())
-				if (!entry.getValue())
-					this.invalidParamsMdpKey.add(entry.getKey());
-			if (this.invalidParamsMdpKey.size() > 0)
-			{
-				StringBuilder sbmdp = new StringBuilder();
-				for (String s : (ArrayList<String>) this.invalidParamsMdpKey)
-				{
-					if (s.equals("Length"))
-						sbmdp.append("Mdp trop court, 8 caractères minimum" + '\n');
-					if (s.equals("Maj letter"))
-						sbmdp.append("Le mot de passe doit contenir une Majuscule" + '\n');
-					if (s.equals("Minus letter"))
-						sbmdp.append("Le mot de passe doit contenir une Minuscule" + '\n');
-					if (s.equals("Well formated"))
-						sbmdp.append("Mot de passe mal formé" + '\n');
-					if (s.equals("Special character"))
-						sbmdp.append("Le mot de passe doit contenir un caractère spécial " + '\n');
-					if (s.equals("Number"))
-						sbmdp.append("Le mot de passe doit contenir un numéro" + '\n');
-				}
-				nbInvalid++ ;
-				JOptionPane.showMessageDialog(null, sbmdp.toString(), "Requis", JOptionPane.OK_OPTION);
-
-			}
-
-			if (String.copyValueOf(getFieldPassword().getPassword()).equals(String.copyValueOf(getFieldPasswordAgain().getPassword())) && !String.copyValueOf(getFieldPasswordKey().getPassword()).equals(String.copyValueOf(getFieldPassword().getPassword())))
-				this.pwds.add(getFieldPassword());
-			else
-			{
-				sb.append("Mot de passe invalide" + '\n');
-				nbInvalid++ ;
-			}
-
-			if (String.copyValueOf(getFieldPasswordKey().getPassword()).equals(String.copyValueOf(getFieldPasswordKeyAgain().getPassword())) && !String.copyValueOf(getFieldPasswordKey().getPassword()).equals(String.copyValueOf(getFieldPassword().getPassword())))
-				this.pwds.add(getFieldPasswordKey());
-			else
-			{
-				sb.append("Mot de passe de la clef invalide" + '\n');
-				nbInvalid++ ;
-			}
-
-			this.params.add(getFieldLengthKey().getSelectedItem().toString());
-
-			try
-			{
-				if (nbInvalid == 0)
-				{
-					List<String> urlRegister = createRegisterURL(this.params, this.pwds);
-					URL url = new URL(urlRegister.get(0) + urlRegister.get(1));
-					URLConnection urlConn = url.openConnection();
-					urlConn.setDoOutput(true);
-
-					BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
-					in.close();
-
-				}
-				else
-					JOptionPane.showMessageDialog(null, sb.toString(), "Requis", JOptionPane.OK_OPTION);
-			}
-			catch (Exception e1)
-			{
-				e1.printStackTrace();
-			}
+			if (null != fieldType)
+				for (FieldType v : values())
+					if (v.toString().equalsIgnoreCase(fieldType))
+						return v;
+			throw new IllegalArgumentException();
 		}
 	}
 
-	/**
-	 *
-	 **/
-	private static final long serialVersionUID = 4899250229943737308L;
-
+	private static final long serialVersionUID = -2404019214589537423L;
 	private JLabel lPseudo, lUserEmail, lLastname, lFirstname, lPassword, lPasswordAgain, lPasswordKey, lPasswordKeyAgain, lKeyLength;
 	private JComboBox<Integer> fLenKey;
 	private JTextField fPseudo, fEmail, fLastname, fFirstname;
 	private JPasswordField fPassword, fPasswordAgain, fPasswordKey, fPasswordKeyAgain;
-	private JButton btnRegister;
+	private JButton btnNext, btnRegister;
+	//@formatter:off
+	private JComponent[]
+			firstPartElements = {this.lPseudo, this.fPseudo, this.fEmail, this.lUserEmail, this.lLastname, this.fLastname, this.lFirstname, this.fFirstname, this.lPassword, this.fPassword, this.lPasswordAgain, this.fPasswordAgain, this.btnNext},
+			secondPartElements = {this.lKeyLength, this.fLenKey, this.lPasswordKey, this.fPasswordKey, this.lPasswordKeyAgain, this.fPasswordKeyAgain, this.btnRegister};
+	//@formatter:on
+
 	private MasterController controller;
 
 	/**
-	 * Create the panel.
+	 * Create and init the panel.
 	 */
 	public RegisterView(MasterController controller)
 	{
-		this.controller = controller;
-		setTextField(getFieldPseudo());
-		setTextField(getFieldEmail());
-		setTextField(getFieldLastname());
-		setTextField(getFieldFirstname());
-		setPasswordField(getFieldPassword());
-		setPasswordField(getFieldPasswordAgain());
-		setPasswordField(getFieldPasswordKey());
-		setPasswordField(getFieldPasswordKeyAgain());
-		this.fPassword.setToolTipText("<html>\r\n<pre>\r\nLe mot de passe doit \u00EAtre d'au moins 8 caract\u00E8res et \u00EAtre compos\u00E9 de :\r\n\t- Au moins 1 majuscule\r\n\t- Au moins 1 minuscule\r\n\t- Au moins 1 chiffre\r\n\t- Au moins 1 caract\u00E8re sp\u00E9cial\r\n</pre>\r\n</html>");
-		this.fPasswordKey.setToolTipText("Mot de passe servant \u00E0 crypter votre paire de clefs RSA\r\nCe mot de passe doit \u00EAtre diff\u00E9rent de celui de connexion (pour des raisons de s\u00E9curit\u00E9)");
-		this.setBounds(0, 39, 1184, 750);
-		GroupLayout glTop = new GroupLayout(this);
-		glTop.setHorizontalGroup(glTop.createParallelGroup(Alignment.LEADING)
-				.addGroup(
-						glTop.createSequentialGroup()
-								.addGroup(
-										glTop.createParallelGroup(Alignment.LEADING)
-												.addGroup(glTop.createSequentialGroup().addGap(221).addComponent(getBtnRegister()))
-												.addGroup(
-														glTop.createSequentialGroup()
-																.addContainerGap()
-																.addGroup(
-																		glTop.createParallelGroup(Alignment.TRAILING).addComponent(getLabelPasswordKeyAgain()).addComponent(getLabelPasswordKey()).addComponent(getLabelPasswordAgain()).addComponent(getLabelPassword()).addComponent(getLabelFirstname()).addComponent(getLabelUserEmail()).addComponent(getLabelPseudo()).addComponent(getLabelLastname())
-																				.addComponent(getLabelKeyLength()))
-																.addGroup(
-																		glTop.createParallelGroup(Alignment.LEADING)
-																				.addGroup(
-																						glTop.createSequentialGroup()
-																								.addGap(33)
-																								.addGroup(
-																										glTop.createParallelGroup(Alignment.LEADING).addComponent(getFieldLastname(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getFieldFirstname(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-																												.addComponent(getFieldEmail(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getFieldPseudo(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-																				.addGroup(
-																						Alignment.TRAILING,
-																						glTop.createSequentialGroup()
-																								.addGap(33)
-																								.addGroup(
-																										glTop.createParallelGroup(Alignment.LEADING, false).addComponent(getFieldPasswordAgain(), GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(getFieldPassword(), GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-																												.addComponent(getFieldPasswordKey(), GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(getFieldPasswordKeyAgain(), GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-																												.addComponent(getFieldLengthKey(), 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))).addContainerGap(826, Short.MAX_VALUE)));
-		glTop.setVerticalGroup(glTop.createParallelGroup(Alignment.LEADING).addGroup(
-				glTop.createSequentialGroup().addGap(21).addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(getLabelPseudo()).addComponent(getFieldPseudo(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(19)
-						.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(getLabelUserEmail(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getLabelUserEmail())).addPreferredGap(ComponentPlacement.UNRELATED)
-						.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(getLabelLastname(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getLabelLastname())).addGap(9)
-						.addGroup(glTop.createParallelGroup(Alignment.LEADING).addGroup(glTop.createSequentialGroup().addGap(8).addComponent(getLabelFirstname())).addComponent(getFieldFirstname(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addPreferredGap(ComponentPlacement.UNRELATED)
-						.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(getFieldPassword(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getLabelPassword())).addGap(9)
-						.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(getLabelPasswordAgain()).addComponent(getFieldPasswordAgain(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
-						.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(getLabelPasswordKey()).addComponent(getFieldPasswordKey(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
-						.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(getLabelPasswordKeyAgain()).addComponent(getFieldPasswordKeyAgain(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(20)
-						.addGroup(glTop.createParallelGroup(Alignment.BASELINE).addComponent(getFieldLengthKey(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getLabelKeyLength())).addGap(18).addComponent(getBtnRegister()).addContainerGap(314, Short.MAX_VALUE)));
-		setLayout(glTop);
+		setLayout(null);
+		add(getLabelPseudo());
+		add(getFieldPseudo());
+		add(getFieldEmail());
+		add(getLabelUserEmail());
+		add(getLabelLastname());
+		add(getFieldLastname());
+		add(getLabelFirstname());
+		add(getFieldFirstname());
+		add(getLabelPassword());
+		add(getFieldPassword());
+		add(getFieldPasswordAgain());
+		add(getLabelPasswordAgain());
+		add(getBtnNext());
+		setAllEmentsActive(this.firstPartElements, this.secondPartElements);
 	}
 
 	private static List<String> createRegisterURL(List<String> details, List<JPasswordField> pwd) throws Exception
 	{
-		JPasswordField pwAccount = pwd.get(0);
-		JPasswordField pwKey = pwd.get(1);
+		JPasswordField pwAccount = pwd.get(0), pwKey = pwd.get(1);
 		MessageDigest mdPwdAccount = null;
 		MessageDigest mdPwdKey = null;
-		String hashtext = "";
-		String hashtextKey = "";
+		String hashtext = "", hashtextKey = "";
 		try
 		{
 			// hachage du mot de passe du compte
@@ -281,71 +118,79 @@ public class RegisterView extends JPanel
 		return url;
 	}
 
-	private static boolean isValidEmail(String text)
+	private static boolean isValidFieldContent(String fieldContent, FieldType fieldType)
 	{
-		if (text.matches("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"))
-			return true;
+		if (FieldType.EMAIL.equals(fieldType))
+			return fieldContent.matches(RegEx.VALID_EMAIL.getRegEx());
+		else if (FieldType.PSEUDO.equals(fieldType))
+			return fieldContent.matches(RegEx.VALID_PSEUDO.getRegEx());
+		else if (FieldType.FIRSTNAME.equals(fieldType))
+			return fieldContent.matches(RegEx.VALID_FIRSTNAME.getRegEx());
+		else if (FieldType.LASTNAME.equals(fieldType))
+			return fieldContent.matches(RegEx.VALID_LASTNAME.getRegEx());
 		else
-			return false;
+			throw new IllegalArgumentException();
 	}
 
-	private static boolean isValidName(String text)
+	private JButton getBtnNext()
 	{
-
-		if (text.matches("^[a-zA-Z-]*$") && text.length() > 1)
-			return true;
-		else
-			return false;
-	}
-
-	private static boolean isValidPseudo(String text)
-	{
-		if (text.matches("^[a-zA-Z0-9_-]*$") && text.length() > 2)
-			return true;
-		else
-			return false;
+		if (this.btnNext == null)
+		{
+			this.btnNext = new JButton("Etape suivante");
+			this.btnNext.setBounds(67, 174, 105, 23);
+		}
+		return this.btnNext;
 	}
 
 	private JButton getBtnRegister()
 	{
-		if (null == this.btnRegister)
+		if (this.btnRegister == null)
+		{
 			this.btnRegister = new JButton("S'enregistrer");
+			this.btnRegister.setBounds(74, 174, 93, 23);
+		}
 		return this.btnRegister;
 	}
 
 	private JTextField getFieldEmail()
 	{
-		if (null == this.fEmail)
+		if (this.fEmail == null)
 		{
-			this.fEmail = new JTextField("");
-			PromptSupport.setPrompt("addresse@exemple.com", this.fEmail);
+			this.fEmail = new JTextField(10);
+			PromptSupport.setPrompt("exemple@site.tld", this.fEmail);
+			PromptSupport.setFocusBehavior(FocusBehavior.SHOW_PROMPT, this.fEmail);
+			this.fEmail.setBounds(134, 35, 95, 22);
 		}
 		return this.fEmail;
 	}
 
 	private JTextField getFieldFirstname()
 	{
-		if (null == this.fFirstname)
+		if (this.fFirstname == null)
 		{
-			this.fFirstname = new JTextField("");
+			this.fFirstname = new JTextField(10);
 			PromptSupport.setPrompt("Votre prénom", this.fFirstname);
+			PromptSupport.setFocusBehavior(FocusBehavior.SHOW_PROMPT, this.fFirstname);
+			this.fFirstname.setBounds(134, 89, 95, 22);
 		}
 		return this.fFirstname;
 	}
 
 	private JTextField getFieldLastname()
 	{
-		if (null == this.fLastname)
+		if (this.fLastname == null)
 		{
-			this.fLastname = new JTextField("");
-			PromptSupport.setPrompt("Votre prénom", this.fLastname);
+			this.fLastname = new JTextField(10);
+			PromptSupport.setPrompt("Votre nom", this.fLastname);
+			PromptSupport.setFocusBehavior(FocusBehavior.SHOW_PROMPT, this.fLastname);
+			this.fLastname.setBounds(134, 62, 95, 22);
 		}
 		return this.fLastname;
 	}
 
 	private JComboBox<Integer> getFieldLengthKey()
 	{
-		if (null == this.fLenKey)
+		if (this.fLenKey == null)
 		{
 			this.fLenKey = new JComboBox<Integer>();
 			this.fLenKey.setModel(new DefaultComboBoxModel<Integer>(new Integer[] {1024, 2048, 4096}));
@@ -356,103 +201,149 @@ public class RegisterView extends JPanel
 
 	private JPasswordField getFieldPassword()
 	{
-		if (null == this.fPassword)
+		if (this.fPassword == null)
+		{
 			this.fPassword = new JPasswordField();
+			PromptSupport.setPrompt("Mot de passe de session", this.fPassword);
+			PromptSupport.setFocusBehavior(FocusBehavior.SHOW_PROMPT, this.fPassword);
+			this.fPassword.setBounds(134, 116, 95, 20);
+		}
 		return this.fPassword;
 	}
 
 	private JPasswordField getFieldPasswordAgain()
 	{
-		if (null == this.fPasswordAgain)
+		if (this.fPasswordAgain == null)
+		{
 			this.fPasswordAgain = new JPasswordField();
+			PromptSupport.setPrompt("Mot de passe de session", this.fPasswordAgain);
+			PromptSupport.setFocusBehavior(FocusBehavior.SHOW_PROMPT, this.fPasswordAgain);
+			this.fPasswordAgain.setBounds(134, 143, 95, 20);
+		}
 		return this.fPasswordAgain;
 	}
 
 	private JPasswordField getFieldPasswordKey()
 	{
-		if (null == this.fPasswordKey)
+		if (this.fPasswordKey == null)
+		{
 			this.fPasswordKey = new JPasswordField();
+			PromptSupport.setPrompt("Mot de passe de la clé", this.fPasswordKey);
+			PromptSupport.setFocusBehavior(FocusBehavior.SHOW_PROMPT, this.fPasswordKey);
+		}
 		return this.fPasswordKey;
 	}
 
 	private JPasswordField getFieldPasswordKeyAgain()
 	{
-		if (null == this.fPasswordKeyAgain)
+		if (this.fPasswordKeyAgain == null)
+		{
 			this.fPasswordKeyAgain = new JPasswordField();
+			PromptSupport.setPrompt("Mot de passe de la clé", this.fPasswordKey);
+			PromptSupport.setFocusBehavior(FocusBehavior.SHOW_PROMPT, this.fPasswordKey);
+		}
 		return this.fPasswordKeyAgain;
 	}
 
 	private JTextField getFieldPseudo()
 	{
-		if (null == this.fPseudo)
+		if (this.fPseudo == null)
 		{
-			this.fPseudo = new JTextField("");
-			PromptSupport.setPrompt("Votre pseudonyme", this.fPseudo);
+			this.fPseudo = new JTextField(10);
+			PromptSupport.setPrompt("Pseudonyme", this.fPseudo);
+			PromptSupport.setFocusBehavior(FocusBehavior.SHOW_PROMPT, this.fPseudo);
+			this.fPseudo.setBounds(134, 8, 95, 22);
 		}
 		return this.fPseudo;
 	}
 
 	private JLabel getLabelFirstname()
 	{
-		if (null == this.lFirstname)
+		if (this.lFirstname == null)
+		{
 			this.lFirstname = new JLabel("Prénom : ");
+			this.lFirstname.setBounds(10, 91, 46, 14);
+		}
 		return this.lFirstname;
 	}
 
 	private JLabel getLabelKeyLength()
 	{
-		if (null == this.lKeyLength)
+		if (this.lKeyLength == null)
 			this.lKeyLength = new JLabel("Longueur clef :");
 		return this.lKeyLength;
 	}
 
 	private JLabel getLabelLastname()
 	{
-		if (null == this.lLastname)
+		if (this.lLastname == null)
+		{
 			this.lLastname = new JLabel("Nom : ");
+			this.lLastname.setBounds(10, 66, 31, 14);
+		}
 		return this.lLastname;
 	}
 
 	private JLabel getLabelPassword()
 	{
-		if (null == this.lPassword)
+		if (this.lPassword == null)
+		{
 			this.lPassword = new JLabel("Mot de passe : ");
+			this.lPassword.setBounds(10, 119, 74, 14);
+		}
 		return this.lPassword;
 	}
 
 	private JLabel getLabelPasswordAgain()
 	{
-		if (null == this.lPasswordAgain)
+		if (this.lPasswordAgain == null)
+		{
 			this.lPasswordAgain = new JLabel("Resaisir mot de passe : ");
+			this.lPasswordAgain.setBounds(10, 146, 114, 14);
+		}
 		return this.lPasswordAgain;
 	}
 
 	private JLabel getLabelPasswordKey()
 	{
-		if (null == this.lPasswordKey)
+		if (this.lPasswordKey == null)
 			this.lPasswordKey = new JLabel("Mot de passe clef: ");
 		return this.lPasswordKey;
 	}
 
 	private JLabel getLabelPasswordKeyAgain()
 	{
-		if (null == this.lPasswordKeyAgain)
+		if (this.lPasswordKeyAgain == null)
 			this.lPasswordKeyAgain = new JLabel("Resaisir mot de passe clef : ");
 		return this.lPasswordKeyAgain;
 	}
 
 	private JLabel getLabelPseudo()
 	{
-		if (null == this.lPseudo)
+		if (this.lPseudo == null)
+		{
 			this.lPseudo = new JLabel("Pseudo : ");
+			this.lPseudo.setBounds(10, 12, 45, 14);
+		}
 		return this.lPseudo;
 	}
 
 	private JLabel getLabelUserEmail()
 	{
-		if (null == this.lUserEmail)
+		if (this.lUserEmail == null)
+		{
 			this.lUserEmail = new JLabel("Email : ");
+			this.lUserEmail.setBounds(10, 39, 46, 14);
+		}
 		return this.lUserEmail;
+	}
+
+	private void setAllEmentsActive(JComponent[] elementsToShow, JComponent[] elementsToHide)
+	{
+		for (JComponent element : elementsToShow)
+			element.setVisible(true);
+		for (JComponent element : elementsToHide)
+			element.setVisible(false);
 	}
 
 	private void setPasswordField(JPasswordField pf)
