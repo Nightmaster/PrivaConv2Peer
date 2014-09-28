@@ -121,7 +121,7 @@ public final class MasterController
 
 	public final String callServerAction(ServerAction serverAction, String... parameters)
 	{
-		//FIXME faire des mÃ©thodes d'action spÃ©cifiques
+		//FIXME faire des méthodes d'action spécifiques
 		return null;
 	}
 

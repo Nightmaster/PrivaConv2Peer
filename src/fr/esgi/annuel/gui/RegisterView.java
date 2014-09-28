@@ -43,29 +43,29 @@ public class RegisterView extends JPanel
 				else
 				{
 					StringBuilder sb = new StringBuilder(550);
-					sb.append(!eqPw ? "Les deux mots de passe doivent être les mêmes !" : "");
+					sb.append(!eqPw ? "Les deux mots de passe doivent ?tre les m?mes !" : "");
 					if (! "".equals(sb.toString()))
 						sb.append("\n");
 					sb.append(!rightPwFmt ? "Le mot de passe doit \u00EAtre d'au moins 8 caract\u00E8res et \u00EAtre compos\u00E9 de :\r\n\t- Au moins 1 majuscule\r\n\t- Au moins 1 minuscule\r\n\t- Au moins 1 chiffre\r\n\t- Au moins 1 caract\u00E8re sp\u00E9cial" : "");
 					if (! "".equals(sb.toString()))
 						sb.append("\n");
-					sb.append(!rightPseudoFmt ? "Le pseudo doit être composé uniquement de caractères alphanumériques, sans espace !" : "");
+					sb.append(!rightPseudoFmt ? "Le pseudo doit ?tre compos? uniquement de caract?res alphanum?riques, sans espace !" : "");
 					if (! "".equals(sb.toString()))
 						sb.append("\n");
 					sb.append(!rightEmailFmt ? "Veuillez rentrer une adresse email correcte !" : "");
 					if (! "".equals(sb.toString()))
 						sb.append("\n");
-					sb.append(!rightLnameFmt ? "Votre nom doit être composé de caractères alpahbétiques uniquement (espaces acceptés)" : "");
+					sb.append(!rightLnameFmt ? "Votre nom doit ?tre compos? de caract?res alpahb?tiques uniquement (espaces accept?s)" : "");
 					if (! "".equals(sb.toString()))
 						sb.append("\n");
-					sb.append(!rightFnameFmt ? "Votre nom doit être composé de caractères alpahbétiques uniquement (espaces et traits d'union acceptés)" : "");
+					sb.append(!rightFnameFmt ? "Votre nom doit ?tre compos? de caract?res alpahb?tiques uniquement (espaces et traits d'union accept?s)" : "");
 					JOptionPane.showMessageDialog(null, sb.toString(), "Invalid content", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 			else // if (RegisterView.this.btnRegister.equals(e.getSource()))
 			{
-				// FIXME finaliser la partie dédiée à l'appuie sur le bouton d'enregistrement !!!
-				if(true) //remplacer par une vérification des conditions ici
+				// FIXME finaliser la partie d?di?e ? l'appuie sur le bouton d'enregistrement !!!
+				if(true) //remplacer par une v?rification des conditions ici
 					;
 				else
 				{
@@ -336,7 +336,7 @@ public class RegisterView extends JPanel
 		if (this.fFirstname == null)
 		{
 			this.fFirstname = new JTextField(10);
-			setPrompt("Votre prénom", this.fFirstname);
+			setPrompt("Votre pr?nom", this.fFirstname);
 			setFocusBehavior(SHOW_PROMPT, this.fFirstname);
 		}
 		return this.fFirstname;
@@ -394,7 +394,7 @@ public class RegisterView extends JPanel
 		if (this.fPasswordKey == null)
 		{
 			this.fPasswordKey = new JPasswordField();
-			setPrompt("Mot de passe de la clé", this.fPasswordKey);
+			setPrompt("Mot de passe de la cl?", this.fPasswordKey);
 			setFocusBehavior(SHOW_PROMPT, this.fPasswordKey);
 			this.fPasswordKey.setToolTipText("Mot de passe servant \u00E0 crypter votre paire de clefs RSA\r\nCe mot de passe doit \u00EAtre diff\u00E9rent de celui de connexion (pour des raisons de s\u00E9curit\u00E9)");
 		}
@@ -406,7 +406,7 @@ public class RegisterView extends JPanel
 		if (this.fPasswordKeyAgain == null)
 		{
 			this.fPasswordKeyAgain = new JPasswordField();
-			setPrompt("Mot de passe de la clé", this.fPasswordKey);
+			setPrompt("Mot de passe de la cl?", this.fPasswordKey);
 			setFocusBehavior(SHOW_PROMPT, this.fPasswordKey);
 		}
 		return this.fPasswordKeyAgain;
@@ -426,7 +426,7 @@ public class RegisterView extends JPanel
 	private JLabel getLabelFirstname()
 	{
 		if (this.lFirstname == null)
-			this.lFirstname = new JLabel("Prénom : ");
+			this.lFirstname = new JLabel("Pr?nom : ");
 		return this.lFirstname;
 	}
 
