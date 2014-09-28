@@ -1,8 +1,10 @@
 package fr.esgi.annuel.ctrl;
 
-import java.awt.EventQueue;
+import javax.swing.*;
+import java.awt.*;
 import java.util.Map;
-import javax.swing.JPanel;
+import java.util.UUID;
+import fr.esgi.annuel.constants.ServerAction;
 import fr.esgi.annuel.constants.Views;
 import fr.esgi.annuel.gui.IdentificationView;
 import fr.esgi.annuel.gui.MasterWindow;
@@ -11,9 +13,26 @@ import fr.esgi.annuel.gui.RegisterView;
 
 public final class MasterController
 {
+	private static final String COOKIE_NAME = "sessId";
+	private static UUID cookieValue;
 	private static MasterWindow window;
-	private final JPanel identificationView = new IdentificationView(this), registerView = new RegisterView(this), profileView = new ProfilView(this);
 	private static JPanel actualPanel;
+	private final JPanel identificationView = new IdentificationView(this), registerView = new RegisterView(this), profileView = new ProfilView(this);
+
+	public static UUID getCookieValue()
+	{
+		return cookieValue;
+	}
+
+	public static void setCookieValue(UUID cookieValue)
+	{
+		MasterController.cookieValue = cookieValue;
+	}
+
+	public static void setCookieValue(String cookieValue)
+	{
+		MasterController.cookieValue = UUID.fromString(cookieValue);
+	}
 
 	public final void changeView(Views view, Map<String, Object> map)
 	{
@@ -46,6 +65,16 @@ public final class MasterController
 		return MasterController.actualPanel;
 	}
 
+	/**
+	 * Setter for actualPanel
+	 * @param actualPanel the  actual panel to define
+	 **/
+	public final void setActualPanel(JPanel actualPanel)
+	{
+		if (!actualPanel.equals(MasterController.actualPanel))
+			MasterController.actualPanel = actualPanel;
+	}
+
 	public final void launch()
 	{
 		try
@@ -53,12 +82,16 @@ public final class MasterController
 			// Set System L&F
 			javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
 		}
-		//@formatter:off
-		catch (javax.swing.UnsupportedLookAndFeelException e) {}
-		catch (ClassNotFoundException e) {}
-		catch (InstantiationException e) {}
-		catch (IllegalAccessException e) {}
-		//@formatter:on
+		// @formatter:off
+		catch (javax.swing.UnsupportedLookAndFeelException e)
+		{}
+		catch (ClassNotFoundException e)
+		{}
+		catch (InstantiationException e)
+		{}
+		catch (IllegalAccessException e)
+		{}
+		// @formatter:on
 		EventQueue.invokeLater(new Runnable()
 		{
 			@Override
@@ -78,13 +111,18 @@ public final class MasterController
 	}
 
 	/**
-	 * Setter for actualPanel
-	 * @param actualPanel the  actual panel to define
+	 * Repaint the JFrame component and make it pack
 	 **/
-	public final void setActualPanel(JPanel actualPanel)
+	public final void packFrame()
 	{
-		if (!actualPanel.equals(MasterController.actualPanel))
-			MasterController.actualPanel = actualPanel;
+		window.repaint();
+		window.pack();
+	}
+
+	public final String callServerAction(ServerAction serverAction, String... parameters)
+	{
+		//FIXME faire des méthodes d'action spécifiques
+		return null;
 	}
 
 	public final void setConnectionStatus(boolean isConnected)

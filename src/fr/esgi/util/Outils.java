@@ -1,18 +1,12 @@
 package fr.esgi.util;
 
-import java.awt.Color;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Base64;
 import java.util.UUID;
-import javax.imageio.ImageIO;
-import javax.swing.ButtonGroup;
-import javax.swing.JOptionPane;
-import javax.swing.JRadioButton;
 
 /**
  * @author Gaël BLAISE
@@ -29,7 +23,6 @@ public class Outils
 	 **/
 	public static BufferedImage base64StringToImage(String imageString)
 	{
-
 		BufferedImage image = null;
 		byte[] imageByte;
 		try
@@ -47,7 +40,7 @@ public class Outils
 	}
 
 	/**
-	 * Fonction qui permet de quitter l'application complète, avec ou sans vérification auprès de l'utilisateur
+	 * Fonction qui permet de quitter l'application compléte, avec ou sans vérification auprès de l'utilisateur
 	 *
 	 * @param confirm {boolean} : <code>true</code> pour avoir une confirmation utilisateur, <code>false</code> sinon
 	 **/
@@ -71,7 +64,6 @@ public class Outils
 	 **/
 	public static UUID byteArrayAsUuid(byte[] byteArray)
 	{
-
 		long msb = 0;
 		long lsb = 0;
 		for (int i = 0; i < 8; i++ )
@@ -124,7 +116,7 @@ public class Outils
 	/**
 	 * Teste si un nombre est (strictement) positif ou non
 	 *
-	 * @param chiffre {double} : le double à vérifier.
+	 * @param nombre {double} : le double à vérifier.
 	 * @param strict {boolean} : indique si on veut vérifier ou non la nullité du nombre.
 	 * @return {boolean} : renvoie <code>false</code> si le nombre est négatif, <code>true</code> si il est positif. En cas d'égalité avec 0 : renvoie <code>true</code> si strict est vrai, <code>false</code> sinon.
 	 **/
@@ -141,7 +133,7 @@ public class Outils
 	/**
 	 * Teste si un nombre est (strictement) positif ou non
 	 *
-	 * @param chiffre {double} : le float à vérifier.
+	 * @param nombre {double} : le float à vérifier.
 	 * @param strict {boolean} : indique si on veut vérifier ou non la nullité du nombre.
 	 * @return {boolean} : renvoie <code>false</code> si le nombre est négatif, <code>true</code> si il est positif. En cas d'égalité avec 0 : renvoie <code>true</code> si strict est vrai, <code>false</code> sinon.
 	 **/
@@ -175,7 +167,7 @@ public class Outils
 	/**
 	 * Teste si un nombre est (strictement) positif ou non
 	 *
-	 * @param chiffre {long} : le long à vérifier.
+	 * @param nombre {long} : le long à vérifier.
 	 * @param strict {boolean} : indique si on veut vérifier ou non la nullité du nombre.
 	 * @return {boolean} : renvoie <code>false</code> si le nombre est négatif, <code>true</code> si il est positif. En cas d'égalité avec 0 : renvoie <code>true</code> si strict est vrai, <code>false</code> sinon.
 	 **/
@@ -192,7 +184,7 @@ public class Outils
 	/**
 	 * Teste si un nombre est (strictement) positif ou non
 	 *
-	 * @param chiffre {short} : le short à vérifier.
+	 * @param nombre {short} : le short à vérifier.
 	 * @param strict {boolean} : indique si on veut vérifier ou non la nullité du nombre.
 	 * @return {boolean} : renvoie <code>false</code> si le nombre est négatif, <code>true</code> si il est positif. En cas d'égalité avec 0 : renvoie <code>true</code> si strict est vrai, <code>false</code> sinon.
 	 **/
@@ -243,11 +235,11 @@ public class Outils
 	public static Color[] rainbow(int nbElem)
 	{
 		Color[] res = new Color[nbElem];
-		float teinte, saturation = 1, luminosité = 1;
+		float teinte, saturation = 1, luminosite = 1;
 		for (int i = 0; i < nbElem; i++ )
 		{
 			teinte = (float) i / (float) nbElem;
-			res[i] = Color.getHSBColor(teinte, saturation, luminosité);
+			res[i] = Color.getHSBColor(teinte, saturation, luminosite);
 		}
 		return res;
 	}
@@ -296,7 +288,6 @@ public class Outils
 	 **/
 	public static byte[] uuidAsByteArray(UUID uuid)
 	{
-
 		long msb = uuid.getMostSignificantBits();
 		long lsb = uuid.getLeastSignificantBits();
 		byte[] buffer = new byte[16];
@@ -307,6 +298,5 @@ public class Outils
 			buffer[i] = (byte) (lsb >>> 8 * (7 - i));
 
 		return buffer;
-
 	}
 }

@@ -1,9 +1,7 @@
 package fr.esgi.annuel.gui;
 
-import static fr.esgi.annuel.constants.Constants.*;
-import static org.jdesktop.xswingx.PromptSupport.setFocusBehavior;
-import static org.jdesktop.xswingx.PromptSupport.setPrompt;
-import static org.jdesktop.xswingx.PromptSupport.FocusBehavior.SHOW_PROMPT;
+import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigInteger;
@@ -11,22 +9,30 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.*;
-import javax.swing.GroupLayout.Alignment;
 import fr.esgi.annuel.constants.RegEx;
+import fr.esgi.annuel.crypt.PasswordUtilities;
 import fr.esgi.annuel.ctrl.MasterController;
+
+import static fr.esgi.annuel.constants.Constants.*;
+import static org.jdesktop.xswingx.PromptSupport.FocusBehavior.SHOW_PROMPT;
+import static org.jdesktop.xswingx.PromptSupport.setFocusBehavior;
+import static org.jdesktop.xswingx.PromptSupport.setPrompt;
 
 public class RegisterView extends JPanel
 {
-	//FIXME ajouter la partie dédiée à l'appuie sur le bouton d'enregistrement !!!
 	private class ButtonListener implements ActionListener
 	{
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
+			if (RegisterView.this.btnNext.equals(e.getSource()))
+			{
 			boolean eqPw, rightPwFmt, rightPseudoFmt, rightEmailFmt, rightFnameFmt, rightLnameFmt;
 			eqPw = RegisterView.this.fPassword.getPassword().equals(RegisterView.this.fPasswordAgain.getPassword());
-			rightPwFmt = isValidFieldContent(new String(RegisterView.this.fPassword.getPassword()), FieldType.PASSWORD);
+			rightPwFmt = true;
+			for (Boolean value : PasswordUtilities.isStrongEnough(String.valueOf(RegisterView.this.fPassword.getPassword())).values())
+				if (!value)
+					rightPwFmt = value;
 			rightPseudoFmt = isValidFieldContent(RegisterView.this.fPseudo.getText(), FieldType.PSEUDO);
 			rightEmailFmt = isValidFieldContent(RegisterView.this.fEmail.getText(), FieldType.EMAIL);
 			rightFnameFmt = isValidFieldContent(RegisterView.this.fFirstname.getText(), FieldType.FIRSTNAME);
@@ -36,27 +42,38 @@ public class RegisterView extends JPanel
 					changeComponents();
 				else
 				{
-					StringBuilder sb = new StringBuilder();
-					sb.append(eqPw ? "Les deux mots de passe doivent être les mêmes !" : "");
-					if ("" != sb.toString())
+					StringBuilder sb = new StringBuilder(550);
+					sb.append(!eqPw ? "Les deux mots de passe doivent être les mêmes !" : "");
+					if (! "".equals(sb.toString()))
 						sb.append("\n");
-					sb.append(rightPwFmt ? "Le mot de passe doit \u00EAtre d'au moins 8 caract\u00E8res et \u00EAtre compos\u00E9 de :\r\n\t- Au moins 1 majuscule\r\n\t- Au moins 1 minuscule\r\n\t- Au moins 1 chiffre\r\n\t- Au moins 1 caract\u00E8re sp\u00E9cial" : "");
-					if ("" != sb.toString())
+					sb.append(!rightPwFmt ? "Le mot de passe doit \u00EAtre d'au moins 8 caract\u00E8res et \u00EAtre compos\u00E9 de :\r\n\t- Au moins 1 majuscule\r\n\t- Au moins 1 minuscule\r\n\t- Au moins 1 chiffre\r\n\t- Au moins 1 caract\u00E8re sp\u00E9cial" : "");
+					if (! "".equals(sb.toString()))
 						sb.append("\n");
-					sb.append(rightPseudoFmt ? "Le pseudo doit être composé uniquement de caractères alphanumériques, sans espace !" : "");
-					if ("" != sb.toString())
+					sb.append(!rightPseudoFmt ? "Le pseudo doit être composé uniquement de caractères alphanumériques, sans espace !" : "");
+					if (! "".equals(sb.toString()))
 						sb.append("\n");
-					sb.append(rightEmailFmt ? "Veuillez rentrer une adresse email correcte !" : "");
-					if ("" != sb.toString())
+					sb.append(!rightEmailFmt ? "Veuillez rentrer une adresse email correcte !" : "");
+					if (! "".equals(sb.toString()))
 						sb.append("\n");
-					sb.append(rightLnameFmt ? "Votre nom doit être composé de caractères alpahbétiques uniquement (espaces acceptés)" : "");
-					if ("" != sb.toString())
+					sb.append(!rightLnameFmt ? "Votre nom doit être composé de caractères alpahbétiques uniquement (espaces acceptés)" : "");
+					if (! "".equals(sb.toString()))
 						sb.append("\n");
-					sb.append(rightFnameFmt ? "Votre nom doit être composé de caractères alpahbétiques uniquement (espaces et traits d'union acceptés)" : "");
-					JOptionPane.showMessageDialog(null, "Message", "Invalid content", JOptionPane.ERROR_MESSAGE);
+					sb.append(!rightFnameFmt ? "Votre nom doit être composé de caractères alpahbétiques uniquement (espaces et traits d'union acceptés)" : "");
+					JOptionPane.showMessageDialog(null, sb.toString(), "Invalid content", JOptionPane.ERROR_MESSAGE);
 				}
+			}
+			else // if (RegisterView.this.btnRegister.equals(e.getSource()))
+			{
+				// FIXME finaliser la partie dédiée à l'appuie sur le bouton d'enregistrement !!!
+				if(true) //remplacer par une vérification des conditions ici
+					;
+				else
+				{
+					StringBuilder sb = new StringBuilder(); //FIXME initialiser la valeur du constructeur
+					JOptionPane.showMessageDialog(null, sb.toString(), "Invalid content", JOptionPane.ERROR_MESSAGE);
+				}
+			}
 		}
-
 	}
 
 	private enum FieldType
@@ -79,11 +96,9 @@ public class RegisterView extends JPanel
 	private JTextField fPseudo, fEmail, fLastname, fFirstname;
 	private JPasswordField fPassword, fPasswordAgain, fPasswordKey, fPasswordKeyAgain;
 	private JButton btnNext, btnRegister;
-	//@formatter:off
 	private JComponent[]
 			firstPartElements = {this.lPseudo, this.fPseudo, this.fEmail, this.lUserEmail, this.lLastname, this.fLastname, this.lFirstname, this.fFirstname, this.lPassword, this.fPassword, this.lPasswordAgain, this.fPasswordAgain, this.btnNext},
 			secondPartElements = {this.lKeyLength, this.fLenKey, this.lPasswordKey, this.fPasswordKey, this.lPasswordKeyAgain, this.fPasswordKeyAgain, this.btnRegister};
-	//@formatter:on
 
 	private MasterController controller;
 
@@ -98,37 +113,37 @@ public class RegisterView extends JPanel
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(10)
-					.addComponent(getLabelPseudo())
+						.addComponent(getLabelPseudo())
 					.addGap(79)
-					.addComponent(getFieldPseudo(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getFieldPseudo(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(10)
-					.addComponent(getLabelUserEmail(), GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+						.addComponent(getLabelUserEmail(), GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
 					.addGap(78)
-					.addComponent(getFieldEmail(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getFieldEmail(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(10)
-					.addComponent(getLabelLastname())
+						.addComponent(getLabelLastname())
 					.addGap(93)
-					.addComponent(getFieldLastname(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getFieldLastname(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(10)
-					.addComponent(getLabelFirstname())
+						.addComponent(getLabelFirstname())
 					.addGap(78)
-					.addComponent(getFieldFirstname(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getFieldFirstname(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(10)
-					.addComponent(getLabelPassword())
+						.addComponent(getLabelPassword())
 					.addGap(50)
-					.addComponent(getFieldPassword(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getFieldPassword(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(10)
-					.addComponent(getLabelPasswordAgain())
+						.addComponent(getLabelPasswordAgain())
 					.addGap(10)
-					.addComponent(getFieldPasswordAgain(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getFieldPasswordAgain(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(67)
-					.addComponent(getBtnNext()))
+						.addComponent(getBtnNext()))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -211,7 +226,7 @@ public class RegisterView extends JPanel
 		}
 		// construction de l'URL
 		List<String> url = new ArrayList<String>();
-		String urlConnect = SRV_URL + ":" + SRV_PORT + "/" + SRV_API + "/" + SRV_REGISTER_PAGE;
+		String urlConnect = SRV_ADDR + ":" + SRV_PORT + "/" + SRV_API + "/" + SRV_REGISTER_PAGE;
 
 		String params = "?" + PARAM_USER + "=" + details.get(0) + "&" + PARAM_EMAIL + "=" + details.get(1) + "&" + PARAM_FIRSTNAME + "=" + details.get(2) + "&" + PARAM_NAME + "=" + details.get(3) + "&" + PARAM_PWD + "=" + hashtext + "&" + PARAM_PWD_KEY + "=" + hashtextKey + "&" + PARAM_LENGTH + "=" + details.get(4);
 
@@ -284,6 +299,7 @@ public class RegisterView extends JPanel
 		//@formatter:on
 		setLayout(groupLayout);
 		setAllEmentsActive(this.secondPartElements, this.firstPartElements);
+		this.controller.packFrame();
 	}
 
 

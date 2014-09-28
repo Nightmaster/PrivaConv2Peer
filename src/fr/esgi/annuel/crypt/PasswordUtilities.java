@@ -13,7 +13,7 @@ public class PasswordUtilities
 	 * @param pw {String}: le mot de passe à vérifier
 	 * @return {boolean} <code>true</code> si pw.contains(["-!\"§$%&/()=?+*~#'_:.,;@\^<>£¤µ"]) == true, <code>false</code> sinon
 	 **/
-	private static boolean contientCaracSpe(String pw)
+	private final static boolean contientCaracSpe(String pw)
 	{
 		boolean res = false;
 		int i = 0;
@@ -34,7 +34,7 @@ public class PasswordUtilities
 	 * @param pw {String}: le mot de passe à vérifier
 	 * @return {boolean} <code>true</code> si le pw contient au moins une majuscule, <code>false</code> sinon
 	 **/
-	private static boolean contientMaj(String pw)
+	private final static boolean contientMaj(String pw)
 	{
 		return Pattern.compile("(?=.*[A-Z])").matcher(pw).find();
 	}
@@ -45,7 +45,7 @@ public class PasswordUtilities
 	 * @param pw {String}: le mot de passe à vérifier
 	 * @return {boolean} <code>true</code> si le pw contient au moins une minuscule, <code>false</code> sinon
 	 **/
-	private static boolean contientMin(String pw)
+	private final static boolean contientMin(String pw)
 	{
 		return Pattern.compile("(?=.*[a-z])").matcher(pw).find();
 	}
@@ -56,7 +56,7 @@ public class PasswordUtilities
 	 * @param pw {String}: le mot de passe à vérifier
 	 * @return {boolean} <code>true</code> si le pw contient au moins un chiffre, <code>false</code> sinon
 	 **/
-	private static boolean contientNombre(String pw)
+	private final static boolean contientNombre(String pw)
 	{
 		return Pattern.compile(".*\\d+.*").matcher(pw).find();
 	}
@@ -67,7 +67,7 @@ public class PasswordUtilities
 	 * @param pw {String}: le mot de passe à vérifier
 	 * @return {boolean} <code>true</code> si pw.length >= 8, <code>false</code> sinon
 	 **/
-	private static boolean estSuffisammentLong(String pw)
+	private final static boolean estSuffisammentLong(String pw)
 	{
 		return pw.length() >= 8;
 	}
@@ -78,7 +78,7 @@ public class PasswordUtilities
 	 * @param pw {String]: Le mot de passe à vérifier
 	 * @return {boolean}: <code>true</code> si le mot de passe valide les attentes, <code>false</code> sinon
 	 **/
-	private static boolean seulementAcceptes(String pw)
+	private final static boolean seulementAcceptes(String pw)
 	{
 		return Pattern.compile("^[-!\"§$%&/()=?+*~#'_:\\.,@^<>£¤µa-zA-Z0-9]+$").matcher(pw).find();
 	}
@@ -89,7 +89,7 @@ public class PasswordUtilities
 	 * @param pw {String}: the password to check
 	 * @return {HashMap&lt;String, Boolean&gt;} The <code>HashMap</code> with the tests results. Ex: "Length":false
 	 **/
-	public static HashMap<String, Boolean> isStrongEnough(String pw)
+	public final static HashMap<String, Boolean> isStrongEnough(String pw)
 	{
 		HashMap<String, Boolean> res = new HashMap<String, Boolean>();
 		res.put(Constants.PW_LENGTH, estSuffisammentLong(pw));
