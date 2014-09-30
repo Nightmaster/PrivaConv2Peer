@@ -13,8 +13,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import fr.esgi.annuel.client.ClientInfo;
 import fr.esgi.annuel.constants.Constants;
+import fr.esgi.annuel.constants.ServerAction;
 import fr.esgi.annuel.constants.Views;
 import fr.esgi.annuel.contact.Contact;
 import fr.esgi.annuel.contact.Contacts;
@@ -31,6 +33,7 @@ import org.json.JSONObject;
 public class IdentificationView extends JPanel
 {
 	private static final long serialVersionUID = -3948992383967747160L;
+	private final Properties properties;
 	private JButton btnConnection, btnRegister;
 	private JCheckBox chckbxRememberMe;
 	private JLabel lblConnectionIdentifier, lblPwd;
@@ -44,6 +47,7 @@ public class IdentificationView extends JPanel
 	public IdentificationView(MasterController controller)
 	{
 		this.controller = controller;
+		properties = this.controller.getProperties();
 		setLayout(null);
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(groupLayout
@@ -160,8 +164,8 @@ public class IdentificationView extends JPanel
 			e.printStackTrace();
 		}
 		List<String> url = new ArrayList<String>();
-		String urlConnect = Constants.SRV_ADDR + ":" + Constants.SRV_PORT + "/" + Constants.SRV_API + "/" + Constants.SRV_CONNECT_PAGE;
-		String params = "?" + Constants.PARAM_USER + "=" + connect + "&" + Constants.PARAM_PWD + "=" + hashtext;
+		String urlConnect = properties.getProperty("server.address") + ":" + properties.getProperty("server.port") + "/" + properties.getProperty("server.api") + "/" + ServerAction.CONNECT.getAddressFor();
+		String params = "?" + Constants.PARAM_USERNAME + "=" + connect + "&" + Constants.PARAM_PWD + "=" + hashtext;
 
 		url.add(urlConnect);
 		url.add(params);

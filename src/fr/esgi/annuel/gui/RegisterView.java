@@ -4,20 +4,16 @@ import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
+import fr.esgi.annuel.constants.FieldType;
 import fr.esgi.annuel.constants.RegEx;
 import fr.esgi.annuel.crypt.PasswordUtilities;
 import fr.esgi.annuel.ctrl.MasterController;
 
-import static fr.esgi.annuel.constants.Constants.*;
 import static org.jdesktop.xswingx.PromptSupport.FocusBehavior.SHOW_PROMPT;
 import static org.jdesktop.xswingx.PromptSupport.setFocusBehavior;
 import static org.jdesktop.xswingx.PromptSupport.setPrompt;
 
+@SuppressWarnings(value = "unused")
 public class RegisterView extends JPanel
 {
 	private class ButtonListener implements ActionListener
@@ -43,50 +39,44 @@ public class RegisterView extends JPanel
 				else
 				{
 					StringBuilder sb = new StringBuilder(550);
-					sb.append(!eqPw ? "Les deux mots de passe doivent ?tre les m?mes !" : "");
+					sb.append(!eqPw ? "Les deux mots de passe doivent \u00EAtre identiques !" : "");
 					if (! "".equals(sb.toString()))
 						sb.append("\n");
-					sb.append(!rightPwFmt ? "Le mot de passe doit \u00EAtre d'au moins 8 caract\u00E8res et \u00EAtre compos\u00E9 de :\r\n\t- Au moins 1 majuscule\r\n\t- Au moins 1 minuscule\r\n\t- Au moins 1 chiffre\r\n\t- Au moins 1 caract\u00E8re sp\u00E9cial" : "");
+					sb.append(!rightPwFmt ? PasswordUtilities.PASSWORD_STANDARD_FORMAT : "");
 					if (! "".equals(sb.toString()))
 						sb.append("\n");
-					sb.append(!rightPseudoFmt ? "Le pseudo doit ?tre compos? uniquement de caract?res alphanum?riques, sans espace !" : "");
+					sb.append(!rightPseudoFmt ? "Le pseudo doit \u00EAtre compos\u00E9 uniquement de caract\u00E8res alphanum\u00E9riques, sans espace !" : "");
 					if (! "".equals(sb.toString()))
 						sb.append("\n");
 					sb.append(!rightEmailFmt ? "Veuillez rentrer une adresse email correcte !" : "");
 					if (! "".equals(sb.toString()))
 						sb.append("\n");
-					sb.append(!rightLnameFmt ? "Votre nom doit ?tre compos? de caract?res alpahb?tiques uniquement (espaces accept?s)" : "");
+					sb.append(!rightLnameFmt ? "Votre nom doit \u00EAtre compos\u00E9 de caract\u00E8res alpahb\u00E9tiques uniquement (espaces accept\u00E9s)" : "");
 					if (! "".equals(sb.toString()))
 						sb.append("\n");
-					sb.append(!rightFnameFmt ? "Votre nom doit ?tre compos? de caract?res alpahb?tiques uniquement (espaces et traits d'union accept?s)" : "");
+					sb.append(!rightFnameFmt ? "Votre nom doit \u00EAtre compos\u00E9 de caract\u00E8res alphab\u00E9tiques uniquement (espaces et traits d'union accept\u00E9s)" : "");
 					JOptionPane.showMessageDialog(null, sb.toString(), "Invalid content", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 			else // if (RegisterView.this.btnRegister.equals(e.getSource()))
 			{
-				// FIXME finaliser la partie d?di?e ? l'appuie sur le bouton d'enregistrement !!!
-				if(true) //remplacer par une v?rification des conditions ici
+				StringBuilder sb = new StringBuilder(); //FIXME initialiser la valeur du constructeur
+				String pwK = String.valueOf(RegisterView.this.fPasswordKey.getPassword()), pwKagain = String.valueOf(RegisterView.this.fPasswordKeyAgain.getPassword());
+				boolean eqPw, rightPwFmt;
+				eqPw = pwK.equals(pwKagain);
+				if(!eqPw)
+					sb.append("Les deux mots de passe doivent \u00EAtre identiques !");
+				rightPwFmt = true;
+				for (Boolean value : PasswordUtilities.isStrongEnough(pwK).values())
+					if (!value)
+						rightPwFmt = value;
+				if(true)
 					;
 				else
 				{
-					StringBuilder sb = new StringBuilder(); //FIXME initialiser la valeur du constructeur
 					JOptionPane.showMessageDialog(null, sb.toString(), "Invalid content", JOptionPane.ERROR_MESSAGE);
 				}
 			}
-		}
-	}
-
-	private enum FieldType
-	{
-		PSEUDO, EMAIL, FIRSTNAME, LASTNAME, PASSWORD;
-
-		public final static FieldType getValue(String fieldType)
-		{
-			if (null != fieldType)
-				for (FieldType v : values())
-					if (v.toString().equalsIgnoreCase(fieldType))
-						return v;
-			throw new IllegalArgumentException();
 		}
 	}
 
@@ -191,49 +181,49 @@ public class RegisterView extends JPanel
 		//@formatter:on
 	}
 
-	private static List<String> createRegisterURL(List<String> details, List<JPasswordField> pwd) throws Exception
-	{
-		JPasswordField pwAccount = pwd.get(0), pwKey = pwd.get(1);
-		MessageDigest mdPwdAccount = null;
-		MessageDigest mdPwdKey = null;
-		String hashtext = "", hashtextKey = "";
-		try
-		{
-			// hachage du mot de passe du compte
-			mdPwdAccount = MessageDigest.getInstance("MD5");
-			mdPwdAccount.reset();
-			mdPwdAccount.update(String.copyValueOf(pwAccount.getPassword()).getBytes());
-			byte[] digest = mdPwdAccount.digest();
-			BigInteger bigInt = new BigInteger(1, digest);
-			hashtext = bigInt.toString(16);
-			while (hashtext.length() < 32)
-				hashtext = "0" + hashtext;
-
-			// hachage du mot de passe de la clef
-			mdPwdKey = MessageDigest.getInstance("MD5");
-			mdPwdKey.reset();
-			mdPwdKey.update(String.copyValueOf(pwKey.getPassword()).getBytes());
-			byte[] digestKey = mdPwdKey.digest();
-			BigInteger bigIntKey = new BigInteger(1, digestKey);
-			hashtextKey = bigIntKey.toString(16);
-			while (hashtextKey.length() < 32)
-				hashtextKey = "0" + hashtextKey;
-
-		}
-		catch (NoSuchAlgorithmException e)
-		{
-			e.printStackTrace();
-		}
-		// construction de l'URL
-		List<String> url = new ArrayList<String>();
-		String urlConnect = SRV_ADDR + ":" + SRV_PORT + "/" + SRV_API + "/" + SRV_REGISTER_PAGE;
-
-		String params = "?" + PARAM_USER + "=" + details.get(0) + "&" + PARAM_EMAIL + "=" + details.get(1) + "&" + PARAM_FIRSTNAME + "=" + details.get(2) + "&" + PARAM_NAME + "=" + details.get(3) + "&" + PARAM_PWD + "=" + hashtext + "&" + PARAM_PWD_KEY + "=" + hashtextKey + "&" + PARAM_LENGTH + "=" + details.get(4);
-
-		url.add(urlConnect);
-		url.add(params);
-		return url;
-	}
+//	private static List<String> createRegisterURL(List<String> details, List<JPasswordField> pwd) throws Exception
+//	{
+//		JPasswordField pwAccount = pwd.get(0), pwKey = pwd.get(1);
+//		MessageDigest mdPwdAccount = null;
+//		MessageDigest mdPwdKey = null;
+//		String hashtext = "", hashtextKey = "";
+//		try
+//		{
+//			// hachage du mot de passe du compte
+//			mdPwdAccount = MessageDigest.getInstance("MD5");
+//			mdPwdAccount.reset();
+//			mdPwdAccount.update(String.copyValueOf(pwAccount.getPassword()).getBytes());
+//			byte[] digest = mdPwdAccount.digest();
+//			BigInteger bigInt = new BigInteger(1, digest);
+//			hashtext = bigInt.toString(16);
+//			while (hashtext.length() < 32)
+//				hashtext = "0" + hashtext;
+//
+//			// hachage du mot de passe de la clef
+//			mdPwdKey = MessageDigest.getInstance("MD5");
+//			mdPwdKey.reset();
+//			mdPwdKey.update(String.copyValueOf(pwKey.getPassword()).getBytes());
+//			byte[] digestKey = mdPwdKey.digest();
+//			BigInteger bigIntKey = new BigInteger(1, digestKey);
+//			hashtextKey = bigIntKey.toString(16);
+//			while (hashtextKey.length() < 32)
+//				hashtextKey = "0" + hashtextKey;
+//
+//		}
+//		catch (NoSuchAlgorithmException e)
+//		{
+//			e.printStackTrace();
+//		}
+//		// construction de l'URL
+//		List<String> url = new ArrayList<String>();
+//		String urlConnect = PROPERTIES.getProperty("server.address") + ":" + PROPERTIES.getProperty("server.port") + "/" + SRV_API + "/" + SRV_REGISTER_PAGE;
+//
+//		String params = "?" + USERNAME + "=" + details.get(0) + "&" + EMAIL + "=" + details.get(1) + "&" + FIRSTNAME + "=" + details.get(2) + "&" + LASTNAME + "=" + details.get(3) + "&" + PASSWORD + "=" + hashtext + "&" + PASSWORD_KEY + "=" + hashtextKey + "&" + KEY_LENGTH + "=" + details.get(4);
+//
+//		url.add(urlConnect);
+//		url.add(params);
+//		return url;
+//	}
 
 	private static boolean isValidFieldContent(String fieldContent, FieldType fieldType)
 	{
@@ -336,7 +326,7 @@ public class RegisterView extends JPanel
 		if (this.fFirstname == null)
 		{
 			this.fFirstname = new JTextField(10);
-			setPrompt("Votre pr?nom", this.fFirstname);
+			setPrompt("Votre pr\u00E9nom", this.fFirstname);
 			setFocusBehavior(SHOW_PROMPT, this.fFirstname);
 		}
 		return this.fFirstname;
@@ -394,7 +384,7 @@ public class RegisterView extends JPanel
 		if (this.fPasswordKey == null)
 		{
 			this.fPasswordKey = new JPasswordField();
-			setPrompt("Mot de passe de la cl?", this.fPasswordKey);
+			setPrompt("Mot de passe de la cl\u00E9", this.fPasswordKey);
 			setFocusBehavior(SHOW_PROMPT, this.fPasswordKey);
 			this.fPasswordKey.setToolTipText("Mot de passe servant \u00E0 crypter votre paire de clefs RSA\r\nCe mot de passe doit \u00EAtre diff\u00E9rent de celui de connexion (pour des raisons de s\u00E9curit\u00E9)");
 		}
@@ -406,7 +396,7 @@ public class RegisterView extends JPanel
 		if (this.fPasswordKeyAgain == null)
 		{
 			this.fPasswordKeyAgain = new JPasswordField();
-			setPrompt("Mot de passe de la cl?", this.fPasswordKey);
+			setPrompt("Mot de passe de la cl\u00E9", this.fPasswordKey);
 			setFocusBehavior(SHOW_PROMPT, this.fPasswordKey);
 		}
 		return this.fPasswordKeyAgain;
@@ -426,7 +416,7 @@ public class RegisterView extends JPanel
 	private JLabel getLabelFirstname()
 	{
 		if (this.lFirstname == null)
-			this.lFirstname = new JLabel("Pr?nom : ");
+			this.lFirstname = new JLabel("Pr\u00E9nom : ");
 		return this.lFirstname;
 	}
 

@@ -3,6 +3,7 @@ package fr.esgi.annuel.ctrl;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
+import java.util.Properties;
 import java.util.UUID;
 import fr.esgi.annuel.constants.ServerAction;
 import fr.esgi.annuel.constants.Views;
@@ -18,20 +19,26 @@ public final class MasterController
 	private static MasterWindow window;
 	private static JPanel actualPanel;
 	private final JPanel identificationView = new IdentificationView(this), registerView = new RegisterView(this), profileView = new ProfilView(this);
+	private final Properties properties;
+
+	public MasterController(Properties properties)
+	{
+		this.properties = properties;
+	}
 
 	public static UUID getCookieValue()
 	{
 		return cookieValue;
 	}
 
-	public static void setCookieValue(UUID cookieValue)
-	{
-		MasterController.cookieValue = cookieValue;
-	}
-
 	public static void setCookieValue(String cookieValue)
 	{
 		MasterController.cookieValue = UUID.fromString(cookieValue);
+	}
+
+	public static void setCookieValue(UUID cookieValue)
+	{
+		MasterController.cookieValue = cookieValue;
 	}
 
 	public final void changeView(Views view, Map<String, Object> map)
@@ -77,21 +84,11 @@ public final class MasterController
 
 	public final void launch()
 	{
-		try
+		try // Set System L&F
 		{
-			// Set System L&F
 			javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
 		}
-		// @formatter:off
-		catch (javax.swing.UnsupportedLookAndFeelException e)
-		{}
-		catch (ClassNotFoundException e)
-		{}
-		catch (InstantiationException e)
-		{}
-		catch (IllegalAccessException e)
-		{}
-		// @formatter:on
+		catch (javax.swing.UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException ignored) {}
 		EventQueue.invokeLater(new Runnable()
 		{
 			@Override
@@ -99,7 +96,7 @@ public final class MasterController
 			{
 				try
 				{
-					window = new MasterWindow(new MasterController());
+					window = new MasterWindow(MasterController.this);
 					window.setVisible(true);
 				}
 				catch (Exception e)
@@ -130,4 +127,8 @@ public final class MasterController
 		MasterController.window.setConnectionStatus(isConnected);
 	}
 
+	public Properties getProperties()
+	{
+		return properties;
+	}
 }

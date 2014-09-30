@@ -3,9 +3,13 @@ package fr.esgi.annuel.crypt;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 import fr.esgi.annuel.constants.Constants;
+import fr.esgi.annuel.constants.PasswordConstraints;
+
+import static fr.esgi.annuel.constants.PasswordConstraints.*;
 
 public class PasswordUtilities
 {
+	public static final String PASSWORD_STANDARD_FORMAT = "Le mot de passe doit \u00EAtre d'au moins 8 caract\u00E8res et \u00EAtre compos\u00E9 de :\r\n\t- Au moins 1 majuscule\r\n\t- Au moins 1 minuscule\r\n\t- Au moins 1 chiffre\r\n\t- Au moins 1 caract\u00E8re sp\u00E9cial";
 
 	/**
 	 * Retourne <code>Vrai</code> si le mot de passe contient un caractère spécial, <code>Faux</code> sinon
@@ -24,7 +28,7 @@ public class PasswordUtilities
 			if (-1 != pw.indexOf(c))
 				res = true;
 			i++ ;
-		}while (true != res && Constants.SPEC_CHARS.length > i); // Tant que res est faux ET que i < longueur de SPEC_CHAR
+		}while (!res && Constants.SPEC_CHARS.length > i); // Tant que res est faux ET que i < longueur de SPEC_CHAR
 		return res;
 	}
 
@@ -83,21 +87,28 @@ public class PasswordUtilities
 		return Pattern.compile("^[-!\"§$%&/()=?+*~#'_:\\.,@^<>£¤µa-zA-Z0-9]+$").matcher(pw).find();
 	}
 
+
+	private static Boolean pasEspace(String pw)
+	{
+		return pw.contains(" ");
+	}
+
 	/**
 	 * Return a HashMap containing the tests name and a boolean indicating if it has been validated, for the given password
 	 *
 	 * @param pw {String}: the password to check
 	 * @return {HashMap&lt;String, Boolean&gt;} The <code>HashMap</code> with the tests results. Ex: "Length":false
 	 **/
-	public final static HashMap<String, Boolean> isStrongEnough(String pw)
+	public final static HashMap<PasswordConstraints, Boolean> isStrongEnough(String pw)
 	{
-		HashMap<String, Boolean> res = new HashMap<String, Boolean>();
-		res.put(Constants.PW_LENGTH, estSuffisammentLong(pw));
-		res.put(Constants.PW_SPE_CHAR, contientCaracSpe(pw));
-		res.put(Constants.PW_NUMBER, contientNombre(pw));
-		res.put(Constants.PW_MIN, contientMin(pw));
-		res.put(Constants.PW_MAJ, contientMaj(pw));
-		res.put(Constants.PW_GOOD_FMT, seulementAcceptes(pw));
+		HashMap<PasswordConstraints, Boolean> res = new HashMap();
+		res.put(LENGTH, estSuffisammentLong(pw));
+		res.put(SPECIAL_CHARACTER, contientCaracSpe(pw));
+		res.put(CONTAINS_NUMBER, contientNombre(pw));
+		res.put(CONTAINS_MINUS_LETTER, contientMin(pw));
+		res.put(CONTAINS_MAJUSCULE_LETTER, contientMaj(pw));
+		res.put(WELL_FORMATED, seulementAcceptes(pw));
+		res.put(NO_SPACE_CHAR, pasEspace(pw));
 		return res;
 	}
 }

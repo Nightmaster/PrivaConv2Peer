@@ -1,69 +1,194 @@
 package fr.esgi.annuel.constants;
 
+import static fr.esgi.annuel.constants.Parameters.*;
+
 /**
 * @author Gaël B.
 **/
 public enum ServerAction
 {
-	REGISTER("webAPI/register"),
-	CONNECT("webAPI/connect"),
-	STAY_ALIVE("webAPI/stayAlive"),
-	DISCONNECT("webAPI/disconnect"),
-	MODIFY_PROFILE("webAPI/updateInfos"),
-	SEARCH("webAPI/search"),
-	ADD_FRIEND("webAPI/addFriend"),
-	ANSWER_REQUEST("webAPI/answerRequest"),
-	GET_PRIVATE_KEY("webAPI/getKey/%s"),
-	GET_PUBLIC_KEY("webAPI/getPubKey/%s"),
-	GET_CLIENT_IP("webAPI/getCliIP/%s"),
-	SHOW_PROFILE("webAPI/showProfile/%s");
+	REGISTER("webAPI/register")
+	{
+		@Override
+		public String[] getAllowedParameters()
+		{
+			return new String[] {USERNAME.getValue(), EMAIL.getValue(), PASSWORD.getValue(), FIRSTNAME.getValue(), LASTNAME.getValue(), PASSWORD_KEY.getValue(), KEY_LENGTH.getValue()};
+		}
+
+		@Override
+		public boolean isPathParameter()
+		{
+			return false;
+		}
+	},
+	CONNECT("webAPI/connect")
+	{
+		@Override
+		public String[] getAllowedParameters()
+		{
+			return new String[]{USERNAME.getValue(), EMAIL.getValue() , PASSWORD.getValue()};
+		}
+
+		@Override
+		public boolean isPathParameter()
+		{
+			return false;
+		}
+	},
+	STAY_ALIVE("webAPI/stayAlive")
+	{
+		@Override
+		public String[] getAllowedParameters()
+		{
+			return null;
+		}
+
+		@Override
+		public boolean isPathParameter()
+		{
+			return false;
+		}
+	},
+	DISCONNECT("webAPI/disconnect")
+	{
+		@Override
+		public String[] getAllowedParameters()
+		{
+			return null;
+		}
+
+		@Override
+		public boolean isPathParameter()
+		{
+			return false;
+		}
+	},
+	MODIFY_PROFILE("webAPI/updateInfos")
+	{
+		@Override
+		public String[] getAllowedParameters()
+		{
+			return new String[] {USERNAME.getValue(), EMAIL.getValue(), PASSWORD.getValue(), FIRSTNAME.getValue(), LASTNAME.getValue()};
+		}
+
+		@Override
+		public boolean isPathParameter()
+		{
+			return false;
+		}
+	},
+	SEARCH("webAPI/search")
+	{
+		@Override
+		public String[] getAllowedParameters()
+		{
+			return new String[]{USERNAME.getValue(), EMAIL.getValue(), FIRSTNAME.getValue(), LASTNAME.getValue()};
+		}
+
+		@Override
+		public boolean isPathParameter()
+		{
+			return false;
+		}
+	},
+	ADD_FRIEND("webAPI/addFriend")
+	{
+		@Override
+		public String[] getAllowedParameters()
+		{
+			return new String[]{USERNAME.getValue(), EMAIL.getValue()};
+		}
+
+		@Override
+		public boolean isPathParameter()
+		{
+			return false;
+		}
+	},
+	ANSWER_REQUEST("webAPI/answerRequest")
+	{
+		@Override
+		public String[] getAllowedParameters()
+		{
+			return new String[]{USERNAME.getValue(), VALIDATION.getValue()};
+		}
+
+		@Override
+		public boolean isPathParameter()
+		{
+			return false;
+		}
+	},
+	GET_PRIVATE_KEY("webAPI/getKey/%s")
+	{
+		@Override
+		public String[] getAllowedParameters()
+		{
+			return null;
+		}
+
+		@Override
+		public boolean isPathParameter()
+		{
+			return true;
+		}
+	},
+	GET_PUBLIC_KEY("webAPI/getPubKey/%s")
+	{
+		@Override
+		public String[] getAllowedParameters()
+		{
+			return null;
+		}
+
+		@Override
+		public boolean isPathParameter()
+		{
+			return true;
+		}
+	},
+	GET_CLIENT_IP("webAPI/getCliIP/%s")
+	{
+		@Override
+		public String[] getAllowedParameters()
+		{
+			return null;
+		}
+
+		@Override
+		public boolean isPathParameter()
+		{
+			return true;
+		}
+	},
+	SHOW_PROFILE("webAPI/showProfile/%s")
+	{
+		@Override
+		public String[] getAllowedParameters()
+		{
+			return null;
+		}
+
+		@Override
+		public boolean isPathParameter()
+		{
+			return true;
+		}
+	};
 
 	private final String pathTo;
-	private static final String[]
-		REGISTER_PARAM = {"login", "email", "hashPw", "lName", "fName", "hashPwK", "lengthKey"},
-		CONNECT_PARAM = {"login" ,"email" ,"hashPW"},
-		MODIFY_PROFILE_PARAM = {"login", "email", "fName", "lName", "hashPW"},
-		SEARCH_PARAM = {"username", "email", "firstname", "name"},
-		ADD_FRIEND_PARAM = {"username", "email"},
-		ANSWER_REQUEST_PARAM = {"username", "validate"},
-		LOGIN_ALONE = {"login"};
 
 	private ServerAction(String pathTo)
 	{
 		this.pathTo = pathTo;
 	}
 
+	public abstract String[] getAllowedParameters();
+
+	public abstract boolean isPathParameter();
 
 	public String  getAddressFor()
 	{
 		return this.pathTo;
-	}
-
-	public String[] getParameters()
-	{
-		if(this == REGISTER)
-			return REGISTER_PARAM;
-		else if (this == CONNECT)
-			return CONNECT_PARAM;
-		else if(this == STAY_ALIVE)
-			return null;
-		else if(this == DISCONNECT)
-			return null;
-		else if(this == MODIFY_PROFILE)
-			return MODIFY_PROFILE_PARAM;
-		else if(this == SEARCH)
-			return SEARCH_PARAM;
-		else if(this == ADD_FRIEND)
-			return ADD_FRIEND_PARAM;
-		else if(this == ANSWER_REQUEST)
-			return ANSWER_REQUEST_PARAM;
-		else if(this == GET_PRIVATE_KEY)
-			return LOGIN_ALONE;
-		else if(this == GET_PUBLIC_KEY)
-			return null;
-		else if(this == GET_CLIENT_IP)
-			return null;
-		else
-			return LOGIN_ALONE;
 	}
 }
