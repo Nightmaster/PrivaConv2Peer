@@ -8,12 +8,12 @@ public enum RegEx
 	VALID_PSEUDO("^[a-zA-Z0-9_-]+$");
 
 	private final String regEx;
-	
+
 	private RegEx(String regEx)
 	{
 		this.regEx = regEx;
 	}
-	
+
 	public String getRegEx()
 	{
 		return this.regEx;

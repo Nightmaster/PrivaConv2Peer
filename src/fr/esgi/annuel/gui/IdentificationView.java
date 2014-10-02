@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import fr.esgi.annuel.client.ClientInfo;
-import fr.esgi.annuel.constants.Constants;
+import fr.esgi.annuel.constants.Parameters;
 import fr.esgi.annuel.constants.ServerAction;
 import fr.esgi.annuel.constants.Views;
 import fr.esgi.annuel.contact.Contact;
@@ -145,6 +145,7 @@ public class IdentificationView extends JPanel
 
 	protected List<String> createConnectionURL(String connect, JPasswordField pwd) throws Exception
 	{
+		//FIXME bouger la partie de création et de requête HTML hors des vues !!!
 		MessageDigest mdPwd = null;
 		String hashtext = "";
 		try
@@ -165,7 +166,7 @@ public class IdentificationView extends JPanel
 		}
 		List<String> url = new ArrayList<String>();
 		String urlConnect = properties.getProperty("server.address") + ":" + properties.getProperty("server.port") + "/" + properties.getProperty("server.api") + "/" + ServerAction.CONNECT.getAddressFor();
-		String params = "?" + Constants.PARAM_USERNAME + "=" + connect + "&" + Constants.PARAM_PWD + "=" + hashtext;
+		String params = "?" + Parameters.USERNAME.getValue() + "=" + connect + "&" + Parameters.PASSWORD.getValue() + "=" + hashtext;
 
 		url.add(urlConnect);
 		url.add(params);
