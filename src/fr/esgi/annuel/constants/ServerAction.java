@@ -12,7 +12,7 @@ public enum ServerAction
 		@Override
 		public String[] getAllowedParameters()
 		{
-			return new String[] {USERNAME.getValue(), EMAIL.getValue(), PASSWORD.getValue(), FIRSTNAME.getValue(), LASTNAME.getValue(), PASSWORD_KEY.getValue(), KEY_LENGTH.getValue()};
+			return new String[] {USERNAME.getParameterValue(), EMAIL.getParameterValue(), PASSWORD.getParameterValue(), FIRSTNAME.getParameterValue(), LASTNAME.getParameterValue(), PASSWORD_KEY.getParameterValue(), KEY_LENGTH.getParameterValue()};
 		}
 
 		@Override
@@ -26,7 +26,7 @@ public enum ServerAction
 		@Override
 		public String[] getAllowedParameters()
 		{
-			return new String[]{USERNAME.getValue(), EMAIL.getValue() , PASSWORD.getValue()};
+			return new String[]{USERNAME.getParameterValue(), EMAIL.getParameterValue() , PASSWORD.getParameterValue()};
 		}
 
 		@Override
@@ -68,7 +68,7 @@ public enum ServerAction
 		@Override
 		public String[] getAllowedParameters()
 		{
-			return new String[] {USERNAME.getValue(), EMAIL.getValue(), PASSWORD.getValue(), FIRSTNAME.getValue(), LASTNAME.getValue()};
+			return new String[] {USERNAME.getParameterValue(), EMAIL.getParameterValue(), PASSWORD.getParameterValue(), FIRSTNAME.getParameterValue(), LASTNAME.getParameterValue()};
 		}
 
 		@Override
@@ -82,7 +82,7 @@ public enum ServerAction
 		@Override
 		public String[] getAllowedParameters()
 		{
-			return new String[]{USERNAME.getValue(), EMAIL.getValue(), FIRSTNAME.getValue(), LASTNAME.getValue()};
+			return new String[]{USERNAME.getParameterValue(), EMAIL.getParameterValue(), FIRSTNAME.getParameterValue(), LASTNAME.getParameterValue()};
 		}
 
 		@Override
@@ -96,7 +96,7 @@ public enum ServerAction
 		@Override
 		public String[] getAllowedParameters()
 		{
-			return new String[]{USERNAME.getValue(), EMAIL.getValue()};
+			return new String[]{USERNAME.getParameterValue(), EMAIL.getParameterValue()};
 		}
 
 		@Override
@@ -110,7 +110,7 @@ public enum ServerAction
 		@Override
 		public String[] getAllowedParameters()
 		{
-			return new String[]{USERNAME.getValue(), VALIDATION.getValue()};
+			return new String[]{USERNAME.getParameterValue(), VALIDATION.getParameterValue()};
 		}
 
 		@Override

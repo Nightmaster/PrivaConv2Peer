@@ -14,15 +14,15 @@ public enum Parameters
 	KEY_LENGTH("length"),
 	VALIDATION("validate");
 
-	private final String value;
+	private final String parameterValue;
 
-	private Parameters(String value)
+	private Parameters(String parameterValue)
 	{
-		this.value = value;
+		this.parameterValue = parameterValue;
 	}
 
-	public String getValue()
+	public String getParameterValue()
 	{
-		return this.value;
+		return this.parameterValue;
 	}
 }

@@ -166,7 +166,7 @@ public class IdentificationView extends JPanel
 		}
 		List<String> url = new ArrayList<String>();
 		String urlConnect = properties.getProperty("server.address") + ":" + properties.getProperty("server.port") + "/" + properties.getProperty("server.api") + "/" + ServerAction.CONNECT.getAddressFor();
-		String params = "?" + Parameters.USERNAME.getValue() + "=" + connect + "&" + Parameters.PASSWORD.getValue() + "=" + hashtext;
+		String params = "?" + Parameters.USERNAME.getParameterValue() + "=" + connect + "&" + Parameters.PASSWORD.getParameterValue() + "=" + hashtext;
 
 		url.add(urlConnect);
 		url.add(params);
