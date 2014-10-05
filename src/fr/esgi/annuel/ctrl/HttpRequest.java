@@ -1,14 +1,17 @@
 package fr.esgi.annuel.ctrl;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.*;
 import fr.esgi.annuel.constants.Parameters;
 import fr.esgi.annuel.constants.ServerAction;
 
 /**
+* Class used to interact with the server's webAPI
 * @author Gaël B.
 **/
-@SuppressWarnings(value = "unused")
 public class HttpRequest
 {
 	private final String serverAddress, serverPort;
@@ -36,9 +39,12 @@ public class HttpRequest
 	* @param name      the client lastname
 	* @param hashPwKey the MD5 hash of password for the private key for this account
 	* @param length    the length of the created private key
+	*
+	* @return the actual instance of the {@link fr.esgi.annuel.ctrl.HttpRequest}
+	*
 	* @throws IOException
 	**/
-	public final void sendRegisterRequest(String username, String email, String hashPw, String firstname, String name, String hashPwKey, int length) throws IOException
+	public final HttpRequest sendRegisterRequest(String username, String email, String hashPw, String firstname, String name, String hashPwKey, int length) throws IOException
 	{
 		initConnection(ServerAction.REGISTER,
 					   Parameters.USERNAME.getParameterValue() + "=" + username,
@@ -48,6 +54,7 @@ public class HttpRequest
 					   Parameters.LASTNAME.getParameterValue() + "=" + name,
 					   Parameters.PASSWORD_KEY.getParameterValue() + "=" + hashPwKey,
 					   Parameters.KEY_LENGTH.getParameterValue() + "=" + Integer.toString(length));
+		return this;
 	}
 
 	/**
@@ -56,34 +63,54 @@ public class HttpRequest
 	* @param username the username used to log on the client (set it to <code>null</code> if email is used)
 	* @param email    the email used to log on the client (set it to <code>null</code> if username is used)
 	* @param hashPw   the MD5 hash of the password to log on the client
+	*
+	* @return the actual instance of the {@link fr.esgi.annuel.ctrl.HttpRequest}
+	*
 	* @throws IOException
 	**/
-	public final void sendConnectionRequest(String username, String email, String hashPw) throws IOException
+	public final HttpRequest sendConnectionRequest(String username, String email, String hashPw) throws IOException
 	{
 		initConnection(ServerAction.CONNECT,
-					   Parameters.USERNAME.getParameterValue() + "=" + username,
-					   Parameters.EMAIL.getParameterValue() + "=" + email,
+					   (null != username) ? Parameters.USERNAME.getParameterValue() + "=" + username : null,
+					   (null != email) ? Parameters.EMAIL.getParameterValue() + "=" + email : null,
 					   Parameters.PASSWORD.getParameterValue() + "=" + hashPw);
+		this.connection.connect();
+		return this;
 	}
 
 	/**
 	* Initiate a connection to the server to make a stay alive action
 	*
+	* @param cookie the cookie used by the webAPI to authenticate the user
+	*
+	* @return the actual instance of the {@link fr.esgi.annuel.ctrl.HttpRequest}
+	*
+	*
 	* @throws IOException
 	**/
-	public final void sendStayAliveRequest() throws IOException
+	public final HttpRequest sendStayAliveRequest(HttpCookie cookie) throws IOException
 	{
 		initConnection(ServerAction.STAY_ALIVE);
+		this.connection.setRequestProperty("Cookie", cookie.toString());
+		this.connection.connect();
+		return this;
 	}
 
 	/**
 	* Initiate a connection to the server to make a disconnection (log out) action
 	*
+	* @param cookie the cookie used by the webAPI to authenticate the user
+	*
+	* @return the actual instance of the {@link fr.esgi.annuel.ctrl.HttpRequest}
+	*
 	* @throws IOException
 	**/
-	public final void sendDisonnectRequest() throws IOException
+	public final HttpRequest sendDisonnectRequest(HttpCookie cookie) throws IOException
 	{
 		initConnection(ServerAction.DISCONNECT);
+		this.connection.setRequestProperty("Cookie", cookie.toString());
+		this.connection.connect();
+		return this;
 	}
 
 	/**
@@ -94,16 +121,23 @@ public class HttpRequest
 	* @param hashPw    the MD5 hash of the new password (set it to <code>null</code> if unchanged)
 	* @param firstname the new firstname (set it to <code>null</code> if unchanged)
 	* @param name      the new lastname (set it to <code>null</code> if unchanged)
+	* @param cookie the cookie used by the webAPI to authenticate the user
+	*
+	* @return the actual instance of the {@link fr.esgi.annuel.ctrl.HttpRequest}
+	*
 	* @throws IOException
 	**/
-	public final void sendUpdateInfosRequest(String username, String email, String hashPw, String firstname, String name) throws IOException
+	public final HttpRequest sendUpdateInfosRequest(String username, String email, String hashPw, String firstname, String name, HttpCookie cookie) throws IOException
 	{
 		initConnection(ServerAction.MODIFY_PROFILE,
-					   Parameters.USERNAME.getParameterValue() + "=" + username,
-					   Parameters.EMAIL.getParameterValue() + "=" + email,
-					   Parameters.PASSWORD.getParameterValue() + "=" + hashPw,
-					   Parameters.FIRSTNAME.getParameterValue() + "=" + firstname,
-					   Parameters.LASTNAME.getParameterValue() + "=" + name);
+					   (null != username) ? Parameters.USERNAME.getParameterValue() + "=" + username : null,
+					   (null != email) ? Parameters.EMAIL.getParameterValue() + "=" + email : null,
+					   (null != hashPw) ? Parameters.PASSWORD.getParameterValue() + "=" + hashPw : null,
+					   (null != firstname) ? Parameters.FIRSTNAME.getParameterValue() + "=" + firstname : null,
+					   (null != name) ? Parameters.LASTNAME.getParameterValue() + "=" + name : null);
+		this.connection.setRequestProperty("Cookie", cookie.toString());
+		this.connection.connect();
+		return this;
 	}
 
 	/**
@@ -113,15 +147,22 @@ public class HttpRequest
 	* @param email     the searched email
 	* @param firstname the searched firstname
 	* @param name      the searched lastname
+	* @param cookie the cookie used by the webAPI to authenticate the user
+	*
+	* @return the actual instance of the {@link fr.esgi.annuel.ctrl.HttpRequest}
+	*
 	* @throws IOException
 	**/
-	public final void sendSearchRequest(String username, String email, String firstname, String name) throws IOException
+	public final HttpRequest sendSearchRequest(String username, String email, String firstname, String name, HttpCookie cookie) throws IOException
 	{
 		initConnection(ServerAction.SEARCH,
-					   Parameters.USERNAME.getParameterValue() + "=" + username,
-					   Parameters.EMAIL.getParameterValue() + "=" + email,
-					   Parameters.FIRSTNAME.getParameterValue() + "=" + firstname,
-					   Parameters.LASTNAME.getParameterValue() + "=" + name);
+					   (null != username) ? Parameters.USERNAME.getParameterValue() + "=" + username : null,
+					   (null != email) ? Parameters.EMAIL.getParameterValue() + "=" + email : null,
+					   (null != firstname) ? Parameters.FIRSTNAME.getParameterValue() + "=" + firstname : null,
+					   (null != name) ? Parameters.LASTNAME.getParameterValue() + "=" + name : null);
+		this.connection.setRequestProperty("Cookie", cookie.toString());
+		this.connection.connect();
+		return this;
 	}
 
 	/**
@@ -129,13 +170,19 @@ public class HttpRequest
 	*
 	* @param username the username of the asked user (set it to <code>null</code> if email is used)
 	* @param email    the email of the asked user (set it to <code>null</code> if username is used)
+	*
+	* @return the actual instance of the {@link fr.esgi.annuel.ctrl.HttpRequest}
+	*
 	* @throws IOException
 	**/
-	public final void sendAddFriendRequest(String username, String email) throws IOException
+	public final HttpRequest sendAddFriendRequest(String username, String email, HttpCookie cookie) throws IOException
 	{
 		initConnection(ServerAction.ADD_FRIEND,
-					   Parameters.USERNAME.getParameterValue() + "=" + username,
-					   Parameters.EMAIL.getParameterValue() + "=" + email);
+					   (null != username) ? Parameters.USERNAME.getParameterValue() + "=" + username : null,
+					   (null != username) ? Parameters.EMAIL.getParameterValue() + "=" + email : null);
+		this.connection.setRequestProperty("Cookie", cookie.toString());
+		this.connection.connect();
+		return this;
 	}
 
 	/**
@@ -143,57 +190,92 @@ public class HttpRequest
 	*
 	* @param username         the username of the user that asked for friendship status
 	* @param validationStatus <code>true</code> if request is accepted, <code>false</code> otherwise
+	* @param cookie the cookie used by the webAPI to authenticate the user
+	*
+	* @return the actual instance of the {@link fr.esgi.annuel.ctrl.HttpRequest}
+	*
 	* @throws IOException
 	**/
-	public final void sendAnswerReqRequest(String username, boolean validationStatus) throws IOException
+	public final HttpRequest sendAnswerReqRequest(String username, boolean validationStatus, HttpCookie cookie) throws IOException
 	{
 		initConnection(ServerAction.ANSWER_REQUEST,
 					   Parameters.USERNAME.getParameterValue() + "=" + username,
 					   Parameters.EMAIL.getParameterValue() + "=" + String.valueOf(validationStatus));
+		this.connection.setRequestProperty("Cookie", cookie.toString());
+		this.connection.connect();
+		return this;
 	}
 
 	/**
 	* Initiate a connection to the server to make a demand to get the private key for the logged on user
 	*
 	* @param username the username of logged on user
+	* @param cookie the cookie used by the webAPI to authenticate the user
+	*
+	* @return the actual instance of the {@link fr.esgi.annuel.ctrl.HttpRequest}
+	*
 	* @throws IOException
 	**/
-	public final void sendGetPrivateKeyReqRequest(String username) throws IOException
+	public final HttpRequest sendGetPrivateKeyReqRequest(String username, HttpCookie cookie) throws IOException
 	{
 		initConnection(ServerAction.GET_PRIVATE_KEY, username);
+		this.connection.setRequestProperty("Cookie", cookie.toString());
+		this.connection.connect();
+		return this;
 	}
 
 	/**
 	* Initiate a connection to the server to make a demand to get the public key of a given user
 	*
 	* @param username the username of the user that we want to get the public key
+	* @param cookie the cookie used by the webAPI to authenticate the user
+	*
+	* @return the actual instance of the {@link fr.esgi.annuel.ctrl.HttpRequest}
+	*
 	* @throws IOException
 	**/
-	public final void sendGetPublicKeyReqRequest(String username) throws IOException
+	public final HttpRequest sendGetPublicKeyReqRequest(String username, HttpCookie cookie) throws IOException
 	{
 		initConnection(ServerAction.GET_PUBLIC_KEY, username);
+		this.connection.setRequestProperty("Cookie", cookie.toString());
+		this.connection.connect();
+		return this;
 	}
 
 	/**
 	* Initiate a connection to the server to make a demand to get the IP of a given user
 	*
 	* @param username the username of the user that we want to get the IP
+	* @param cookie the cookie used by the webAPI to authenticate the user
+	*
+	* @return the actual instance of the {@link fr.esgi.annuel.ctrl.HttpRequest}
+	*
 	* @throws IOException
 	**/
-	public final void sendGetClientIpRequest(String username) throws IOException
+	public final HttpRequest sendGetClientIpRequest(String username, HttpCookie cookie) throws IOException
 	{
 		initConnection(ServerAction.GET_CLIENT_IP, username);
+		this.connection.setRequestProperty("Cookie", cookie.toString());
+		this.connection.connect();
+		return this;
 	}
 
 	/**
 	* Initiate a connection to the server to make a demand to get the public data of a given user
 	*
 	* @param username the username of the user that we want to get the public data
+	* @param cookie the cookie used by the webAPI to authenticate the user
+	*
+	* @return the actual instance of the {@link fr.esgi.annuel.ctrl.HttpRequest}
+	*
 	* @throws IOException
 	**/
-	public final void sendShowProfileRequest(String username) throws IOException
+	public final HttpRequest sendShowProfileRequest(String username, HttpCookie cookie) throws IOException
 	{
 		initConnection(ServerAction.SHOW_PROFILE, username);
+		this.connection.setRequestProperty("Cookie", cookie.toString());
+		this.connection.connect();
+		return this;
 	}
 
 	public URLConnection getConnection()
@@ -222,8 +304,8 @@ public class HttpRequest
 						sb.append('&');
 					sb.append(param);
 				}
-			System.out.println(this.serverAddress + ":" + this.serverPort + "/" + action.getAddressFor() + sb.toString());
-			//this.connection = new URL(this.serverAddress + ":" + this.serverPort + "/" + action.getAddressFor() + sb.toString()).openConnection();
+			//System.out.println(this.serverAddress + ":" + this.serverPort + "/" + action.getAddressFor() + sb.toString());
+			this.connection = new URL(this.serverAddress + ":" + this.serverPort + "/" + action.getAddressFor() + sb.toString()).openConnection();
 		}
 	}
 
@@ -244,6 +326,31 @@ public class HttpRequest
 		if (null != this.connection)
 		{
 			return this.store.getCookies().get(0);
+		}
+		throw new ConnectException("Connection not already established!");
+	}
+
+	/**
+	* Read the connection content and return it as a String
+	*
+	* @return the content as a String
+	* @throws IOException
+	**/
+	public final String getContent() throws IOException
+	{
+		if (null != this.connection)
+		{
+			StringBuilder sb = new StringBuilder(this.connection.getContentLength());
+			BufferedReader buff = new BufferedReader(new InputStreamReader((InputStream) this.connection.getContent()));
+			String content;
+			do
+			{
+				content = buff.readLine();
+				if (null != content)
+					sb.append(content.trim());
+			}
+			while (null != content);
+			return sb.toString();
 		}
 		throw new ConnectException("Connection not already established!");
 	}
