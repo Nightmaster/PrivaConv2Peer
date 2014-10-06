@@ -5,7 +5,6 @@ import java.awt.*;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
-import fr.esgi.annuel.constants.ServerAction;
 import fr.esgi.annuel.constants.Views;
 import fr.esgi.annuel.gui.IdentificationView;
 import fr.esgi.annuel.gui.MasterWindow;
@@ -21,24 +20,24 @@ public final class MasterController
 	private final JPanel identificationView = new IdentificationView(this), registerView = new RegisterView(this), profileView = new ProfilView(this);
 	private final Properties properties;
 
+	/**
+	* Instantiate a new {@link fr.esgi.annuel.ctrl.MasterController} with the properties loaded on startup
+	*
+	* @param properties {{@link java.util.Properties}}the properties loaded on startup
+	**/
 	public MasterController(Properties properties)
 	{
 		this.properties = properties;
 	}
 
+	/**
+	* Getter for the value of the current cookie
+	*
+	* @return {{@link java.util.UUID}} the uuid value contained in the cookie
+	**/
 	public static UUID getCookieValue()
 	{
 		return cookieValue;
-	}
-
-	public static void setCookieValue(String cookieValue)
-	{
-		MasterController.cookieValue = UUID.fromString(cookieValue);
-	}
-
-	public static void setCookieValue(UUID cookieValue)
-	{
-		MasterController.cookieValue = cookieValue;
 	}
 
 	public final void changeView(Views view, Map<String, Object> map)
@@ -63,25 +62,29 @@ public final class MasterController
 	}
 
 	/**
-	 * Getter for actualPanel
-	 *
-	 * @return the actual Panel
-	 **/
+	* Getter for actualPanel
+	*
+	* @return the actual Panel
+	**/
 	public final JPanel getActualPanel()
 	{
 		return MasterController.actualPanel;
 	}
 
 	/**
-	 * Setter for actualPanel
-	 * @param actualPanel the  actual panel to define
-	 **/
+	* Setter for actualPanel
+	*
+	* @param actualPanel {{@link javax.swing.JPanel}}: the  actual panel to define
+	**/
 	public final void setActualPanel(JPanel actualPanel)
 	{
 		if (!actualPanel.equals(MasterController.actualPanel))
 			MasterController.actualPanel = actualPanel;
 	}
 
+	/**
+	* Launch the graphical user interface
+	**/
 	public final void launch()
 	{
 		try // Set System L&F
@@ -108,25 +111,29 @@ public final class MasterController
 	}
 
 	/**
-	 * Repaint the JFrame component and make it pack
-	 **/
+	* Repaint the JFrame component and make it pack
+	**/
 	public final void packFrame()
 	{
 		window.repaint();
 		window.pack();
 	}
 
-	public final String callServerAction(ServerAction serverAction, String... parameters)
-	{
-		//FIXME faire des méthodes d'action spécifiques
-		return null;
-	}
-
+	/**
+	* Set the connection status for the application
+	*
+	* @param isConnected {<ocde>boolean</ocde>}: the actual status
+	**/
 	public final void setConnectionStatus(boolean isConnected)
 	{
 		MasterController.window.setConnectionStatus(isConnected);
 	}
 
+	/**
+	* Return the properties loaded at the startup
+	*
+	* @return {{@link java.util.Properties}}: the properties
+	**/
 	public Properties getProperties()
 	{
 		return properties;

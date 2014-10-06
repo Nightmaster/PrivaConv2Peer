@@ -1,5 +1,8 @@
 package fr.esgi.annuel.crypt;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 import fr.esgi.annuel.constants.Constants;
@@ -110,5 +113,43 @@ public class PasswordUtilities
 		res.put(WELL_FORMATED, seulementAcceptes(pw));
 		res.put(NO_SPACE_CHAR, pasEspace(pw));
 		return res;
+	}
+
+	/**
+	* Hash (MD5) the password
+	*
+	* @param pw {{@link String}}: the password to hash
+	*
+	* @return {{@link String}}: the hash of the password
+	**/
+	public final static String hashPassword(String pw)
+	{
+		try
+		{
+			return hashPassword(pw.getBytes("UTF-8"));
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			return null;
+		}
+	}
+
+	/**
+	 * Hash (MD5) the password
+	 *
+	 * @param pw {<code>byte[]</code>}: the password to hash
+	 *
+	 * @return {{@link String}}: the hash of the password
+	 **/
+	public final static String hashPassword(byte[] pw)
+	{
+		try
+		{
+			return new String(MessageDigest.getInstance("MD5").digest(pw));
+		}
+		catch (NoSuchAlgorithmException e)
+		{
+			return null;
+		}
 	}
 }

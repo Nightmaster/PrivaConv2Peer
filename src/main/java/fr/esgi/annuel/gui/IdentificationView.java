@@ -27,8 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- * Class IdentificationView
- * Elle permet de construire la vue d'identification et de valider la connexion
+ * Create the identification view ({@link javax.swing.JPanel})
  **/
 public class IdentificationView extends JPanel
 {
@@ -42,7 +41,9 @@ public class IdentificationView extends JPanel
 	private MasterController controller;
 
 	/**
-	 * Create the panel.
+	 * Create the a new {@link fr.esgi.annuel.gui.IdentificationView}
+	 *
+	 * @param controller {{@link fr.esgi.annuel.ctrl.MasterController}}: the controller of the application
 	 **/
 	public IdentificationView(MasterController controller)
 	{
