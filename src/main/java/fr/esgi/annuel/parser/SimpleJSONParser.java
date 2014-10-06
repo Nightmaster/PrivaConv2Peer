@@ -3,7 +3,7 @@ package fr.esgi.annuel.parser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-class SimpleJSONParser
+public class SimpleJsonParser
 {
 	private String displayMessage = null;
 	private boolean error, status;
@@ -16,7 +16,7 @@ class SimpleJSONParser
 	 * @param action {String}: the name of the current action
 	 * @throws JSONException Can throw exceptions because of illegal arguments
 	 **/
-	public SimpleJSONParser(JSONObject json, String action) throws JSONException
+	SimpleJsonParser(JSONObject json, String action) throws JSONException
 	{
 		if ("registration" != action.toLowerCase() && "disconnection" != action.toLowerCase())
 			throw new IllegalArgumentException("action parameter must be: \"Registration\" or \"Disconnection\" (not case sensitive)!");

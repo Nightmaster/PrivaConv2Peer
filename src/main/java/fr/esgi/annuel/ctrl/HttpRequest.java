@@ -44,7 +44,7 @@ public class HttpRequest
 	*
 	* @throws IOException
 	**/
-	public final HttpRequest sendRegisterRequest(String username, String email, String hashPw, String firstname, String name, String hashPwKey, int length) throws IOException
+	public final HttpRequest sendRegisterRequest(String username, String email, String hashPw, String firstname, String name, int length, String hashPwKey) throws IOException
 	{
 		initConnection(ServerAction.REGISTER,
 					   Parameters.USERNAME.getParameterValue() + "=" + username,

@@ -31,7 +31,6 @@ public class Lanceur
 				catch (IOException ignored)
 				{}
 		}
-		MasterController m = new MasterController(PROPERTIES);
-		m.launch();
+		new MasterController(PROPERTIES).launch();
 	}
 }

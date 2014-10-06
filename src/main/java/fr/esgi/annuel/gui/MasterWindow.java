@@ -14,51 +14,6 @@ import fr.esgi.util.Outils;
 @SuppressWarnings("serial")
 public class MasterWindow extends JFrame
 {
-	private class MenuItemListener implements ActionListener
-	{
-
-		private final void aboutChoice()
-		{
-			JOptionPane.showMessageDialog(null, "Private Conversations Over P2P v 1.0", "PrivaConv2Peer - Version", JOptionPane.PLAIN_MESSAGE);
-		}
-
-		private final void addUserWindows()
-		{
-
-		}
-
-		private final void conversationWindow()
-		{}
-
-		private final void helpChoice()
-		{
-			JOptionPane.showMessageDialog(null, "Menu à venir", "à venir", JOptionPane.INFORMATION_MESSAGE);
-		}
-
-		private final void profilWindow()
-		{
-
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent ev)
-		{
-			String str = ((JMenuItem) ev.getSource()).getText();
-			if (Constants.QUIT.equals(str))
-				Outils.breakPgm(true);
-			else if (Constants.LAUNCH_CONVERSATION.equals(str))
-				conversationWindow();
-			else if (Constants.ABOUT.equals(str))
-				aboutChoice();
-			else if (Constants.PROFILE.equals(str))
-				profilWindow();
-			else if (Constants.ADD_USER.equals(str))
-				addUserWindows();
-			else if (Constants.HELP.equals(str))
-				helpChoice();
-		}
-	}
-
 	private String actualView = "";
 	private JPanel contentPane;
 	private MasterController controller;
@@ -70,11 +25,19 @@ public class MasterWindow extends JFrame
 	public MasterWindow(MasterController controller)
 	{
 		this.controller = controller;
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		JPanel panel = new IdentificationView(controller);
 		setView(panel, Views.IDENTIFICATION);
 		this.controller.setActualPanel(panel);
 		this.pack();
+	}
+
+	public void openDisconnectPopup()
+	{
+		JOptionPane.showMessageDialog(this,
+									  "Vous avez \u00E9t\u00E9 d\u00E9connect\u00E9 suite \u00E0 votre inactivit\u00E9 de plus de 15 minutes",
+									  "D\u00E9connexion automatique",
+									  JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	private JMenu getMenu()
@@ -212,20 +175,72 @@ public class MasterWindow extends JFrame
 
 	/**
 	 * @param userConnected boolean used to know if user is connected
-	 **/
+	 */
 	public final void setConnectionStatus(boolean userConnected)
 	{
 		this.userConnected = userConnected;
 	}
 
+	/**
+	* Change the displayed view by the window
+	*
+	* @param panel {{@link javax.swing.JPanel}}: the view to display in the window
+	* @param view  {{@link fr.esgi.annuel.constants.Views}}: the enum defining the view
+	**/
 	public final void setView(JPanel panel, Views view)
 	{
+		setJMenuBar(getMnBar());
 		this.contentPane = panel;
 		this.contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(this.contentPane);
 		this.actualView = view.getName();
-		setJMenuBar(getMnBar());
 		this.repaint();
 		this.pack();
+	}
+
+	private class MenuItemListener implements ActionListener
+	{
+
+		private final void aboutChoice()
+		{
+			JOptionPane.showMessageDialog(null, "Private Conversations Over P2P v 1.0", "PrivaConv2Peer - Version", JOptionPane.PLAIN_MESSAGE);
+		}
+
+		private final void addUserWindows()
+		{
+
+		}
+
+		private final void conversationWindow()
+		{
+		}
+
+		private final void helpChoice()
+		{
+			JOptionPane.showMessageDialog(null, "Menu à venir", "à venir", JOptionPane.INFORMATION_MESSAGE);
+		}
+
+		private final void profilWindow()
+		{
+
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent ev)
+		{
+			String str = ((JMenuItem) ev.getSource()).getText();
+			if (Constants.QUIT.equals(str))
+				Outils.breakPgm(true);
+			else if (Constants.LAUNCH_CONVERSATION.equals(str))
+				conversationWindow();
+			else if (Constants.ABOUT.equals(str))
+				aboutChoice();
+			else if (Constants.PROFILE.equals(str))
+				profilWindow();
+			else if (Constants.ADD_USER.equals(str))
+				addUserWindows();
+			else if (Constants.HELP.equals(str))
+				helpChoice();
+		}
 	}
 }

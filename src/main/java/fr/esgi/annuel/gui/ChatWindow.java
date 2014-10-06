@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import fr.esgi.annuel.client.Client;
 import fr.esgi.annuel.client.ClientInfo;
-import fr.esgi.annuel.contact.Contacts;
+import fr.esgi.annuel.client.contact.Contacts;
 import fr.esgi.annuel.message.Message;
 import fr.esgi.annuel.message.MessageQueue;
 import fr.esgi.annuel.server.Server;
@@ -19,7 +19,7 @@ import fr.esgi.annuel.server.Server;
 public class ChatWindow
 {
 
-	static ClientInfo logedUser = new ClientInfo("");
+	static ClientInfo logedUser = new ClientInfo();
 	protected static final int MAJ_KEY = 16;
 	boolean clearArea = false;
 	String currentInterlocuteur = "";
@@ -33,21 +33,11 @@ public class ChatWindow
 	private JFrame frame;
 	private JPanel panel;
 
+	//FIXME Mettre à jour cette classe !!!
 	public ChatWindow()
 	{
 		initialize();
 	}
-
-	/**
-	 * Create the application.
-	 * @param logedUser
-	 */
-	public ChatWindow(ClientInfo logedUser)
-	{
-		initialize();
-		ChatWindow.logedUser.setLogin(logedUser.getLogin());
-	}
-
 	/**
 	 * Launch the application.
 	 */

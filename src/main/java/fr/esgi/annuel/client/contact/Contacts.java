@@ -1,4 +1,4 @@
-package fr.esgi.annuel.contact;
+package fr.esgi.annuel.client.contact;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +13,7 @@ import java.util.Map;
  * */
 public class Contacts
 {
-	private static final Map<String, Contact> contactList = new HashMap<String, Contact>();
+	private static final Map<String, Contact> contactList = new HashMap<>();
 
 	synchronized public static Contact addContact(Contact contact)
 	{

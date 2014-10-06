@@ -3,7 +3,7 @@ package fr.esgi.annuel.parser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-class AddFriendJSONParser
+public class AddFriendJsonParser
 {
 	private String displayMessage = null;
 	private boolean error, invitationSent = false;
@@ -15,7 +15,7 @@ class AddFriendJSONParser
 	 * @param json {JSONObject}: the JSON returned by the server's web service
 	 * @throws JSONException Can throw exceptions because of illegal arguments
 	 **/
-	public AddFriendJSONParser(JSONObject json) throws JSONException
+	AddFriendJsonParser(JSONObject json) throws JSONException
 	{
 		this.error = json.getBoolean("error");
 		if (true == this.error)

@@ -4,11 +4,12 @@ import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import fr.esgi.annuel.constants.FieldType;
-import fr.esgi.annuel.constants.RegEx;
 import fr.esgi.annuel.crypt.PasswordUtilities;
 import fr.esgi.annuel.ctrl.MasterController;
 
+import static fr.esgi.annuel.constants.FieldType.*;
+import static fr.esgi.annuel.ctrl.FieldContentValidator.getErrorMessageFor;
+import static fr.esgi.annuel.ctrl.FieldContentValidator.isValidFieldContent;
 import static org.jdesktop.xswingx.PromptSupport.FocusBehavior.SHOW_PROMPT;
 import static org.jdesktop.xswingx.PromptSupport.setFocusBehavior;
 import static org.jdesktop.xswingx.PromptSupport.setPrompt;
@@ -29,10 +30,10 @@ public class RegisterView extends JPanel
 			for (Boolean value : PasswordUtilities.isStrongEnough(String.valueOf(RegisterView.this.fPassword.getPassword())).values())
 				if (!value)
 					rightPwFmt = value;
-			rightPseudoFmt = isValidFieldContent(RegisterView.this.fPseudo.getText(), FieldType.PSEUDO);
-			rightEmailFmt = isValidFieldContent(RegisterView.this.fEmail.getText(), FieldType.EMAIL);
-			rightFnameFmt = isValidFieldContent(RegisterView.this.fFirstname.getText(), FieldType.FIRSTNAME);
-			rightLnameFmt = isValidFieldContent(RegisterView.this.fLastname.getText(), FieldType.LASTNAME);
+			rightPseudoFmt = isValidFieldContent(RegisterView.this.fPseudo.getText(), PSEUDO);
+			rightEmailFmt = isValidFieldContent(RegisterView.this.fEmail.getText(), EMAIL);
+			rightFnameFmt = isValidFieldContent(RegisterView.this.fFirstname.getText(), FIRSTNAME);
+			rightLnameFmt = isValidFieldContent(RegisterView.this.fLastname.getText(), LASTNAME);
 			if (RegisterView.this.btnNext.equals(e.getSource()))
 				if (eqPw && rightPwFmt && rightPseudoFmt && rightEmailFmt && rightFnameFmt && rightLnameFmt)
 					changeComponents();
@@ -45,25 +46,26 @@ public class RegisterView extends JPanel
 					sb.append(!rightPwFmt ? PasswordUtilities.PASSWORD_STANDARD_FORMAT : "");
 					if (! "".equals(sb.toString()))
 						sb.append("\n");
-					sb.append(!rightPseudoFmt ? "Le pseudo doit \u00EAtre compos\u00E9 uniquement de caract\u00E8res alphanum\u00E9riques, sans espace !" : "");
+					sb.append(!rightPseudoFmt ? getErrorMessageFor(PSEUDO) : "");
 					if (! "".equals(sb.toString()))
 						sb.append("\n");
-					sb.append(!rightEmailFmt ? "Veuillez rentrer une adresse email correcte !" : "");
+					sb.append(!rightEmailFmt ? getErrorMessageFor(EMAIL) : "");
 					if (! "".equals(sb.toString()))
 						sb.append("\n");
-					sb.append(!rightLnameFmt ? "Votre nom doit \u00EAtre compos\u00E9 de caract\u00E8res alpahb\u00E9tiques uniquement (espaces accept\u00E9s)" : "");
+					sb.append(!rightLnameFmt ? getErrorMessageFor(LASTNAME) : "");
 					if (! "".equals(sb.toString()))
 						sb.append("\n");
-					sb.append(!rightFnameFmt ? "Votre nom doit \u00EAtre compos\u00E9 de caract\u00E8res alphab\u00E9tiques uniquement (espaces et traits d'union accept\u00E9s)" : "");
+					sb.append(!rightFnameFmt ? getErrorMessageFor(FIRSTNAME) : "");
 					JOptionPane.showMessageDialog(null, sb.toString(), "Invalid content", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 			else // if (RegisterView.this.btnRegister.equals(e.getSource()))
 			{
 				StringBuilder sb = new StringBuilder(); //FIXME initialiser la valeur du constructeur
-				String pwK = String.valueOf(RegisterView.this.fPasswordKey.getPassword()), pwKagain = String.valueOf(RegisterView.this.fPasswordKeyAgain.getPassword());
+				String pwK = String.valueOf(RegisterView.this.fPasswordKey.getPassword()),
+					   pwKAgain = String.valueOf(RegisterView.this.fPasswordKeyAgain.getPassword());
 				boolean eqPw, rightPwFmt;
-				eqPw = pwK.equals(pwKagain);
+				eqPw = pwK.equals(pwKAgain);
 				if(!eqPw)
 					sb.append("Les deux mots de passe doivent \u00EAtre identiques !");
 				rightPwFmt = true;
@@ -225,19 +227,6 @@ public class RegisterView extends JPanel
 //		return url;
 //	}
 
-	private static boolean isValidFieldContent(String fieldContent, FieldType fieldType)
-	{
-		if (FieldType.EMAIL.equals(fieldType))
-			return fieldContent.matches(RegEx.VALID_EMAIL.getRegEx());
-		else if (FieldType.PSEUDO.equals(fieldType))
-			return fieldContent.matches(RegEx.VALID_PSEUDO.getRegEx());
-		else if (FieldType.FIRSTNAME.equals(fieldType))
-			return fieldContent.matches(RegEx.VALID_FIRSTNAME.getRegEx());
-		else if (FieldType.LASTNAME.equals(fieldType))
-			return fieldContent.matches(RegEx.VALID_LASTNAME.getRegEx());
-		else
-			throw new IllegalArgumentException();
-	}
 	private void changeComponents()
 	{
 		//@formatter:off

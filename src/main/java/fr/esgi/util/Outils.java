@@ -47,7 +47,7 @@ public class Outils
 	public static void breakPgm(boolean confirm)
 	{
 		int quit;
-		if (confirm == true) // Quitter avec confirmation
+		if (confirm) // Quitter avec confirmation
 			quit = JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment quitter ?", "Quitter", JOptionPane.YES_NO_OPTION);
 		else
 			quit = 0; // Quitter sans confirmation
@@ -58,8 +58,9 @@ public class Outils
 	/**
 	* Transformation d'un tableau d'octets (Byte Array) en un UUID
 	* @see http://stackoverflow.com/questions/772802/storing-uuid-as-base64-string
-	 *
-	* @param {byte []} : le byte array à transformer en UUID (Unique User Id)
+	*
+	* @param byteArray {<code>byte []</code>} : le byte array à transformer en UUID (Unique User Id)
+	*
 	* @return {UUID} l'UUID issu du tableau d'octet reçu en entrée
 	**/
 	public static UUID byteArrayAsUuid(byte[] byteArray)
@@ -107,10 +108,9 @@ public class Outils
 	{
 		if (null == obj)
 			return false;
-		else if (true == obj.equals(""))
+		else if (obj.equals(""))
 			return false;
-		else
-			return true;
+		return true;
 	}
 
 	/**
@@ -122,12 +122,11 @@ public class Outils
 	**/
 	public static boolean estPositif(double nombre, boolean strict)
 	{
-		if (true == strict && nombre == 0)
+		if (strict && nombre == 0)
 			return true;
 		else if (nombre > 0)
 			return true;
-		else
-			return false;
+		return false;
 	}
 
 	/**
@@ -139,12 +138,11 @@ public class Outils
 	**/
 	public static boolean estPositif(float nombre, boolean strict)
 	{
-		if (true == strict && nombre == 0)
+		if (strict && nombre == 0)
 			return true;
 		else if (nombre > 0)
 			return true;
-		else
-			return false;
+		return false;
 	}
 
 	/**
@@ -156,12 +154,11 @@ public class Outils
 	**/
 	public static boolean estPositif(int nombre, boolean strict)
 	{
-		if (true == strict && nombre == 0)
+		if (strict && nombre == 0)
 			return true;
 		else if (nombre > 0)
 			return true;
-		else
-			return false;
+		return false;
 	}
 
 	/**
@@ -173,12 +170,11 @@ public class Outils
 	**/
 	public static boolean estPositif(long nombre, boolean strict)
 	{
-		if (true == strict && nombre == 0)
+		if (strict && nombre == 0)
 			return true;
 		else if (nombre > 0)
 			return true;
-		else
-			return false;
+		return false;
 	}
 
 	/**
@@ -190,19 +186,18 @@ public class Outils
 	**/
 	public static boolean estPositif(short nombre, boolean strict)
 	{
-		if (true == strict && nombre == 0)
+		if (strict && nombre == 0)
 			return true;
 		else if (nombre > 0)
 			return true;
-		else
-			return false;
+		return false;
 	}
 
 	/**
 	* Transforme un BufferedImage en String sous forme Base64
 	 *
-	* @param image {BuffuredImage}: Le buffer de l'image a transformer en String base64
-	* @param type {String}: La String décrivant le type d'image (jpeg, png, tiff, gif...)
+	* @param image {{@link java.awt.image.BufferedImage}}: Le buffer de l'image a transformer en String base64
+	* @param type {{@link String}}: La String décrivant le type d'image (jpeg, png, tiff, gif...)
 	* @return
 	**/
 	public static String imageToBase64String(BufferedImage image, String type)

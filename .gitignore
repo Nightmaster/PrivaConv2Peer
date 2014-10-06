@@ -29,3 +29,6 @@ proguard/
 *.iws
 .idea/
 /bin
+
+# Personnal test files
+Test.java

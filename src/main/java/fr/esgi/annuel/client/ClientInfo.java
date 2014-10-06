@@ -2,24 +2,27 @@ package fr.esgi.annuel.client;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import com.google.common.base.Strings;
+import fr.esgi.annuel.parser.ConnectionJsonParser;
+import fr.esgi.annuel.parser.ModifyProfileJsonParser;
+import fr.esgi.annuel.parser.subclasses.ChangedValues;
+import fr.esgi.annuel.parser.subclasses.Friend;
 
 /**
  * Class ClientInfo
  * Elle contiendra les informations de l'utilisateur
- *
- *
- * */
+ */
 public class ClientInfo
 {
 	InetAddress clientAdress;
-	public String email;
-	public String firstname;
-	public String lastname;
-	public String login; // Name by which the user logged into the chat room
+	private String email;
+	private String firstName;
+	private String lastName;
+	private String login; // Name by which the user logged into the chat room
+	private Friend[] friendList;
 
-	public ClientInfo(String pseudo)
+	public ClientInfo()
 	{
-		this.login = pseudo;
 		try
 		{
 			this.clientAdress = InetAddress.getLocalHost();
@@ -28,6 +31,24 @@ public class ClientInfo
 		{
 			e.printStackTrace();
 		}
+	}
+
+	public ClientInfo(String login, String email, String lastName, String firstName, Friend[] friendList)
+	{
+		this.login = login;
+		this.email = email;
+		this.lastName = lastName;
+		this.firstName = firstName;
+		this.friendList = friendList;
+	}
+
+	public ClientInfo(ConnectionJsonParser connectionJson)
+	{
+		this(connectionJson.getUserInfos().getLogin(),
+			 connectionJson.getUserInfos().getEmail(),
+			 connectionJson.getUserInfos().getName(),
+			 connectionJson.getUserInfos().getFirstname(),
+			 connectionJson.getFriendList());
 	}
 
 	public InetAddress getClientAdress()
@@ -40,14 +61,14 @@ public class ClientInfo
 		return this.email;
 	}
 
-	public String getFirstname()
+	public String getFirstName()
 	{
-		return this.firstname;
+		return this.firstName;
 	}
 
-	public String getLastname()
+	public String getLastName()
 	{
-		return this.lastname;
+		return this.lastName;
 	}
 
 	public String getLogin()
@@ -55,29 +76,27 @@ public class ClientInfo
 		return this.login;
 	}
 
-	public void setClientAdress(InetAddress clientAdress)
+	/**
+	* Set the new values from the server answer
+	*
+	* @param updatedInformation {{@link fr.esgi.annuel.parser.ModifyProfileJsonParser}} the parsed JSON from the ModifyProfile request
+	**/
+	public void updateInformation(ModifyProfileJsonParser updatedInformation)
 	{
-		this.clientAdress = clientAdress;
+		ChangedValues newValues = updatedInformation.getNewValues();
+		this.login = Strings.isNullOrEmpty(newValues.getLogin()) ? this.login : newValues.getLogin();
+		this.email = Strings.isNullOrEmpty(newValues.getEmail()) ? this.email : newValues.getEmail();
+		this.lastName = Strings.isNullOrEmpty(newValues.getEmail()) ? this.lastName : newValues.getEmail();
+		this.firstName = Strings.isNullOrEmpty(newValues.getFirstName()) ? this.firstName : newValues.getFirstName();
 	}
 
-	public void setEmail(String email)
+	public Friend[] getFriendList()
 	{
-		this.email = email;
+		return friendList;
 	}
 
-	public void setFirstname(String firstname)
+	public void setFriendList(Friend[] friendList)
 	{
-		this.firstname = firstname;
+		this.friendList = friendList;
 	}
-
-	public void setLastname(String lastname)
-	{
-		this.lastname = lastname;
-	}
-
-	public void setLogin(String strName)
-	{
-		this.login = strName;
-	}
-
 }

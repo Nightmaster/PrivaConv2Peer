@@ -6,7 +6,7 @@ import org.json.JSONObject;
 import fr.esgi.annuel.parser.subclasses.Friend;
 import fr.esgi.annuel.parser.subclasses.UserInfos;
 
-class ConnectionJSONParser
+public class ConnectionJsonParser
 {
 	private String[] askFriendship;
 	private String displayMessage = null;
@@ -21,7 +21,7 @@ class ConnectionJSONParser
 	 * @param json {JSONObject}: the JSON returned by the server's web service
 	 * @throws JSONException Can throw exceptions because of illegal arguments
 	 **/
-	public ConnectionJSONParser(JSONObject json) throws JSONException
+	ConnectionJsonParser(JSONObject json) throws JSONException
 	{
 		JSONArray ask = null, fList = null;
 		this.error = json.getBoolean("error");

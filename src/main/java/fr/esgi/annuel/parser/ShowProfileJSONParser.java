@@ -4,7 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import fr.esgi.annuel.parser.subclasses.UserInfos;
 
-class ShowProfileJSONParser
+public class ShowProfileJsonParser
 {
 	private String displayMessage = null;
 	private boolean error;
@@ -17,7 +17,7 @@ class ShowProfileJSONParser
 	 * @param json {JSONObject}: the JSON returned by the server's web service
 	 * @throws JSONException Can throw exceptions because of illegal arguments
 	 **/
-	public ShowProfileJSONParser(JSONObject json) throws JSONException
+	ShowProfileJsonParser(JSONObject json) throws JSONException
 	{
 		this.error = json.getBoolean("error");
 		if (true == this.error)
