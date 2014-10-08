@@ -12,6 +12,8 @@
 bin/
 gen/
 _gsdata_/
+target/
+!targer/PrivaConvToPeer*.jar
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -29,3 +31,10 @@ proguard/
 *.iws
 .idea/
 /bin
+
+# Personnal test files
+**Test.java
+
+# Gui dev on Eclipse files
+**RegView.java
+**Tmp.java
