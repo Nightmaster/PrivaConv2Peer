@@ -5,7 +5,7 @@ import java.net.UnknownHostException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ClientIPJsonParser
+public class ClientIpJsonParser
 {
 	private String displayMessage = null;
 	private boolean error;
@@ -18,7 +18,7 @@ public class ClientIPJsonParser
 	 * @param json {JSONObject}: the JSON returned by the server's web service
 	 * @throws JSONException Can throw exceptions because of illegal arguments
 	 **/
-	ClientIPJsonParser(JSONObject json) throws JSONException
+	ClientIpJsonParser(JSONObject json) throws JSONException
 	{
 		this.error = json.getBoolean("error");
 		if (true == this.error)

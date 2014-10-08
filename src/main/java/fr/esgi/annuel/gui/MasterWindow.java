@@ -2,10 +2,8 @@ package fr.esgi.annuel.gui;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
+import java.awt.*;
+import java.awt.event.*;
 import fr.esgi.annuel.constants.Constants;
 import fr.esgi.annuel.constants.Views;
 import fr.esgi.annuel.ctrl.MasterController;
@@ -13,6 +11,7 @@ import fr.esgi.util.Outils;
 
 public class MasterWindow extends JFrame
 {
+	private Point position;
 	private Views actualView;
 	private MasterController controller;
 	private JMenuBar menuBar;
@@ -21,6 +20,18 @@ public class MasterWindow extends JFrame
 
 	public MasterWindow(MasterController controller)
 	{
+		super();
+		setLocationRelativeTo(null);
+		addWindowFocusListener(new WindowAdapter()
+		{
+			@Override
+			public void windowClosing(WindowEvent windowEvent)
+			{
+				//TODO @see http://stackoverflow.com/questions/7777640/best-practice-for-setting-jframe-locations
+				//TODO Faire un controller dédié à la gestion des propriétés sauvegardées ???
+				super.windowClosing(windowEvent);
+			}
+		});
 		this.controller = controller;
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		JPanel panel = new IdentificationView(controller);

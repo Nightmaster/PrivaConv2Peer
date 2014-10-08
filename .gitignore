@@ -34,3 +34,7 @@ proguard/
 
 # Personnal test files
 **Test.java
+
+# Gui dev on Eclipse files
+**RegView.java
+**Tmp.java

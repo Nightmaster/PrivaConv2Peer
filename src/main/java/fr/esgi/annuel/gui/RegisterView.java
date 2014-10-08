@@ -20,61 +20,59 @@ import static org.jdesktop.xswingx.PromptSupport.FocusBehavior.SHOW_PROMPT;
 import static org.jdesktop.xswingx.PromptSupport.setFocusBehavior;
 import static org.jdesktop.xswingx.PromptSupport.setPrompt;
 
-public class RegisterView extends JPanel
+public class RegisterView extends JPanel implements Resettable
 {
+	private final RegisterViewKeyPart nextView;
 	private final JTextField[] textFields;
 	private final JPasswordField[] passwordFields;
 	private JLabel lPseudo, lUserEmail, lLastName, lFirstName, lPassword, lPasswordAgain;
 	private JTextField fPseudo, fEmail, fLastName, fFirstName;
 	private JPasswordField fPassword, fPasswordAgain;
-	private JButton btnNext;
+	private JButton btnNext, btnCancel;
 	private String pw, login, email, firstName, lastName;
 	private MasterController controller;
 
 	/**
 	* Create and init the panel.
 	**/
-	public RegisterView(MasterController controller)
+	public RegisterView(MasterController controller, RegisterViewKeyPart nextView)
 	{
 		this.controller = controller;
 		this.controller.setLookAndFeel();
+		this.nextView = nextView;
 		//@formatter:off
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(10)
-						.addComponent(getLabelPseudo())
-					.addGap(79)
-						.addComponent(getFieldPseudo(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
+					.addComponent(getLabelPseudo())
+					.addGap(70)
+					.addComponent(getFieldPseudo(), GroupLayout.PREFERRED_SIZE, 130, GroupLayout.PREFERRED_SIZE))
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(10)
-						.addComponent(getLabelUserEmail(), GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-					.addGap(78)
-						.addComponent(getFieldEmail(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
+					.addComponent(getLabelUserEmail(), GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+					.addGap(69)
+					.addComponent(getFieldEmail(), GroupLayout.PREFERRED_SIZE, 130, GroupLayout.PREFERRED_SIZE))
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(10)
-						.addComponent(getLabelLastName())
-					.addGap(93)
-						.addComponent(getFieldLastName(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
+					.addComponent(getLabelLastName())
+					.addGap(84)
+					.addComponent(getFieldLastName(), GroupLayout.PREFERRED_SIZE, 130, GroupLayout.PREFERRED_SIZE))
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(10)
-						.addComponent(getLabelFirstName())
-					.addGap(78)
-						.addComponent(getFieldFirstName(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
+					.addComponent(getLabelFirstName())
+					.addGap(69)
+					.addComponent(getFieldFirstName(), GroupLayout.PREFERRED_SIZE, 130, GroupLayout.PREFERRED_SIZE))
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(10)
-						.addComponent(getLabelPassword())
-					.addGap(50)
-						.addComponent(getFieldPassword(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
+					.addComponent(getLabelPassword())
+					.addGap(41)
+					.addComponent(getFieldPassword(), GroupLayout.PREFERRED_SIZE, 130, GroupLayout.PREFERRED_SIZE))
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(10)
-						.addComponent(getLabelPasswordAgain())
-					.addGap(10)
-						.addComponent(getFieldPasswordAgain(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
+					.addComponent(getLabelPasswordAgain())
+					.addGap(1)
+					.addComponent(getFieldPasswordAgain(), GroupLayout.PREFERRED_SIZE, 130, GroupLayout.PREFERRED_SIZE))
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(67)
-						.addComponent(getBtnNext()))
+					.addGap(18)
+					.addComponent(getBtnCancel())
+					.addGap(19)
+					.addComponent(getBtnNext()))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -105,9 +103,7 @@ public class RegisterView extends JPanel
 						.addComponent(getFieldFirstName(), GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
 					.addGap(5)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(3)
-							.addComponent(getLabelPassword()))
+						.addComponent(getLabelPassword())
 						.addComponent(getFieldPassword(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(7)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
@@ -116,12 +112,24 @@ public class RegisterView extends JPanel
 							.addComponent(getLabelPasswordAgain()))
 						.addComponent(getFieldPasswordAgain(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(11)
-					.addComponent(getBtnNext()))
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(getBtnCancel())
+						.addComponent(getBtnNext())))
 		);
 		setLayout(groupLayout);
 		//@formatter:on
 		this.textFields = new JTextField[] {this.fPseudo, this.fEmail, this.fLastName, this.fFirstName};
 		this.passwordFields = new JPasswordField[] {this.fPassword, this.fPasswordAgain};
+	}
+
+	private JButton getBtnCancel()
+	{
+		if(this.btnCancel == null)
+		{
+			this.btnCancel = new JButton("Annuler");
+			this.btnCancel.addActionListener(new ButtonListener());
+		}
+		return this.btnCancel;
 	}
 
 	private JButton getBtnNext()
@@ -251,46 +259,46 @@ public class RegisterView extends JPanel
 		return this.lUserEmail;
 	}
 
-	String getLogin()
+	public void sendValuesToNextView()
 	{
-		return this.login;
+		final HashMap<StoredValues, String> values = new HashMap<>();
+		values.put(StoredValues.LOGIN, this.login);
+		values.put(StoredValues.EMAIL, this.email);
+		values.put(StoredValues.LASTNAME, this.lastName);
+		values.put(StoredValues.FIRSTNAME, this.firstName);
+		values.put(StoredValues.HASHED_PASSWORD, PasswordUtilities.hashPassword(this.pw));
+		this.nextView.setPrevViewValues(values);
 	}
 
-	String getEmail()
+	@Override
+	public RegisterView reset()
 	{
-		return this.email;
+		this.login = this.email = this.pw = this.lastName = this.firstName = null;
+		this.fPseudo.setText(null);
+		this.fEmail.setText(null);
+		this.fLastName.setText(null);
+		this.fFirstName.setText(null);
+		this.fPassword.setText(null);
+		this.fPasswordAgain.setText(null);
+		if(! this.fPseudo.requestFocusInWindow())
+			this.fPseudo.requestFocus();
+		return this;
 	}
 
-	String getPassword()
-	{
-		return this.pw;
-	}
-
-	String getLastName()
-	{
-		return this.lastName;
-	}
-
-	String getFirstName()
-	{
-		return this.firstName;
-	}
-
-	//FIXME ajouter un bouton d'annulation et un de retour arrière !
 	private class ButtonListener implements ActionListener
 	{
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
-			RegisterView.this.pw = String.valueOf(RegisterView.this.fPassword.getPassword());
-			RegisterView.this.login = RegisterView.this.fPseudo.getText();
-			RegisterView.this.email = RegisterView.this.fEmail.getText();
-			RegisterView.this.firstName = RegisterView.this.fFirstName.getText();
-			RegisterView.this.lastName = RegisterView.this.fLastName.getText();
-			String pwAgain = String.valueOf(RegisterView.this.fPasswordAgain.getPassword());
 
 			if (RegisterView.this.btnNext.equals(e.getSource()))
 			{
+				RegisterView.this.pw = String.valueOf(RegisterView.this.fPassword.getPassword());
+				RegisterView.this.login = RegisterView.this.fPseudo.getText();
+				RegisterView.this.email = RegisterView.this.fEmail.getText();
+				RegisterView.this.firstName = RegisterView.this.fFirstName.getText();
+				RegisterView.this.lastName = RegisterView.this.fLastName.getText();
+				String pwAgain = String.valueOf(RegisterView.this.fPasswordAgain.getPassword());
 				if (Strings.isNullOrEmpty(pw) || Strings.isNullOrEmpty(pwAgain))
 					return;
 				StringBuilder sb = new StringBuilder(1000);
@@ -322,6 +330,12 @@ public class RegisterView extends JPanel
 						res = res.substring(0, res.length() - 1);
 					JOptionPane.showMessageDialog(null, res, "Valeur(s) incorrecte(s) d\u00E0e(s)", JOptionPane.ERROR_MESSAGE);
 				}
+			}
+			else // if (RegisterView.this.btnCancel.equals(e.getSource()))
+			{
+				reset()
+				.nextView.reset();
+				RegisterView.this.controller.changeView(Views.IDENTIFICATION);
 			}
 		}
 	}
@@ -366,6 +380,11 @@ public class RegisterView extends JPanel
 		{
 			checkFieldsNotEmpty();
 		}
+	}
+
+	enum StoredValues
+	{
+		LOGIN, EMAIL, LASTNAME, FIRSTNAME, HASHED_PASSWORD;
 	}
 }
 

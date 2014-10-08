@@ -25,10 +25,10 @@ public final class MasterController
 	private final HttpRequest httpRequest;
 	private final Properties properties;
 	private ClientInfo user;
-	private IdentificationView identificationView = new IdentificationView(this);
-	private RegisterView registerView = new RegisterView(this);
-	private RegisterViewKeyPart registerKeyPartView = new RegisterViewKeyPart(this, this.registerView);
-	private ProfileView profileView = new ProfileView(this);
+	private IdentificationView identificationView;
+	private RegisterViewKeyPart registerKeyPartView;
+	private RegisterView registerView;
+	private ProfileView profileView;
 	private HttpCookie cookie;
 	private Properties registeredProperties;
 
@@ -41,6 +41,10 @@ public final class MasterController
 	{
 		this.properties = properties;
 		this.httpRequest = new HttpRequest(this);
+		this.identificationView = new IdentificationView(this);
+		this.registerKeyPartView = new RegisterViewKeyPart(this);
+		this.registerView = new RegisterView(this, this.registerKeyPartView);
+		this.profileView = new ProfileView(this);
 	}
 
 	/**
@@ -102,6 +106,7 @@ public final class MasterController
 		{
 			window.setView(this.registerKeyPartView, view);
 			setActualPanel(this.registerKeyPartView);
+			this.registerView.sendValuesToNextView();
 		}
 		else if (Views.PROFILE.equals(view))
 		{
@@ -193,8 +198,10 @@ public final class MasterController
 		return properties;
 	}
 
-	public final String register(String username, String emailAddress, String hashPw, String firstname, String lastname, int keyLength, String hashPwKey)
+	public final String register(String username, String emailAddress, String hashPw, String firstname, String lastname, int keyLength, String hashPwKey) throws IllegalArgumentException
 	{
+		if(32 != hashPw.length() || 32 != hashPwKey.length())
+			throw new IllegalArgumentException("Both arguments hashPw && hashPwK must have been hashed for security reasons !");
 		try
 		{
 			return this.httpRequest.sendRegisterRequest(username, emailAddress, hashPw, firstname, lastname, keyLength, hashPwKey).getContent();

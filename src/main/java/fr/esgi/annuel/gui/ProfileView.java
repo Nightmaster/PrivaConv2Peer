@@ -17,6 +17,7 @@ public class ProfileView extends JPanel
 	**/
 	public ProfileView(MasterController controller)
 	{
+		this.controller = controller;
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addComponent(getLblName()).addGap(141).addComponent(getLblEmailAddress()))
 			.addGroup(groupLayout.createSequentialGroup().addComponent(getFFirstName(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE).addGap(19).addComponent(getTextField1(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)).addGroup(groupLayout.createSequentialGroup().addComponent(getLblFirstName()).addGap(126).addComponent(getLblNewPw()))

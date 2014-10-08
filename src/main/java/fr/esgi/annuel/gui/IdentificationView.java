@@ -19,7 +19,7 @@ import static fr.esgi.annuel.ctrl.FieldContentValidator.isValidFieldContent;
 /**
  * Create the identification view ({@link javax.swing.JPanel})
  **/
-public class IdentificationView extends JPanel
+public class IdentificationView extends JPanel implements Resettable
 {
 	private JButton btnConnection, btnRegister;
 	private JCheckBox chckbxRememberMe;
@@ -127,6 +127,7 @@ public class IdentificationView extends JPanel
 		return this.fLoginValue;
 	}
 
+	@Override
 	public final IdentificationView reset()
 	{
 		this.fPassword.setText(null);

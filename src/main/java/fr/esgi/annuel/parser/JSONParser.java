@@ -37,15 +37,15 @@ public class JSONParser
 	}
 
 	/**
-	 * Create an instance of {@link ClientIPJsonParser}
+	 * Create an instance of {@link ClientIpJsonParser}
 	 *
 	 * @param json {JSONObject}: the JSON returned by the web service on this action
 	 * @return {ClientIPJSONParser} the client IP parser
 	 * @throws JSONException
 	 **/
-	public static ClientIPJsonParser getClientIPParser(String json) throws JSONException
+	public static ClientIpJsonParser getClientIpParser(String json) throws JSONException
 	{
-		return new ClientIPJsonParser(new JSONObject(json));
+		return new ClientIpJsonParser(new JSONObject(json));
 	}
 
 	/**

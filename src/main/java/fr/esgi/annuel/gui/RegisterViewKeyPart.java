@@ -9,8 +9,10 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 import com.google.common.base.Strings;
 import fr.esgi.annuel.constants.PasswordConstraints;
+import fr.esgi.annuel.constants.Views;
 import fr.esgi.annuel.crypt.PasswordUtilities;
 import fr.esgi.annuel.ctrl.MasterController;
+import fr.esgi.annuel.gui.RegisterView.StoredValues;
 import fr.esgi.annuel.parser.JSONParser;
 import fr.esgi.annuel.parser.SimpleJsonParser;
 import org.json.JSONException;
@@ -20,22 +22,26 @@ import static org.jdesktop.xswingx.PromptSupport.FocusBehavior.SHOW_PROMPT;
 import static org.jdesktop.xswingx.PromptSupport.setFocusBehavior;
 import static org.jdesktop.xswingx.PromptSupport.setPrompt;
 
-public class RegisterViewKeyPart extends JPanel
+public class RegisterViewKeyPart extends JPanel implements Resettable
 {
 	private static final Integer[] AVAILABLE_KEY_LENGTHS = {1024, 2048, 4096};
-	private final RegisterView registerView;
 	private final MasterController controller;
 	private final JPasswordField[] passwordFields;
+	private HashMap<StoredValues, String> prevViewValues;
 	private JLabel lPasswordKey, lPasswordKeyAgain, lKeyLength;
 	private JComboBox<Integer> fLenKey;
 	private JPasswordField fPasswordKey, fPasswordKeyAgain;
-	private JButton btnRegister;
+	private JButton btnPrevious, btnRegister;
 
-	public RegisterViewKeyPart(MasterController controller, RegisterView registerView)
+	/**
+	 * Instantiate a new {@link fr.esgi.annuel.gui.RegisterViewKeyPart}
+	 *
+	 * @param controller {{@link fr.esgi.annuel.ctrl.MasterController}}: the application's controller
+	 */
+	public RegisterViewKeyPart(MasterController controller)
 	{
 		this.controller = controller;
 		this.controller.setLookAndFeel();
-		this.registerView = registerView;
 		//@formatter:off
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
@@ -43,31 +49,33 @@ public class RegisterViewKeyPart extends JPanel
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(10)
 					.addComponent(getLabelKeyLength())
-					.addGap(62)
-					.addComponent(getFieldLengthKey(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
+					.addGap(102)
+					.addComponent(getFieldLengthKey(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(10)
 					.addComponent(getLabelPasswordKey())
 					.addGap(43)
-					.addComponent(getFieldPasswordKey(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
+					.addComponent(getFieldPasswordKey(), GroupLayout.PREFERRED_SIZE, 130, GroupLayout.PREFERRED_SIZE))
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(10)
 					.addComponent(getLabelPasswordKeyAgain())
-					.addComponent(getFieldPasswordKeyAgain(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
+					.addComponent(getFieldPasswordKeyAgain(), GroupLayout.PREFERRED_SIZE, 130, GroupLayout.PREFERRED_SIZE))
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(79)
+					.addGap(33)
+					.addComponent(getBtnPrevious())
+					.addGap(34)
 					.addComponent(getBtnRegister()))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(8)
+					.addGap(9)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(4)
+							.addGap(3)
 							.addComponent(getLabelKeyLength()))
-						.addComponent(getFieldLengthKey(), GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
-					.addGap(5)
+						.addComponent(getFieldLengthKey(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(6)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(4)
@@ -80,11 +88,23 @@ public class RegisterViewKeyPart extends JPanel
 							.addComponent(getLabelPasswordKeyAgain()))
 						.addComponent(getFieldPasswordKeyAgain(), GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
 					.addGap(7)
-					.addComponent(getBtnRegister()))
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(getBtnPrevious())
+						.addComponent(getBtnRegister())))
 		);
 		//@formatter:on
 		setLayout(groupLayout);
 		this.passwordFields = new JPasswordField[] {this.fPasswordKey, this.fPasswordKeyAgain};
+	}
+
+	private JButton getBtnPrevious()
+	{
+		if (this.btnPrevious == null)
+		{
+			this.btnPrevious = new JButton("Pr\u00E9c\u00E9dent");
+			this.btnPrevious.addActionListener(new ButtonListener());
+		}
+		return this.btnPrevious;
 	}
 
 	private JButton getBtnRegister()
@@ -156,28 +176,44 @@ public class RegisterViewKeyPart extends JPanel
 		return this.lPasswordKeyAgain;
 	}
 
+	@Override
+	public RegisterViewKeyPart reset()
+	{
+		this.fPasswordKey.setText(null);
+		this.fPasswordKeyAgain.setText(null);
+		if(! this.fLenKey.requestFocusInWindow())
+			this.fLenKey.requestFocus();
+		return this;
+	}
+
+	void setPrevViewValues(final HashMap<StoredValues, String> prevViewValues)
+	{
+		this.prevViewValues = prevViewValues;
+	}
+
 	private class ButtonListener implements ActionListener
 	{
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
-			String pw = RegisterViewKeyPart.this.registerView.getPassword();
 			if (RegisterViewKeyPart.this.btnRegister.equals(e.getSource()))
 			{
 				int keyLength = AVAILABLE_KEY_LENGTHS[RegisterViewKeyPart.this.fLenKey.getSelectedIndex()];
 				StringBuilder sb = new StringBuilder(450);
-				String pwK = String.valueOf(RegisterViewKeyPart.this.fPasswordKey.getPassword()),
-						pwKAgain = String.valueOf(RegisterViewKeyPart.this.fPasswordKeyAgain.getPassword());
+				String	hashedPw = RegisterViewKeyPart.this.prevViewValues.get(StoredValues.HASHED_PASSWORD),
+						pwK = String.valueOf(RegisterViewKeyPart.this.fPasswordKey.getPassword()),
+						pwKAgain = String.valueOf(RegisterViewKeyPart.this.fPasswordKeyAgain.getPassword()),
+						hashedPwK = hashPassword(pwK);
 				if (Strings.isNullOrEmpty(pwK) || Strings.isNullOrEmpty(pwKAgain))
 					return;
 				/**Equality between similar password verification and verification of a difference between session PW and key PW**/
 				if (!pwK.equals(pwKAgain))
 					sb.append("Les deux mots de passe doivent \u00EAtre identiques !");
-				else if (pw.equals(pwK))
+				else if (hashedPw.equals(hashedPwK))
 					sb.append("Le mot de passe de la cl\u00E9 doit \u00EAtre diff\u00E9rent de celui de votre compte !");
 
 				/**Password verification**/
-				HashMap<PasswordConstraints, Boolean> map = PasswordUtilities.isStrongEnough(pw);
+				HashMap<PasswordConstraints, Boolean> map = PasswordUtilities.isStrongEnough(hashedPw);
 				for (PasswordConstraints constraint : map.keySet())
 					if (!map.get(constraint))
 					{
@@ -190,21 +226,19 @@ public class RegisterViewKeyPart extends JPanel
 					try
 					{
 						SimpleJsonParser registerJsonParser = JSONParser.getRegistrationParser(
-								RegisterViewKeyPart.this.controller.register(RegisterViewKeyPart.this.registerView.getLogin(),
-																			 RegisterViewKeyPart.this.registerView.getEmail(),
-																			 hashPassword(pw),
-																			 RegisterViewKeyPart.this.registerView.getFirstName(),
-																			 RegisterViewKeyPart.this.registerView.getLastName(),
+								RegisterViewKeyPart.this.controller.register(RegisterViewKeyPart.this.prevViewValues.get(StoredValues.LOGIN),
+																			 RegisterViewKeyPart.this.prevViewValues.get(StoredValues.EMAIL),
+																			 hashedPw,
+																			 RegisterViewKeyPart.this.prevViewValues.get(StoredValues.FIRSTNAME),
+																			 RegisterViewKeyPart.this.prevViewValues.get(StoredValues.LASTNAME),
 																			 keyLength,
-																			 pwK));
+																			 hashedPwK));
 						if (registerJsonParser.isError())
 							JOptionPane.showMessageDialog(RegisterViewKeyPart.this, registerJsonParser.getDisplayMessage(), "Erreur \u00E0 l'enregistrement", JOptionPane.ERROR_MESSAGE);
 						else
 							JOptionPane.showMessageDialog(RegisterViewKeyPart.this, "F\u00E9licitation, vous \u00EAtes bien enregistr\u00E9", "Vlidation d'enregistrement", JOptionPane.INFORMATION_MESSAGE);
 					}
-					catch (JSONException ignored)
-					{
-					}
+					catch (JSONException | IllegalArgumentException ignored) {}
 				}
 				else
 				{
@@ -216,6 +250,8 @@ public class RegisterViewKeyPart extends JPanel
 					JOptionPane.showMessageDialog(null, res, "Valeur(s) incorrecte(s) d\u00E0e(s)", JOptionPane.ERROR_MESSAGE);
 				}
 			}
+			else // if(RegisterViewKeyPart.this.btnPrevious.equals(e.getSource()))
+				RegisterViewKeyPart.this.controller.changeView(Views.REGISTER);
 		}
 	}
 
