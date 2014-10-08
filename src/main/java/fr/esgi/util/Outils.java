@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Base64;
+import java.util.Properties;
 import java.util.UUID;
 
 /**
@@ -311,5 +312,40 @@ public class Outils
 		else if (os.contains("NUX"))
 			return System.getProperty("user.home");
 		return System.getProperty("user.dir");
+	}
+
+	public static final Properties readPropertyFile(InputStream is)
+	{
+		Properties prop = new Properties();
+		try
+		{
+			prop.load(is);
+			return prop;
+		}
+		catch (IOException e)
+		{
+			return null;
+		}
+		finally
+		{
+			if (null != is)
+				try
+				{
+					is.close();
+				}
+				catch (IOException ignored)
+				{}
+		}
+	}
+	public static final Properties readPropertyFile(String pathToFile)
+	{
+		try
+		{
+			return readPropertyFile(new FileInputStream(new File(pathToFile)));
+		}
+		catch (IOException ignored)
+		{
+			return null;
+		}
 	}
 }

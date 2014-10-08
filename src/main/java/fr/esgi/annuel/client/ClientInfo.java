@@ -2,11 +2,12 @@ package fr.esgi.annuel.client;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.List;
 import com.google.common.base.Strings;
 import fr.esgi.annuel.parser.ConnectionJsonParser;
 import fr.esgi.annuel.parser.ModifyProfileJsonParser;
 import fr.esgi.annuel.parser.subclasses.ChangedValues;
-import fr.esgi.annuel.parser.subclasses.Friend;
 
 /**
  * Class ClientInfo
@@ -19,7 +20,7 @@ public class ClientInfo
 	private String firstName;
 	private String lastName;
 	private String login; // Name by which the user logged into the chat room
-	private Friend[] friendList;
+	private List<Friend> friendList;
 
 	public ClientInfo()
 	{
@@ -33,7 +34,7 @@ public class ClientInfo
 		}
 	}
 
-	public ClientInfo(String login, String email, String lastName, String firstName, Friend[] friendList)
+	public ClientInfo(String login, String email, String lastName, String firstName, List<Friend> friendList)
 	{
 		this.login = login;
 		this.email = email;
@@ -48,7 +49,7 @@ public class ClientInfo
 			 connectionJson.getUserInfos().getEmail(),
 			 connectionJson.getUserInfos().getName(),
 			 connectionJson.getUserInfos().getFirstname(),
-			 connectionJson.getFriendList());
+			 Arrays.asList(connectionJson.getFriendList()));
 	}
 
 	public InetAddress getClientAdress()
@@ -90,12 +91,12 @@ public class ClientInfo
 		this.firstName = Strings.isNullOrEmpty(newValues.getFirstName()) ? this.firstName : newValues.getFirstName();
 	}
 
-	public Friend[] getFriendList()
+	public List<Friend> getFriendList()
 	{
 		return friendList;
 	}
 
-	public void setFriendList(Friend[] friendList)
+	public void setFriendList(List<Friend> friendList)
 	{
 		this.friendList = friendList;
 	}

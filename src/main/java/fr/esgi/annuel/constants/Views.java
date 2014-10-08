@@ -2,7 +2,7 @@ package fr.esgi.annuel.constants;
 
 public enum Views
 {
-	IDENTIFICATION("Identification"), REGISTER("Register"), CHAT("Chat"), PROFILE("Profile");
+	IDENTIFICATION("Identification"), REGISTER("Register"), CHAT("Chat"), PROFILE("Profile"), REGISTER_PART_2("Register - key part");
 
 	private final String name;
 

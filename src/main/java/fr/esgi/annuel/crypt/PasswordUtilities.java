@@ -87,13 +87,13 @@ public class PasswordUtilities
 	 **/
 	private final static boolean seulementAcceptes(String pw)
 	{
-		return Pattern.compile("^[-!\"§$%&/()=?+*~#'_:\\.,@^<>£¤µa-zA-Z0-9]+$").matcher(pw).find();
+		return Pattern.compile("^[-!\"§$%&/()=?+*~#'_:\\.,@^<>£¤µa-zA-Z0-9 ]+$").matcher(pw).find();
 	}
 
 
 	private static Boolean pasEspace(String pw)
 	{
-		return pw.contains(" ");
+		return ! pw.contains(" ");
 	}
 
 	/**
@@ -126,28 +126,9 @@ public class PasswordUtilities
 	{
 		try
 		{
-			return hashPassword(pw.getBytes("UTF-8"));
+			return new String(MessageDigest.getInstance("MD5").digest(pw.getBytes("UTF-8")));
 		}
-		catch (UnsupportedEncodingException e)
-		{
-			return null;
-		}
-	}
-
-	/**
-	 * Hash (MD5) the password
-	 *
-	 * @param pw {<code>byte[]</code>}: the password to hash
-	 *
-	 * @return {{@link String}}: the hash of the password
-	 **/
-	public final static String hashPassword(byte[] pw)
-	{
-		try
-		{
-			return new String(MessageDigest.getInstance("MD5").digest(pw));
-		}
-		catch (NoSuchAlgorithmException e)
+		catch (UnsupportedEncodingException | NoSuchAlgorithmException e)
 		{
 			return null;
 		}

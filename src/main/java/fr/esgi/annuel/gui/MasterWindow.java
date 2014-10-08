@@ -11,16 +11,13 @@ import fr.esgi.annuel.constants.Views;
 import fr.esgi.annuel.ctrl.MasterController;
 import fr.esgi.util.Outils;
 
-@SuppressWarnings("serial")
 public class MasterWindow extends JFrame
 {
-	private String actualView = "";
-	private JPanel contentPane;
+	private Views actualView;
 	private MasterController controller;
 	private JMenuBar menuBar;
 	private JMenu mnFichier, menu;
 	private JMenuItem mntmLaunchConv, mntmPropos, mntmQuitter, mntmProfil, mntmAddUser, mntmAide, mntmDisconnect;
-	private boolean userConnected = false;
 
 	public MasterWindow(MasterController controller)
 	{
@@ -28,8 +25,6 @@ public class MasterWindow extends JFrame
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		JPanel panel = new IdentificationView(controller);
 		setView(panel, Views.IDENTIFICATION);
-		this.controller.setActualPanel(panel);
-		this.pack();
 	}
 
 	public void openDisconnectPopup()
@@ -87,9 +82,6 @@ public class MasterWindow extends JFrame
 			this.mntmAddUser.setMnemonic('A');
 			this.mntmAddUser.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_MASK));
 		}
-		if (this.actualView.equals("Identification"))
-			if (Views.IDENTIFICATION.getName().equals(this.actualView))
-				this.mntmAddUser.setEnabled(false);
 		return this.mntmAddUser;
 	}
 
@@ -113,9 +105,6 @@ public class MasterWindow extends JFrame
 			this.mntmDisconnect.addActionListener(new MenuItemListener());
 			this.mntmDisconnect.setMnemonic('D');
 		}
-		if (this.actualView.equals("Identification"))
-			if (Views.IDENTIFICATION.getName().equals(this.actualView))
-				this.mntmDisconnect.setEnabled(false);
 		return this.mntmDisconnect;
 	}
 
@@ -128,9 +117,6 @@ public class MasterWindow extends JFrame
 			this.mntmLaunchConv.setMnemonic('O');
 			this.mntmLaunchConv.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
 		}
-		if (this.actualView.equals("Identification"))
-			if (Views.IDENTIFICATION.getName().equals(this.actualView))
-				this.mntmLaunchConv.setEnabled(false);
 		return this.mntmLaunchConv;
 	}
 
@@ -143,9 +129,7 @@ public class MasterWindow extends JFrame
 			this.mntmProfil.setMnemonic('P');
 			this.mntmProfil.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_MASK));
 		}
-		if (this.actualView.equals("Identification"))
-			if (Views.IDENTIFICATION.getName().equals(this.actualView))
-				this.mntmProfil.setEnabled(false);
+			this.mntmProfil.setEnabled(false);
 		return this.mntmProfil;
 	}
 
@@ -174,14 +158,6 @@ public class MasterWindow extends JFrame
 	}
 
 	/**
-	 * @param userConnected boolean used to know if user is connected
-	 */
-	public final void setConnectionStatus(boolean userConnected)
-	{
-		this.userConnected = userConnected;
-	}
-
-	/**
 	* Change the displayed view by the window
 	*
 	* @param panel {{@link javax.swing.JPanel}}: the view to display in the window
@@ -190,12 +166,24 @@ public class MasterWindow extends JFrame
 	public final void setView(JPanel panel, Views view)
 	{
 		setJMenuBar(getMnBar());
-		this.contentPane = panel;
-		this.contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(this.contentPane);
-		this.actualView = view.getName();
+		panel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(panel);
+		this.actualView = view;
+		this.controller.setActualPanel(panel);
+		this.autoEnableMenuItems();
 		this.repaint();
 		this.pack();
+	}
+
+	private final void autoEnableMenuItems()
+	{
+		if(Views.REGISTER.equals(this.actualView) || Views.IDENTIFICATION.equals(this.actualView))
+		{
+			this.mntmAddUser.setEnabled(false);
+			this.mntmDisconnect.setEnabled(false);
+			this.mntmLaunchConv.setEnabled(false);
+			this.mntmProfil.setEnabled(false);
+		}
 	}
 
 	private class MenuItemListener implements ActionListener
@@ -217,7 +205,7 @@ public class MasterWindow extends JFrame
 
 		private final void helpChoice()
 		{
-			JOptionPane.showMessageDialog(null, "Menu à venir", "à venir", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Menu \u00E0 venir", "\u00C0 venir", JOptionPane.INFORMATION_MESSAGE);
 		}
 
 		private final void profilWindow()

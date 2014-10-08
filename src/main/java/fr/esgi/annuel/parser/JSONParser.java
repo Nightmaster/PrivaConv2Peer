@@ -19,9 +19,9 @@ public class JSONParser
 	 * @return {AddFriendJSONParser} the add friend parser
 	 * @throws JSONException
 	 **/
-	public static AddFriendJsonParser getAddFriendParser(JSONObject json) throws JSONException
+	public static AddFriendJsonParser getAddFriendParser(String json) throws JSONException
 	{
-		return new AddFriendJsonParser(json);
+		return new AddFriendJsonParser(new JSONObject(json));
 	}
 
 	/**
@@ -31,9 +31,9 @@ public class JSONParser
 	 * @return {AnswerRequestJSONParser} the answer friend request parser
 	 * @throws JSONException
 	 **/
-	public static AnswerRequestJsonParser getAnswerRequestParser(JSONObject json) throws JSONException
+	public static AnswerRequestJsonParser getAnswerRequestParser(String json) throws JSONException
 	{
-		return new AnswerRequestJsonParser(json);
+		return new AnswerRequestJsonParser(new JSONObject(json));
 	}
 
 	/**
@@ -43,9 +43,9 @@ public class JSONParser
 	 * @return {ClientIPJSONParser} the client IP parser
 	 * @throws JSONException
 	 **/
-	public static ClientIPJsonParser getClientIPParser(JSONObject json) throws JSONException
+	public static ClientIPJsonParser getClientIPParser(String json) throws JSONException
 	{
-		return new ClientIPJsonParser(json);
+		return new ClientIPJsonParser(new JSONObject(json));
 	}
 
 	/**
@@ -55,9 +55,9 @@ public class JSONParser
 	 * @return {ConnectionJSONParser} the connection parser
 	 * @throws JSONException
 	 **/
-	public static ConnectionJsonParser getConnectionParser(JSONObject json) throws JSONException
+	public static ConnectionJsonParser getConnectionParser(String json) throws JSONException
 	{
-		return new ConnectionJsonParser(json);
+		return new ConnectionJsonParser(new JSONObject(json));
 	}
 
 	/**
@@ -67,9 +67,9 @@ public class JSONParser
 	 * @return {SimpleJSONParser} the disconnection parser
 	 * @throws JSONException
 	 **/
-	public static SimpleJsonParser getDisconnectionParser(JSONObject json) throws JSONException
+	public static SimpleJsonParser getDisconnectionParser(String json) throws JSONException
 	{
-		return new SimpleJsonParser(json, DISCONNECTION);
+		return new SimpleJsonParser(new JSONObject(json), DISCONNECTION);
 	}
 
 	/**
@@ -79,9 +79,9 @@ public class JSONParser
 	 * @return {ModifyProfileJSONParser} the modify profile parser
 	 * @throws JSONException
 	 **/
-	public static ModifyProfileJsonParser getodifyProfileParser(JSONObject json) throws JSONException
+	public static ModifyProfileJsonParser getodifyProfileParser(String json) throws JSONException
 	{
-		return new ModifyProfileJsonParser(json);
+		return new ModifyProfileJsonParser(new JSONObject(json));
 	}
 
 	/**
@@ -91,9 +91,9 @@ public class JSONParser
 	 * @return {PrivateKeyJSONParser} the private key parser
 	 * @throws JSONException
 	 **/
-	public static PrivateKeyJsonParser getPrivateKeyParser(JSONObject json) throws JSONException
+	public static PrivateKeyJsonParser getPrivateKeyParser(String json) throws JSONException
 	{
-		return new PrivateKeyJsonParser(json);
+		return new PrivateKeyJsonParser(new JSONObject(json));
 	}
 
 	/**
@@ -103,9 +103,9 @@ public class JSONParser
 	 * @return {PublicKeyJSONParser} the public key parser
 	 * @throws JSONException
 	 **/
-	public static PublicKeyJsonParser getPublicKeyParser(JSONObject json) throws JSONException
+	public static PublicKeyJsonParser getPublicKeyParser(String json) throws JSONException
 	{
-		return new PublicKeyJsonParser(json);
+		return new PublicKeyJsonParser(new JSONObject(json));
 	}
 
 	/**
@@ -115,9 +115,9 @@ public class JSONParser
 	 * @return {SimpleJSONParser} the registration parser
 	 * @throws JSONException
 	 **/
-	public static SimpleJsonParser getRegistrationParser(JSONObject json) throws JSONException
+	public static SimpleJsonParser getRegistrationParser(String json) throws JSONException
 	{
-		return new SimpleJsonParser(json, REGISTRATION);
+		return new SimpleJsonParser(new JSONObject(json), REGISTRATION);
 	}
 
 	/**
@@ -127,9 +127,9 @@ public class JSONParser
 	 * @return {SearchJSONParser} the search parser
 	 * @throws JSONException
 	 **/
-	public static SearchJsonParser getSearchParser(JSONObject json) throws JSONException
+	public static SearchJsonParser getSearchParser(String json) throws JSONException
 	{
-		return new SearchJsonParser(json);
+		return new SearchJsonParser(new JSONObject(json));
 	}
 
 	/**
@@ -139,9 +139,9 @@ public class JSONParser
 	 * @return {ShowProfileJSONParser} the show profile parser
 	 * @throws JSONException
 	 **/
-	public static ShowProfileJsonParser getShowProfileParser(JSONObject json) throws JSONException
+	public static ShowProfileJsonParser getShowProfileParser(String json) throws JSONException
 	{
-		return new ShowProfileJsonParser(json);
+		return new ShowProfileJsonParser(new JSONObject(json));
 	}
 
 	/**
@@ -151,8 +151,8 @@ public class JSONParser
 	 * @return {StayAliveJSONParser} the stay alive parser
 	 * @throws JSONException
 	 **/
-	public static StayAliveJsonParser getStayAliveParser(JSONObject json) throws JSONException
+	public static StayAliveJsonParser getStayAliveParser(String json) throws JSONException
 	{
-		return new StayAliveJsonParser(json);
+		return new StayAliveJsonParser(new JSONObject(json));
 	}
 }

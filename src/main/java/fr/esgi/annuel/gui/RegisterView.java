@@ -2,8 +2,14 @@ package fr.esgi.annuel.gui;
 
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import com.google.common.base.Strings;
+import fr.esgi.annuel.constants.PasswordConstraints;
+import fr.esgi.annuel.constants.Views;
 import fr.esgi.annuel.crypt.PasswordUtilities;
 import fr.esgi.annuel.ctrl.MasterController;
 
@@ -14,91 +20,24 @@ import static org.jdesktop.xswingx.PromptSupport.FocusBehavior.SHOW_PROMPT;
 import static org.jdesktop.xswingx.PromptSupport.setFocusBehavior;
 import static org.jdesktop.xswingx.PromptSupport.setPrompt;
 
-@SuppressWarnings(value = "unused")
 public class RegisterView extends JPanel
 {
-	private class ButtonListener implements ActionListener
-	{
-		@Override
-		public void actionPerformed(ActionEvent e)
-		{
-			if (RegisterView.this.btnNext.equals(e.getSource()))
-			{
-			boolean eqPw, rightPwFmt, rightPseudoFmt, rightEmailFmt, rightFnameFmt, rightLnameFmt;
-			eqPw = RegisterView.this.fPassword.getPassword().equals(RegisterView.this.fPasswordAgain.getPassword());
-			rightPwFmt = true;
-			for (Boolean value : PasswordUtilities.isStrongEnough(String.valueOf(RegisterView.this.fPassword.getPassword())).values())
-				if (!value)
-					rightPwFmt = value;
-			rightPseudoFmt = isValidFieldContent(RegisterView.this.fPseudo.getText(), PSEUDO);
-			rightEmailFmt = isValidFieldContent(RegisterView.this.fEmail.getText(), EMAIL);
-			rightFnameFmt = isValidFieldContent(RegisterView.this.fFirstname.getText(), FIRSTNAME);
-			rightLnameFmt = isValidFieldContent(RegisterView.this.fLastname.getText(), LASTNAME);
-			if (RegisterView.this.btnNext.equals(e.getSource()))
-				if (eqPw && rightPwFmt && rightPseudoFmt && rightEmailFmt && rightFnameFmt && rightLnameFmt)
-					changeComponents();
-				else
-				{
-					StringBuilder sb = new StringBuilder(550);
-					sb.append(!eqPw ? "Les deux mots de passe doivent \u00EAtre identiques !" : "");
-					if (! "".equals(sb.toString()))
-						sb.append("\n");
-					sb.append(!rightPwFmt ? PasswordUtilities.PASSWORD_STANDARD_FORMAT : "");
-					if (! "".equals(sb.toString()))
-						sb.append("\n");
-					sb.append(!rightPseudoFmt ? getErrorMessageFor(PSEUDO) : "");
-					if (! "".equals(sb.toString()))
-						sb.append("\n");
-					sb.append(!rightEmailFmt ? getErrorMessageFor(EMAIL) : "");
-					if (! "".equals(sb.toString()))
-						sb.append("\n");
-					sb.append(!rightLnameFmt ? getErrorMessageFor(LASTNAME) : "");
-					if (! "".equals(sb.toString()))
-						sb.append("\n");
-					sb.append(!rightFnameFmt ? getErrorMessageFor(FIRSTNAME) : "");
-					JOptionPane.showMessageDialog(null, sb.toString(), "Invalid content", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-			else // if (RegisterView.this.btnRegister.equals(e.getSource()))
-			{
-				StringBuilder sb = new StringBuilder(); //FIXME initialiser la valeur du constructeur
-				String pwK = String.valueOf(RegisterView.this.fPasswordKey.getPassword()),
-					   pwKAgain = String.valueOf(RegisterView.this.fPasswordKeyAgain.getPassword());
-				boolean eqPw, rightPwFmt;
-				eqPw = pwK.equals(pwKAgain);
-				if(!eqPw)
-					sb.append("Les deux mots de passe doivent \u00EAtre identiques !");
-				rightPwFmt = true;
-				for (Boolean value : PasswordUtilities.isStrongEnough(pwK).values())
-					if (!value)
-						rightPwFmt = value;
-				if(true)
-					;
-				else
-				{
-					JOptionPane.showMessageDialog(null, sb.toString(), "Invalid content", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		}
-	}
-
-	private static final long serialVersionUID = -1354403666889275249L;
-	private JLabel lPseudo, lUserEmail, lLastname, lFirstname, lPassword, lPasswordAgain, lPasswordKey, lPasswordKeyAgain, lKeyLength;
-	private JComboBox<Integer> fLenKey;
-	private JTextField fPseudo, fEmail, fLastname, fFirstname;
-	private JPasswordField fPassword, fPasswordAgain, fPasswordKey, fPasswordKeyAgain;
-	private JButton btnNext, btnRegister;
-	private JComponent[]
-			firstPartElements = {this.lPseudo, this.fPseudo, this.fEmail, this.lUserEmail, this.lLastname, this.fLastname, this.lFirstname, this.fFirstname, this.lPassword, this.fPassword, this.lPasswordAgain, this.fPasswordAgain, this.btnNext},
-			secondPartElements = {this.lKeyLength, this.fLenKey, this.lPasswordKey, this.fPasswordKey, this.lPasswordKeyAgain, this.fPasswordKeyAgain, this.btnRegister};
-
+	private final JTextField[] textFields;
+	private final JPasswordField[] passwordFields;
+	private JLabel lPseudo, lUserEmail, lLastName, lFirstName, lPassword, lPasswordAgain;
+	private JTextField fPseudo, fEmail, fLastName, fFirstName;
+	private JPasswordField fPassword, fPasswordAgain;
+	private JButton btnNext;
+	private String pw, login, email, firstName, lastName;
 	private MasterController controller;
 
 	/**
-	 * Create and init the panel.
-	 */
+	* Create and init the panel.
+	**/
 	public RegisterView(MasterController controller)
 	{
+		this.controller = controller;
+		this.controller.setLookAndFeel();
 		//@formatter:off
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
@@ -115,14 +54,14 @@ public class RegisterView extends JPanel
 						.addComponent(getFieldEmail(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(10)
-						.addComponent(getLabelLastname())
+						.addComponent(getLabelLastName())
 					.addGap(93)
-						.addComponent(getFieldLastname(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getFieldLastName(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(10)
-						.addComponent(getLabelFirstname())
+						.addComponent(getLabelFirstName())
 					.addGap(78)
-						.addComponent(getFieldFirstname(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getFieldFirstName(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(10)
 						.addComponent(getLabelPassword())
@@ -156,14 +95,14 @@ public class RegisterView extends JPanel
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(4)
-							.addComponent(getLabelLastname()))
-						.addComponent(getFieldLastname(), GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
+							.addComponent(getLabelLastName()))
+						.addComponent(getFieldLastName(), GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
 					.addGap(5)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(2)
-							.addComponent(getLabelFirstname()))
-						.addComponent(getFieldFirstname(), GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
+							.addComponent(getLabelFirstName()))
+						.addComponent(getFieldFirstName(), GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
 					.addGap(5)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
@@ -181,106 +120,9 @@ public class RegisterView extends JPanel
 		);
 		setLayout(groupLayout);
 		//@formatter:on
+		this.textFields = new JTextField[] {this.fPseudo, this.fEmail, this.fLastName, this.fFirstName};
+		this.passwordFields = new JPasswordField[] {this.fPassword, this.fPasswordAgain};
 	}
-
-//	private static List<String> createRegisterURL(List<String> details, List<JPasswordField> pwd) throws Exception
-//	{
-//		JPasswordField pwAccount = pwd.get(0), pwKey = pwd.get(1);
-//		MessageDigest mdPwdAccount = null;
-//		MessageDigest mdPwdKey = null;
-//		String hashtext = "", hashtextKey = "";
-//		try
-//		{
-//			// hachage du mot de passe du compte
-//			mdPwdAccount = MessageDigest.getInstance("MD5");
-//			mdPwdAccount.reset();
-//			mdPwdAccount.update(String.copyValueOf(pwAccount.getPassword()).getBytes());
-//			byte[] digest = mdPwdAccount.digest();
-//			BigInteger bigInt = new BigInteger(1, digest);
-//			hashtext = bigInt.toString(16);
-//			while (hashtext.length() < 32)
-//				hashtext = "0" + hashtext;
-//
-//			// hachage du mot de passe de la clef
-//			mdPwdKey = MessageDigest.getInstance("MD5");
-//			mdPwdKey.reset();
-//			mdPwdKey.update(String.copyValueOf(pwKey.getPassword()).getBytes());
-//			byte[] digestKey = mdPwdKey.digest();
-//			BigInteger bigIntKey = new BigInteger(1, digestKey);
-//			hashtextKey = bigIntKey.toString(16);
-//			while (hashtextKey.length() < 32)
-//				hashtextKey = "0" + hashtextKey;
-//
-//		}
-//		catch (NoSuchAlgorithmException e)
-//		{
-//			e.printStackTrace();
-//		}
-//		// construction de l'URL
-//		List<String> url = new ArrayList<String>();
-//		String urlConnect = PROPERTIES.getProperty("server.address") + ":" + PROPERTIES.getProperty("server.port") + "/" + SRV_API + "/" + SRV_REGISTER_PAGE;
-//
-//		String params = "?" + USERNAME + "=" + details.get(0) + "&" + EMAIL + "=" + details.get(1) + "&" + FIRSTNAME + "=" + details.get(2) + "&" + LASTNAME + "=" + details.get(3) + "&" + PASSWORD + "=" + hashtext + "&" + PASSWORD_KEY + "=" + hashtextKey + "&" + KEY_LENGTH + "=" + details.get(4);
-//
-//		url.add(urlConnect);
-//		url.add(params);
-//		return url;
-//	}
-
-	private void changeComponents()
-	{
-		//@formatter:off
-		GroupLayout groupLayout = new GroupLayout(this);
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(10)
-					.addComponent(getLabelKeyLength())
-					.addGap(62)
-					.addComponent(getFieldLengthKey(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(10)
-					.addComponent(getLabelPasswordKey())
-					.addGap(43)
-					.addComponent(getFieldPasswordKey(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(10)
-					.addComponent(getLabelPasswordKeyAgain())
-					.addComponent(getFieldPasswordKeyAgain(), GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(79)
-					.addComponent(getBtnRegister()))
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(8)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(4)
-							.addComponent(getLabelKeyLength()))
-						.addComponent(getFieldLengthKey(), GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
-					.addGap(5)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(4)
-							.addComponent(getLabelPasswordKey()))
-						.addComponent(getFieldPasswordKey(), GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
-					.addGap(5)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(4)
-							.addComponent(getLabelPasswordKeyAgain()))
-						.addComponent(getFieldPasswordKeyAgain(), GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
-					.addGap(7)
-					.addComponent(getBtnRegister()))
-		);
-		//@formatter:on
-		setLayout(groupLayout);
-		setAllEmentsActive(this.secondPartElements, this.firstPartElements);
-		this.controller.packFrame();
-	}
-
 
 	private JButton getBtnNext()
 	{
@@ -288,15 +130,9 @@ public class RegisterView extends JPanel
 		{
 			this.btnNext = new JButton("Etape suivante");
 			this.btnNext.addActionListener(new ButtonListener());
+			this.btnNext.setEnabled(false);
 		}
 		return this.btnNext;
-	}
-
-	private JButton getBtnRegister()
-	{
-		if (this.btnRegister == null)
-			this.btnRegister = new JButton("S'enregistrer");
-		return this.btnRegister;
 	}
 
 	private JTextField getFieldEmail()
@@ -304,44 +140,35 @@ public class RegisterView extends JPanel
 		if (this.fEmail == null)
 		{
 			this.fEmail = new JTextField(10);
+			this.fEmail.getDocument().addDocumentListener(new FieldListener());
 			setPrompt("exemple@site.tld", this.fEmail);
 			setFocusBehavior(SHOW_PROMPT, this.fEmail);
 		}
 		return this.fEmail;
 	}
 
-	private JTextField getFieldFirstname()
+	private JTextField getFieldFirstName()
 	{
-		if (this.fFirstname == null)
+		if (this.fFirstName == null)
 		{
-			this.fFirstname = new JTextField(10);
-			setPrompt("Votre pr\u00E9nom", this.fFirstname);
-			setFocusBehavior(SHOW_PROMPT, this.fFirstname);
+			this.fFirstName = new JTextField(10);
+			this.fFirstName.getDocument().addDocumentListener(new FieldListener());
+			setPrompt("Votre pr\u00E9nom", this.fFirstName);
+			setFocusBehavior(SHOW_PROMPT, this.fFirstName);
 		}
-		return this.fFirstname;
+		return this.fFirstName;
 	}
 
-	private JTextField getFieldLastname()
+	private JTextField getFieldLastName()
 	{
-		if (this.fLastname == null)
+		if (this.fLastName == null)
 		{
-			this.fLastname = new JTextField(10);
-			setPrompt("Votre nom", this.fLastname);
-			setFocusBehavior(SHOW_PROMPT, this.fLastname);
+			this.fLastName = new JTextField(10);
+			this.fLastName.getDocument().addDocumentListener(new FieldListener());
+			setPrompt("Votre nom", this.fLastName);
+			setFocusBehavior(SHOW_PROMPT, this.fLastName);
 		}
-		return this.fLastname;
-	}
-
-	private JComboBox<Integer> getFieldLengthKey()
-	{
-		if (this.fLenKey == null)
-		{
-			this.fLenKey = new JComboBox<Integer>();
-			this.fLenKey.setMaximumRowCount(4);
-			this.fLenKey.setModel(new DefaultComboBoxModel<Integer>(new Integer[] {1024, 2048, 4096}));
-			this.fLenKey.setToolTipText("<html>\r\nLongueur de clefs de cryptage :<br>\r\n\t- 1024 : peu s\u00E9curis\u00E9, mais traitement rapide <br>\r\n  \t- 2048 : bon rapport s\u00E9curit\u00E9 / vitesse de traitement <br>\r\n  \t- 4096 : tr\u00E8s s\u00E9curis\u00E9, mais vitesse de traitement plus lente <br>\r\n</html>");
-		}
-		return this.fLenKey;
+		return this.fLastName;
 	}
 
 	private JPasswordField getFieldPassword()
@@ -349,6 +176,7 @@ public class RegisterView extends JPanel
 		if (this.fPassword == null)
 		{
 			this.fPassword = new JPasswordField();
+			this.fPassword.getDocument().addDocumentListener(new FieldListener());
 			setPrompt("Mot de passe de session", this.fPassword);
 			setFocusBehavior(SHOW_PROMPT, this.fPassword);
 			this.fPassword.setToolTipText("<html>\r\n<pre>\r\nLe mot de passe doit \u00EAtre d'au moins 8 caract\u00E8res et \u00EAtre compos\u00E9 de :\r\n\t- Au moins 1 majuscule\r\n\t- Au moins 1 minuscule\r\n\t- Au moins 1 chiffre\r\n\t- Au moins 1 caract\u00E8re sp\u00E9cial\r\n</pre>\r\n</html>");
@@ -362,33 +190,11 @@ public class RegisterView extends JPanel
 		if (this.fPasswordAgain == null)
 		{
 			this.fPasswordAgain = new JPasswordField();
+			this.fPasswordAgain.getDocument().addDocumentListener(new FieldListener());
 			setPrompt("Mot de passe de session", this.fPasswordAgain);
 			setFocusBehavior(SHOW_PROMPT, this.fPasswordAgain);
 		}
 		return this.fPasswordAgain;
-	}
-
-	private JPasswordField getFieldPasswordKey()
-	{
-		if (this.fPasswordKey == null)
-		{
-			this.fPasswordKey = new JPasswordField();
-			setPrompt("Mot de passe de la cl\u00E9", this.fPasswordKey);
-			setFocusBehavior(SHOW_PROMPT, this.fPasswordKey);
-			this.fPasswordKey.setToolTipText("Mot de passe servant \u00E0 crypter votre paire de clefs RSA\r\nCe mot de passe doit \u00EAtre diff\u00E9rent de celui de connexion (pour des raisons de s\u00E9curit\u00E9)");
-		}
-		return this.fPasswordKey;
-	}
-
-	private JPasswordField getFieldPasswordKeyAgain()
-	{
-		if (this.fPasswordKeyAgain == null)
-		{
-			this.fPasswordKeyAgain = new JPasswordField();
-			setPrompt("Mot de passe de la cl\u00E9", this.fPasswordKey);
-			setFocusBehavior(SHOW_PROMPT, this.fPasswordKey);
-		}
-		return this.fPasswordKeyAgain;
 	}
 
 	private JTextField getFieldPseudo()
@@ -396,31 +202,25 @@ public class RegisterView extends JPanel
 		if (this.fPseudo == null)
 		{
 			this.fPseudo = new JTextField(10);
+			this.fPseudo.getDocument().addDocumentListener(new FieldListener());
 			setPrompt("Pseudonyme", this.fPseudo);
 			setFocusBehavior(SHOW_PROMPT, this.fPseudo);
 		}
 		return this.fPseudo;
 	}
 
-	private JLabel getLabelFirstname()
+	private JLabel getLabelFirstName()
 	{
-		if (this.lFirstname == null)
-			this.lFirstname = new JLabel("Pr\u00E9nom : ");
-		return this.lFirstname;
+		if (this.lFirstName == null)
+			this.lFirstName = new JLabel("Pr\u00E9nom : ");
+		return this.lFirstName;
 	}
 
-	private JLabel getLabelKeyLength()
+	private JLabel getLabelLastName()
 	{
-		if (this.lKeyLength == null)
-			this.lKeyLength = new JLabel("Longueur clef :");
-		return this.lKeyLength;
-	}
-
-	private JLabel getLabelLastname()
-	{
-		if (this.lLastname == null)
-			this.lLastname = new JLabel("Nom : ");
-		return this.lLastname;
+		if (this.lLastName == null)
+			this.lLastName = new JLabel("Nom : ");
+		return this.lLastName;
 	}
 
 	private JLabel getLabelPassword()
@@ -437,20 +237,6 @@ public class RegisterView extends JPanel
 		return this.lPasswordAgain;
 	}
 
-	private JLabel getLabelPasswordKey()
-	{
-		if (this.lPasswordKey == null)
-			this.lPasswordKey = new JLabel("Mot de passe clef: ");
-		return this.lPasswordKey;
-	}
-
-	private JLabel getLabelPasswordKeyAgain()
-	{
-		if (this.lPasswordKeyAgain == null)
-			this.lPasswordKeyAgain = new JLabel("Resaisir mot de passe clef : ");
-		return this.lPasswordKeyAgain;
-	}
-
 	private JLabel getLabelPseudo()
 	{
 		if (this.lPseudo == null)
@@ -465,11 +251,121 @@ public class RegisterView extends JPanel
 		return this.lUserEmail;
 	}
 
-	private void setAllEmentsActive(JComponent[] elementsToShow, JComponent[] elementsToHide)
+	String getLogin()
 	{
-		for (JComponent element : elementsToShow)
-			element.setVisible(true);
-		for (JComponent element : elementsToHide)
-			element.setVisible(false);
+		return this.login;
+	}
+
+	String getEmail()
+	{
+		return this.email;
+	}
+
+	String getPassword()
+	{
+		return this.pw;
+	}
+
+	String getLastName()
+	{
+		return this.lastName;
+	}
+
+	String getFirstName()
+	{
+		return this.firstName;
+	}
+
+	//FIXME ajouter un bouton d'annulation et un de retour arrière !
+	private class ButtonListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			RegisterView.this.pw = String.valueOf(RegisterView.this.fPassword.getPassword());
+			RegisterView.this.login = RegisterView.this.fPseudo.getText();
+			RegisterView.this.email = RegisterView.this.fEmail.getText();
+			RegisterView.this.firstName = RegisterView.this.fFirstName.getText();
+			RegisterView.this.lastName = RegisterView.this.fLastName.getText();
+			String pwAgain = String.valueOf(RegisterView.this.fPasswordAgain.getPassword());
+
+			if (RegisterView.this.btnNext.equals(e.getSource()))
+			{
+				if (Strings.isNullOrEmpty(pw) || Strings.isNullOrEmpty(pwAgain))
+					return;
+				StringBuilder sb = new StringBuilder(1000);
+
+				/**Fields content (except PW) verification**/
+				sb.append(!RegisterView.this.pw.equals(pwAgain) ? "Les deux mots de passe doivent \u00EAtre identiques !\n" : "");
+				sb.append(!isValidFieldContent(login, PSEUDO) ? getErrorMessageFor(PSEUDO) + "\n" : "");
+				sb.append(!isValidFieldContent(email, EMAIL) ? getErrorMessageFor(EMAIL) + "\n" : "");
+				sb.append(!isValidFieldContent(lastName, LASTNAME) ? getErrorMessageFor(LASTNAME) + "\n" : "");
+				sb.append(!isValidFieldContent(firstName, FIRSTNAME) ? getErrorMessageFor(FIRSTNAME) : "");
+
+				/**Password verification**/
+				HashMap<PasswordConstraints, Boolean> map = PasswordUtilities.isStrongEnough(pw);
+				for (PasswordConstraints constraint : map.keySet())
+					if (!map.get(constraint))
+					{
+						sb.append(constraint.getErrorMessage());
+						sb.append('\n');
+					}
+
+				if ("".equals(sb.toString())) //if no error has been detected
+					RegisterView.this.controller.changeView(Views.REGISTER_PART_2);
+				else
+				{
+					String res = sb.toString();
+					while (res.contains("\n\n"))
+						res = res.replace("\n\n", "\n");
+					if (res.endsWith("\n"))
+						res = res.substring(0, res.length() - 1);
+					JOptionPane.showMessageDialog(null, res, "Valeur(s) incorrecte(s) d\u00E0e(s)", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		}
+	}
+
+	private class FieldListener implements DocumentListener
+	{
+		private void checkFieldsNotEmpty()
+		{
+			for (JTextField field : RegisterView.this.textFields)
+			{
+				if (field.getText().trim().isEmpty())
+				{
+					RegisterView.this.btnNext.setEnabled(false);
+					return;
+				}
+			}
+			for (JPasswordField field : RegisterView.this.passwordFields)
+			{
+				if (Strings.isNullOrEmpty(String.valueOf(field.getPassword())))
+				{
+					RegisterView.this.btnNext.setEnabled(false);
+					return;
+				}
+			}
+			RegisterView.this.btnNext.setEnabled(true);
+		}
+
+		@Override
+		public void insertUpdate(DocumentEvent e)
+		{
+			checkFieldsNotEmpty();
+		}
+
+		@Override
+		public void removeUpdate(DocumentEvent e)
+		{
+			checkFieldsNotEmpty();
+		}
+
+		@Override
+		public void changedUpdate(DocumentEvent e)
+		{
+			checkFieldsNotEmpty();
+		}
 	}
 }
+

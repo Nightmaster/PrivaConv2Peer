@@ -1,4 +1,4 @@
-package fr.esgi.annuel.parser.subclasses;
+package fr.esgi.annuel.client;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,10 +8,15 @@ public class Friend
 	private boolean connected;
 	private String username;
 
+	public Friend(String username, boolean connected)
+	{
+		this.username = username;
+		this.connected = connected;
+	}
+
 	public Friend(JSONObject json) throws JSONException
 	{
-		this.username = json.getString("displayLogin");
-		this.connected = json.getBoolean("connected");
+		this(json.getString("displayLogin"), json.getBoolean("connected"));
 	}
 
 	public String getUsername()

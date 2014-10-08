@@ -4,7 +4,7 @@ public interface Constants
 {
 	public final static String // Menu
 			APP_NAME = "PrivaConv2Peer",
-			ADD_USER = "Ajouter un utilisateur à votre liste",
+			ADD_USER = "Ajouter un utilisateur \u00E0 votre liste",
 			LAUNCH_CONVERSATION = "Ouvrir une nouvelle conversation",
 			PROFILE = "Profil",
 			DISCONNECT = "D\u00E9connnexion",

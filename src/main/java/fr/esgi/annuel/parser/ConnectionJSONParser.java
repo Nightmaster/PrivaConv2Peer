@@ -3,7 +3,7 @@ package fr.esgi.annuel.parser;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import fr.esgi.annuel.parser.subclasses.Friend;
+import fr.esgi.annuel.client.Friend;
 import fr.esgi.annuel.parser.subclasses.UserInfos;
 
 public class ConnectionJsonParser

@@ -4,7 +4,6 @@ import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Properties;
 import com.google.common.base.Strings;
 import fr.esgi.annuel.constants.Views;
 import fr.esgi.annuel.crypt.PasswordUtilities;
@@ -22,8 +21,6 @@ import static fr.esgi.annuel.ctrl.FieldContentValidator.isValidFieldContent;
  **/
 public class IdentificationView extends JPanel
 {
-	private static final long serialVersionUID = -3948992383967747160L;
-	private final Properties properties;
 	private JButton btnConnection, btnRegister;
 	private JCheckBox chckbxRememberMe;
 	private JLabel lblConnectionIdentifier, lblPwd;
@@ -39,7 +36,7 @@ public class IdentificationView extends JPanel
 	public IdentificationView(MasterController controller)
 	{
 		this.controller = controller;
-		properties = this.controller.getProperties();
+		this.controller.setLookAndFeel();
 		setLayout(null);
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(groupLayout
@@ -80,7 +77,7 @@ public class IdentificationView extends JPanel
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					IdentificationView.this.controller.changeView(Views.REGISTER, null);
+					IdentificationView.this.controller.changeView(Views.REGISTER);
 				}
 			});
 		}
@@ -119,11 +116,6 @@ public class IdentificationView extends JPanel
 		return this.fPassword;
 	}
 
-	private String getPw()
-	{
-		return String.valueOf(getFPassword().getPassword());
-	}
-
 	private JTextField getFLoginValue()
 	{
 		if (this.fLoginValue == null)
@@ -153,6 +145,16 @@ public class IdentificationView extends JPanel
 		return new IdentificationView(this.controller);
 	}
 
+	public final void setEnableChckBox(boolean enabled)
+	{
+		this.chckbxRememberMe.setEnabled(enabled);
+	}
+
+	public final void setLoginValue(String value)
+	{
+		this.fLoginValue.setText(value);
+	}
+
 	public final String getLogin()
 	{
 		return this.fLoginValue.getText();
@@ -177,14 +179,12 @@ public class IdentificationView extends JPanel
 				if(! isValidFieldContent(login, EMAIL))
 				{
 					JOptionPane.showMessageDialog(IdentificationView.this, getErrorMessageFor(EMAIL), "Identifiant incorrect", JOptionPane.ERROR_MESSAGE);
-					return;
 				}
 				else
 					IdentificationView.this.controller.connect(null, login, password);
 			else if (!isValidFieldContent(login, PSEUDO))
 			{
 				JOptionPane.showMessageDialog(IdentificationView.this, getErrorMessageFor(PSEUDO), "Identifiant incorrect", JOptionPane.ERROR_MESSAGE);
-				return;
 			}
 			else
 				IdentificationView.this.controller.connect(login, null, password);
