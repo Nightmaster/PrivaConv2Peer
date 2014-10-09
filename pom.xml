@@ -40,5 +40,11 @@
 			<artifactId>PromptSupport</artifactId>
 			<version>1.0</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.bitlet.weupnp</groupId>
+			<artifactId>Gateway</artifactId>
+			<version>1.0</version>
+		</dependency>
 	</dependencies>
 </project>
