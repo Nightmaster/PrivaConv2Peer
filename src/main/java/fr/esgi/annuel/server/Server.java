@@ -1,51 +1,32 @@
 package fr.esgi.annuel.server;
 
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.util.Date;
-import fr.esgi.annuel.message.Message;
-import fr.esgi.annuel.message.MessageQueue;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Arrays;
 
 public class Server implements Runnable
 {
-
-	static DatagramSocket serverSocket;
-
 	@Override
 	public void run()
 	{
 		try
 		{
-			serverSocket = new DatagramSocket(1111);
-			byte[] receiveData = new byte[1024];
-
+			ServerSocket server = new ServerSocket(6991);
 			while (true)
 			{
-				Message mess = new Message();
-				DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-				serverSocket.receive(receivePacket);
-				String s = new String(receivePacket.getData()).substring(0, receivePacket.getLength());
-				mess.setMessage(s);
-				String[] splits = s.split(" :");
-				int iterator = 0;
-				String pseudo = "";
-				for (String part : splits)
-					if (iterator == 0)
-					{
-						pseudo = part;
-						iterator++ ;
-					}
-				iterator = 0;
-				mess.setReceiveDate(new Date());
-				System.out.println(pseudo);
-				MessageQueue.addMessageToPrint(pseudo, mess);
+				Socket socket = server.accept();
+				System.out.println(socket.getInetAddress() + " " + socket.getPort());
+				//FIXME ajouter la couche de décryptage
+				byte[] b = new byte[256]; //FIXME voir comment gérer des messages très long sans splitter
+				int count;
+				while ((count = socket.getInputStream().read(b)) > 0)
+					System.out.println(new String(Arrays.copyOf(b, count)));
+				socket.close();
 			}
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
-
 	}
-
 }

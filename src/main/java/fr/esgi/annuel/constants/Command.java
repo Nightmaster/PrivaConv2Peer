@@ -1,4 +1,4 @@
-package fr.esgi.annuel.server;
+package fr.esgi.annuel.constants;
 
 public enum Command
 {
