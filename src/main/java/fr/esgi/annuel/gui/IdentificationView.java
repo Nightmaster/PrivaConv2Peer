@@ -23,9 +23,11 @@ public class IdentificationView extends JPanel implements Resettable
 {
 	private JButton btnConnection, btnRegister;
 	private JCheckBox chckbxRememberMe;
-	private JLabel lblConnectionIdentifier, lblPwd;
+	private JLabel lblConnectionIdentifier, lblPwd, lblNoAccount;
 	private JPasswordField fPassword;
+	private JSeparator horizontalSeparator;
 	private JTextField fLoginValue;
+
 	private MasterController controller;
 
 	/**
@@ -37,22 +39,58 @@ public class IdentificationView extends JPanel implements Resettable
 	{
 		this.controller = controller;
 		this.controller.setLookAndFeel();
-		setLayout(null);
 		GroupLayout groupLayout = new GroupLayout(this);
-		groupLayout.setHorizontalGroup(groupLayout
-				.createParallelGroup(Alignment.LEADING)
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup().addGap(5).addComponent(getLblPwd())).addComponent(getFPassword(), GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)).addContainerGap(316, Short.MAX_VALUE))
-				.addGroup(groupLayout
-					.createSequentialGroup()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(getLblConnectionIdentifier()).addComponent(getFLoginValue(), GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE).addGroup(groupLayout.createSequentialGroup().addGap(23).addComponent(getBtnConnection()))
-						.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addComponent(getBtnRegister()).addComponent(getChckbxRememberMe()))).addContainerGap(316, Short.MAX_VALUE)));
-		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(
-			groupLayout.createSequentialGroup()
-				.addComponent(getLblConnectionIdentifier()).addGap(4).addComponent(getFLoginValue(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addGap(13).addComponent(getLblPwd()).addGap(4).addComponent(getFPassword(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addGap(18)
-					.addComponent(getBtnConnection()).addGap(7).addComponent(getChckbxRememberMe()).addGap(18).addComponent(getBtnRegister()).addGap(99)));
+					.addGap(0)
+					.addComponent(getLblConnectionIdentifier()))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(0)
+					.addComponent(getFLoginValue(), GroupLayout.PREFERRED_SIZE, 140, GroupLayout.PREFERRED_SIZE))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(0)
+					.addComponent(getLblPwd()))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(0)
+					.addComponent(getFPassword(), GroupLayout.PREFERRED_SIZE, 140, GroupLayout.PREFERRED_SIZE))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(0)
+					.addComponent(getChckbxRememberMe()))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(30)
+					.addComponent(getBtnConnection(), GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(0)
+					.addComponent(getHorizontalSeparator(), GroupLayout.PREFERRED_SIZE, 140, GroupLayout.PREFERRED_SIZE))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(0)
+					.addComponent(getLblNoAccount()))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(28)
+					.addComponent(getBtnRegister()))
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addComponent(getLblConnectionIdentifier())
+					.addGap(5)
+					.addComponent(getFLoginValue(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(10)
+					.addComponent(getLblPwd())
+					.addGap(5)
+					.addComponent(getFPassword(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(10)
+					.addComponent(getChckbxRememberMe())
+					.addGap(10)
+					.addComponent(getBtnConnection())
+					.addGap(15)
+					.addComponent(getHorizontalSeparator(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(15)
+					.addComponent(getLblNoAccount())
+					.addGap(5)
+					.addComponent(getBtnRegister()))
+		);
 		setLayout(groupLayout);
 	}
 
@@ -91,18 +129,15 @@ public class IdentificationView extends JPanel implements Resettable
 		return this.chckbxRememberMe;
 	}
 
-	private JLabel getLblConnectionIdentifier()
+	private JTextField getFLoginValue()
 	{
-		if (this.lblConnectionIdentifier == null)
-			this.lblConnectionIdentifier = new JLabel("Identifiant de connexion");
-		return this.lblConnectionIdentifier;
-	}
-
-	private JLabel getLblPwd()
-	{
-		if (this.lblPwd == null)
-			this.lblPwd = new JLabel("Mot de passe :");
-		return this.lblPwd;
+		if (this.fLoginValue == null)
+		{
+			this.fLoginValue = new JTextField(10);
+			PromptSupport.setPrompt("Pseudo ou @ mail", this.fLoginValue);
+			PromptSupport.setFocusBehavior(FocusBehavior.SHOW_PROMPT, this.fLoginValue);
+		}
+		return this.fLoginValue;
 	}
 
 	private JPasswordField getFPassword()
@@ -116,22 +151,64 @@ public class IdentificationView extends JPanel implements Resettable
 		return this.fPassword;
 	}
 
-	private JTextField getFLoginValue()
+	private JSeparator getHorizontalSeparator()
 	{
-		if (this.fLoginValue == null)
-		{
-			this.fLoginValue = new JTextField(10);
-			PromptSupport.setPrompt("Pseudo ou @ mail", this.fLoginValue);
-			PromptSupport.setFocusBehavior(FocusBehavior.SHOW_PROMPT, this.fLoginValue);
-		}
-		return this.fLoginValue;
+		if (this.horizontalSeparator == null)
+			this.horizontalSeparator = new JSeparator();
+		return this.horizontalSeparator;
 	}
 
+	private JLabel getLblConnectionIdentifier()
+	{
+		if (this.lblConnectionIdentifier == null)
+			this.lblConnectionIdentifier = new JLabel("Identifiant de connexion");
+		return this.lblConnectionIdentifier;
+	}
+
+	private JLabel getLblNoAccount()
+	{
+		if (this.lblNoAccount == null)
+			this.lblNoAccount = new JLabel("Pas encore de compte ?");
+		return this.lblNoAccount;
+	}
+
+	private JLabel getLblPwd()
+	{
+		if (this.lblPwd == null)
+			this.lblPwd = new JLabel("Mot de passe :");
+		return this.lblPwd;
+	}
+
+	/**
+	* Return the MD5 hash of the typed password
+	*
+	* @return {@link java.lang.String}: the MD5 hash of the password if it is not an empty value, <code>null</code> otherwise
+	**/
+	public final String getHashedPassword()
+	{
+		return 0 != this.fPassword.getPassword().length ? PasswordUtilities.hashPassword(String.valueOf(getFPassword().getPassword())) : null;
+	}
+
+	/**
+	* Return the typed value in the {@link javax.swing.JTextField login field}
+	*
+	* @return {@link java.lang.String}: the content of the {@link javax.swing.JTextField login field} ({@link javax.swing.JTextField#getText exactly})
+	**/
+	public final String getLogin()
+	{
+		return this.fLoginValue.getText();
+	}
+
+	/**
+	* Reset the components of the view, and return it
+	*
+	* @return {{@link fr.esgi.annuel.gui.IdentificationView}}: the {@link fr.esgi.annuel.gui.IdentificationView identification view} with its components back to their default value
+	**/
 	@Override
 	public final IdentificationView reset()
 	{
 		this.fPassword.setText(null);
-		if(this.chckbxRememberMe.isSelected())
+		if (this.chckbxRememberMe.isSelected())
 		{
 			this.fLoginValue.setText(this.fLoginValue.getText());
 			if (! this.fLoginValue.requestFocusInWindow())
@@ -146,24 +223,26 @@ public class IdentificationView extends JPanel implements Resettable
 		return new IdentificationView(this.controller);
 	}
 
-	public final void setEnableChckBox(boolean enabled)
+	/**
+	* Set the "Remember me" checkbox to the value passed as parameter.
+	* This function is to use when the status of the saved properties file is known
+	*
+	* @param enabled {<code>boolean</code>}: <code>true</code> to enable the checkbox, <code>false</code> otherwise
+	**/
+	public synchronized final void setEnabledChckBox(boolean enabled)
 	{
 		this.chckbxRememberMe.setEnabled(enabled);
 	}
 
-	public final void setLoginValue(String value)
+	/**
+	* Initialize the {@link javax.swing.JTextField login field} with a default value.
+	* This function is to used when the status of the saved properties file is known as read, and contains a default login value
+	*
+	* @param value {@link java.lang.String}: the login to set in the {@link javax.swing.JTextField login field}
+	**/
+	public synchronized final void setLoginValue(String value)
 	{
 		this.fLoginValue.setText(value);
-	}
-
-	public final String getLogin()
-	{
-		return this.fLoginValue.getText();
-	}
-
-	public final String getHashedPassword()
-	{
-		return 0 != this.fPassword.getPassword().length ? PasswordUtilities.hashPassword(String.valueOf(getFPassword().getPassword())) : null;
 	}
 
 	private final class BtnListener implements ActionListener
@@ -174,19 +253,15 @@ public class IdentificationView extends JPanel implements Resettable
 			final String login = getLogin(),
 						 password = getHashedPassword();
 
-			if(Strings.isNullOrEmpty(password))
+			if (Strings.isNullOrEmpty(password))
 				return;
-			if(login.contains("@"))
-				if(! isValidFieldContent(login, EMAIL))
-				{
+			if (login.contains("@"))
+				if (!isValidFieldContent(login, EMAIL))
 					JOptionPane.showMessageDialog(IdentificationView.this, getErrorMessageFor(EMAIL), "Identifiant incorrect", JOptionPane.ERROR_MESSAGE);
-				}
 				else
 					IdentificationView.this.controller.connect(null, login, password);
 			else if (!isValidFieldContent(login, PSEUDO))
-			{
 				JOptionPane.showMessageDialog(IdentificationView.this, getErrorMessageFor(PSEUDO), "Identifiant incorrect", JOptionPane.ERROR_MESSAGE);
-			}
 			else
 				IdentificationView.this.controller.connect(login, null, password);
 		}

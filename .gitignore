@@ -38,3 +38,4 @@ proguard/
 # Gui dev on Eclipse files
 **RegView.java
 **Tmp.java
+**IdView.java

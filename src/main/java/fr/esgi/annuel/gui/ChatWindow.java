@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import fr.esgi.annuel.client.Client;
 import fr.esgi.annuel.client.ClientInfo;
 import fr.esgi.annuel.client.contact.Contacts;
 import fr.esgi.annuel.message.Message;
@@ -51,7 +50,7 @@ public class ChatWindow
 				try
 				{
 					new Thread(new Server()).start();
-					new Thread(new Client(logedUser)).start();
+					//new Thread(new Client(logedUser)).start();
 					ChatWindow window = new ChatWindow();
 					window.frame.setVisible(true);
 				}

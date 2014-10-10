@@ -169,7 +169,7 @@ public final class MasterController
 				window = new MasterWindow(MasterController.this);
 				window.setVisible(true);
 				if (null == MasterController.this.registeredProperties)
-					MasterController.this.identificationView.setEnableChckBox(false);
+					MasterController.this.identificationView.setEnabledChckBox(false);
 				else
 					MasterController.this.identificationView.setLoginValue(MasterController.this.registeredProperties.getProperty("login"));
 			}

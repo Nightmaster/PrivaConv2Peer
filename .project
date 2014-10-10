@@ -14,6 +14,13 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>java</name>
+			<type>2</type>
+			<location>D:/Git/PrivaConv2Peer/src/main/java</location>
+		</link>
+	</linkedResources>
 	<filteredResources>
 		<filter>
 			<id>1399926128878</id>
