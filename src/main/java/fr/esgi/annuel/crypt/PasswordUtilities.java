@@ -1,6 +1,5 @@
 package fr.esgi.annuel.crypt;
 
-import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -20,7 +19,7 @@ public class PasswordUtilities
 	 * @param pw {String}: le mot de passe à vérifier
 	 * @return {boolean} <code>true</code> si pw.contains(["-!\"§$%&/()=?+*~#'_:.,;@\^<>£¤µ"]) == true, <code>false</code> sinon
 	 **/
-	private final static boolean contientCaracSpe(String pw)
+	private static boolean contientCaracSpe(String pw)
 	{
 		boolean res = false;
 		int i = 0;
@@ -41,7 +40,7 @@ public class PasswordUtilities
 	 * @param pw {String}: le mot de passe à vérifier
 	 * @return {boolean} <code>true</code> si le pw contient au moins une majuscule, <code>false</code> sinon
 	 **/
-	private final static boolean contientMaj(String pw)
+	private static boolean contientMaj(String pw)
 	{
 		return Pattern.compile("(?=.*[A-Z])").matcher(pw).find();
 	}
@@ -52,7 +51,7 @@ public class PasswordUtilities
 	 * @param pw {String}: le mot de passe à vérifier
 	 * @return {boolean} <code>true</code> si le pw contient au moins une minuscule, <code>false</code> sinon
 	 **/
-	private final static boolean contientMin(String pw)
+	private static boolean contientMin(String pw)
 	{
 		return Pattern.compile("(?=.*[a-z])").matcher(pw).find();
 	}
@@ -63,7 +62,7 @@ public class PasswordUtilities
 	 * @param pw {String}: le mot de passe à vérifier
 	 * @return {boolean} <code>true</code> si le pw contient au moins un chiffre, <code>false</code> sinon
 	 **/
-	private final static boolean contientNombre(String pw)
+	private static boolean contientNombre(String pw)
 	{
 		return Pattern.compile(".*\\d+.*").matcher(pw).find();
 	}
@@ -74,7 +73,7 @@ public class PasswordUtilities
 	 * @param pw {String}: le mot de passe à vérifier
 	 * @return {boolean} <code>true</code> si pw.length >= 8, <code>false</code> sinon
 	 **/
-	private final static boolean estSuffisammentLong(String pw)
+	private static boolean estSuffisammentLong(String pw)
 	{
 		return pw.length() >= 8;
 	}
@@ -85,7 +84,7 @@ public class PasswordUtilities
 	 * @param pw {String]: Le mot de passe à vérifier
 	 * @return {boolean}: <code>true</code> si le mot de passe valide les attentes, <code>false</code> sinon
 	 **/
-	private final static boolean seulementAcceptes(String pw)
+	private static boolean seulementAcceptes(String pw)
 	{
 		return Pattern.compile("^[-!\"§$%&/()=?+*~#'_:\\.,@^<>£¤µa-zA-Z0-9 ]+$").matcher(pw).find();
 	}
@@ -104,7 +103,7 @@ public class PasswordUtilities
 	 **/
 	public final static HashMap<PasswordConstraints, Boolean> isStrongEnough(String pw)
 	{
-		HashMap<PasswordConstraints, Boolean> res = new HashMap();
+		HashMap<PasswordConstraints, Boolean> res = new HashMap<>();
 		res.put(LENGTH, estSuffisammentLong(pw));
 		res.put(SPECIAL_CHARACTER, contientCaracSpe(pw));
 		res.put(CONTAINS_NUMBER, contientNombre(pw));
@@ -126,10 +125,17 @@ public class PasswordUtilities
 	{
 		try
 		{
-			return new String(MessageDigest.getInstance("MD5").digest(pw.getBytes("UTF-8")));
+			byte[] byteArray = MessageDigest.getInstance("MD5").digest(pw.getBytes());
+			StringBuilder sb = new StringBuilder(32);
+			for (byte aByte : byteArray)
+			{
+				sb.append(Integer.toHexString((aByte & 0xFF) | 0x100).substring(1, 3));
+			}
+			return sb.toString();
 		}
-		catch (UnsupportedEncodingException | NoSuchAlgorithmException e)
+		catch (NoSuchAlgorithmException e)
 		{
+			e.printStackTrace();
 			return null;
 		}
 	}
