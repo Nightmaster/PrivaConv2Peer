@@ -101,7 +101,7 @@ public class PasswordUtilities
 	 * @param pw {String}: the password to check
 	 * @return {HashMap&lt;String, Boolean&gt;} The <code>HashMap</code> with the tests results. Ex: "Length":false
 	 **/
-	public final static HashMap<PasswordConstraints, Boolean> isStrongEnough(String pw)
+	public static HashMap<PasswordConstraints, Boolean> isStrongEnough(String pw)
 	{
 		HashMap<PasswordConstraints, Boolean> res = new HashMap<>();
 		res.put(LENGTH, estSuffisammentLong(pw));
@@ -121,7 +121,7 @@ public class PasswordUtilities
 	*
 	* @return {{@link String}}: the hash of the password
 	**/
-	public final static String hashPassword(String pw)
+	public static String hashPassword(String pw)
 	{
 		try
 		{

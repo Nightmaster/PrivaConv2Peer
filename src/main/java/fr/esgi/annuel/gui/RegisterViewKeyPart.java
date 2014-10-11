@@ -149,8 +149,8 @@ public class RegisterViewKeyPart extends JPanel implements Resettable
 		{
 			this.fPasswordKeyAgain = new JPasswordField();
 			this.fPasswordKeyAgain.getDocument().addDocumentListener(new FieldListener());
-			setPrompt("Mot de passe de la cl\u00E9", this.fPasswordKey);
-			setFocusBehavior(SHOW_PROMPT, this.fPasswordKey);
+			setPrompt("Ressaisir le mot de passe", this.fPasswordKeyAgain);
+			setFocusBehavior(SHOW_PROMPT, this.fPasswordKeyAgain);
 		}
 		return this.fPasswordKeyAgain;
 	}
@@ -172,7 +172,9 @@ public class RegisterViewKeyPart extends JPanel implements Resettable
 	private JLabel getLabelPasswordKeyAgain()
 	{
 		if (this.lPasswordKeyAgain == null)
+		{
 			this.lPasswordKeyAgain = new JLabel("Resaisir mot de passe clef : ");
+		}
 		return this.lPasswordKeyAgain;
 	}
 
@@ -189,6 +191,8 @@ public class RegisterViewKeyPart extends JPanel implements Resettable
 	void setPrevViewValues(final HashMap<StoredValues, String> prevViewValues)
 	{
 		this.prevViewValues = prevViewValues;
+		for(StoredValues value : this.prevViewValues.keySet())
+			System.out.println(this.prevViewValues.get(value));
 	}
 
 	private class ButtonListener implements ActionListener
@@ -208,9 +212,9 @@ public class RegisterViewKeyPart extends JPanel implements Resettable
 					return;
 				/**Equality between similar password verification and verification of a difference between session PW and key PW**/
 				if (!pwK.equals(pwKAgain))
-					sb.append("Les deux mots de passe doivent \u00EAtre identiques !");
+					sb.append("Les deux mots de passe doivent \u00EAtre identiques !\n");
 				else if (hashedPw.equals(hashedPwK))
-					sb.append("Le mot de passe de la cl\u00E9 doit \u00EAtre diff\u00E9rent de celui de votre compte !");
+					sb.append("Le mot de passe de la cl\u00E9 doit \u00EAtre diff\u00E9rent de celui de votre compte !\n");
 
 				/**Password verification**/
 				HashMap<PasswordConstraints, Boolean> map = PasswordUtilities.isStrongEnough(hashedPw);
@@ -236,9 +240,16 @@ public class RegisterViewKeyPart extends JPanel implements Resettable
 						if (registerJsonParser.isError())
 							JOptionPane.showMessageDialog(RegisterViewKeyPart.this, registerJsonParser.getDisplayMessage(), "Erreur \u00E0 l'enregistrement", JOptionPane.ERROR_MESSAGE);
 						else
-							JOptionPane.showMessageDialog(RegisterViewKeyPart.this, "F\u00E9licitation, vous \u00EAtes bien enregistr\u00E9", "Vlidation d'enregistrement", JOptionPane.INFORMATION_MESSAGE);
+						{
+							JOptionPane.showMessageDialog(RegisterViewKeyPart.this, "F\u00E9licitation, vous \u00EAtes bien enregistr\u00E9", "Validation d'enregistrement", JOptionPane.INFORMATION_MESSAGE);
+							RegisterViewKeyPart.this.controller.changeView(Views.IDENTIFICATION);
+						}
 					}
-					catch (JSONException | IllegalArgumentException ignored) {}
+					catch (JSONException ignored) {}
+					catch (IllegalArgumentException exc)
+					{
+						exc.printStackTrace();
+					}
 				}
 				else
 				{

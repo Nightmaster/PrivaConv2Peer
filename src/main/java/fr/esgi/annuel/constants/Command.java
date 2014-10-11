@@ -2,5 +2,5 @@ package fr.esgi.annuel.constants;
 
 public enum Command
 {
-	List, Login, Logout, Message, Null;
+	LIST, LOGIN, LOGOUT, MESSAGE, NULL;
 }

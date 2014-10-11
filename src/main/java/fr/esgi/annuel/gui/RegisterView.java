@@ -199,7 +199,7 @@ public class RegisterView extends JPanel implements Resettable
 		{
 			this.fPasswordAgain = new JPasswordField();
 			this.fPasswordAgain.getDocument().addDocumentListener(new FieldListener());
-			setPrompt("Mot de passe de session", this.fPasswordAgain);
+			setPrompt("Ressaisir le mot de passe", this.fPasswordAgain);
 			setFocusBehavior(SHOW_PROMPT, this.fPasswordAgain);
 		}
 		return this.fPasswordAgain;
@@ -320,7 +320,10 @@ public class RegisterView extends JPanel implements Resettable
 					}
 
 				if ("".equals(sb.toString())) //if no error has been detected
+				{
+					sendValuesToNextView();
 					RegisterView.this.controller.changeView(Views.REGISTER_PART_2);
+				}
 				else
 				{
 					String res = sb.toString();

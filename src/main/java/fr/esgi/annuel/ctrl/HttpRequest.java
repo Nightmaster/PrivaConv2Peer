@@ -16,17 +16,15 @@ public class HttpRequest
 {
 	private final String serverAddress, serverPort;
 	private URLConnection connection = null;
-	private CookieManager manager = new CookieManager();
 	private CookieStore store;
-	private MasterController controller;
 
 	public HttpRequest(MasterController controller)
 	{
-		this.controller = controller;
-		serverAddress = this.controller.getProperties().getProperty("server.address");
-		serverPort = this.controller.getProperties().getProperty("server.port");
-		CookieHandler.setDefault(this.manager);
-		this.store = this.manager.getCookieStore();
+		this.serverAddress = controller.getPropertiesController().getProperties().getProperty("server.address");
+		this.serverPort = controller.getPropertiesController().getProperties().getProperty("server.port");
+		CookieManager manager = new CookieManager();
+		CookieHandler.setDefault(manager);
+		this.store = manager.getCookieStore();
 	}
 
 	/**
@@ -283,7 +281,7 @@ public class HttpRequest
 		return this.connection;
 	}
 
-	private final void initConnection(ServerAction action, String... parameters) throws IOException
+	private void initConnection(ServerAction action, String... parameters) throws IOException
 	{
 		if (action.getAddressFor().contains("%s"))
 			System.out.println(this.serverAddress + ":" + this.serverPort + "/" + String.format(action.getAddressFor(), parameters[0]));
@@ -309,10 +307,9 @@ public class HttpRequest
 		}
 	}
 
-	private final void initConnection(ServerAction action) throws IOException
+	private void initConnection(ServerAction action) throws IOException
 	{
-		System.out.println(this.serverAddress + ":" + this.serverPort + "/" + action.getAddressFor());
-		//connection = new URL(this.serverAddress + ":" + this.serverPort + "/" + action.getAddressFor()).openConnection();
+		connection = new URL(this.serverAddress + ":" + this.serverPort + "/" + action.getAddressFor()).openConnection();
 	}
 
 	/**

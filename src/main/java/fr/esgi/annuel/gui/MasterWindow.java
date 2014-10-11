@@ -2,8 +2,10 @@ package fr.esgi.annuel.gui;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import fr.esgi.annuel.constants.Constants;
 import fr.esgi.annuel.constants.Views;
 import fr.esgi.annuel.ctrl.MasterController;
@@ -11,7 +13,6 @@ import fr.esgi.util.Outils;
 
 public class MasterWindow extends JFrame
 {
-	private Point position;
 	private Views actualView;
 	private MasterController controller;
 	private JMenuBar menuBar;
@@ -21,17 +22,7 @@ public class MasterWindow extends JFrame
 	public MasterWindow(MasterController controller)
 	{
 		super();
-		setLocationRelativeTo(null);
-		addWindowFocusListener(new WindowAdapter()
-		{
-			@Override
-			public void windowClosing(WindowEvent windowEvent)
-			{
-				//TODO @see http://stackoverflow.com/questions/7777640/best-practice-for-setting-jframe-locations
-				//TODO Faire un controller dédié à la gestion des propriétés sauvegardées ???
-				super.windowClosing(windowEvent);
-			}
-		});
+		super.setResizable(false);
 		this.controller = controller;
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		JPanel panel = new IdentificationView(controller);
@@ -186,7 +177,7 @@ public class MasterWindow extends JFrame
 		this.pack();
 	}
 
-	private final void autoEnableMenuItems()
+	private void autoEnableMenuItems()
 	{
 		if(Views.REGISTER.equals(this.actualView) || Views.IDENTIFICATION.equals(this.actualView))
 		{
@@ -200,28 +191,28 @@ public class MasterWindow extends JFrame
 	private class MenuItemListener implements ActionListener
 	{
 
-		private final void aboutChoice()
+		private void aboutChoice()
 		{
 			JOptionPane.showMessageDialog(null, "Private Conversations Over P2P v 1.0", "PrivaConv2Peer - Version", JOptionPane.PLAIN_MESSAGE);
 		}
 
-		private final void addUserWindows()
+		private void addUserWindows()
 		{
-
+			//FIXME faire une pop-up de recherche ici
 		}
 
-		private final void conversationWindow()
+		private void conversationWindow()
 		{
 		}
 
-		private final void helpChoice()
+		private void helpChoice()
 		{
 			JOptionPane.showMessageDialog(null, "Menu \u00E0 venir", "\u00C0 venir", JOptionPane.INFORMATION_MESSAGE);
 		}
 
-		private final void profilWindow()
+		private void profilWindow()
 		{
-
+			MasterWindow.this.controller.changeView(Views.PROFILE);
 		}
 
 		@Override

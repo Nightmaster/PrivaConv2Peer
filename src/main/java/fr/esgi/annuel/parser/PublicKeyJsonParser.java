@@ -20,7 +20,7 @@ public class PublicKeyJsonParser
 	PublicKeyJsonParser(JSONObject json) throws JSONException
 	{
 		this.error = json.getBoolean("error");
-		if (true == this.error)
+		if (this.error)
 		{
 			this.displayMessage = json.getString("displayMessage");
 			this.httpCode = json.getInt("httpErrorCode");

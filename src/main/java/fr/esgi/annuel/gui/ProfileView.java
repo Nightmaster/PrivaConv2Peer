@@ -2,11 +2,14 @@ package fr.esgi.annuel.gui;
 
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import fr.esgi.annuel.ctrl.MasterController;
 
 @SuppressWarnings("serial")
 public class ProfileView extends JPanel
 {
+	private JButton btnCancel, btnSubmit;
 	private JLabel lblEmailAddress, lblPwConfirmation, lblName, lblNewPw, lblFirstName, lblPseudo;
 	private JPasswordField pwdFieldChange, pwdFieldConfirm;
 	private JTextField textField, textField1, fFirstName, fLastName;
@@ -17,19 +20,62 @@ public class ProfileView extends JPanel
 	**/
 	public ProfileView(MasterController controller)
 	{
+		//FIXME ajouter le bouton de validation
 		this.controller = controller;
+		this.controller.setLookAndFeel();
 		GroupLayout groupLayout = new GroupLayout(this);
-		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addComponent(getLblName()).addGap(141).addComponent(getLblEmailAddress()))
-			.addGroup(groupLayout.createSequentialGroup().addComponent(getFFirstName(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE).addGap(19).addComponent(getTextField1(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)).addGroup(groupLayout.createSequentialGroup().addComponent(getLblFirstName()).addGap(126).addComponent(getLblNewPw()))
-			.addGroup(groupLayout.createSequentialGroup().addComponent(getFLastName(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE).addGap(19).addComponent(getPwdFieldChange(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)).addGroup(groupLayout.createSequentialGroup().addComponent(getLblPseudo()).addGap(101).addComponent(getLblPwConfirmation()))
-			.addGroup(groupLayout.createSequentialGroup().addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE).addGap(19).addComponent(getPwdFieldConfirm(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)));
-		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(
-			groupLayout.createSequentialGroup().addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblName()).addComponent(getLblEmailAddress())).addGap(6)
-				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getFFirstName(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getTextField1(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
-				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblFirstName()).addGroup(groupLayout.createSequentialGroup().addGap(5).addComponent(getLblNewPw()))).addGap(6)
-				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getFLastName(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getPwdFieldChange(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(11)
-				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getLblPseudo()).addComponent(getLblPwConfirmation())).addGap(11)
-				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(getPwdFieldConfirm(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))));
+		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+			.addGroup(groupLayout.createSequentialGroup()
+				.addComponent(getLblName())
+				.addGap(141)
+				.addComponent(getLblEmailAddress()))
+			.addGroup(groupLayout.createSequentialGroup()
+				.addComponent(getFFirstName(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)
+				.addGap(19)
+				.addComponent(getTextField1(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE))
+			.addGroup(groupLayout.createSequentialGroup()
+				.addComponent(getLblFirstName())
+				.addGap(126)
+				.addComponent(getLblNewPw()))
+			.addGroup(groupLayout.createSequentialGroup()
+				.addComponent(getFLastName(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)
+				.addGap(19)
+				.addComponent(getPwdFieldChange(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE))
+			.addGroup(groupLayout.createSequentialGroup()
+				.addComponent(getLblPseudo())
+				.addGap(101)
+				.addComponent(getLblPwConfirmation()))
+			.addGroup(groupLayout.createSequentialGroup()
+				.addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)
+				.addGap(19)
+				.addComponent(getPwdFieldConfirm(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)));
+		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+			.addGroup(groupLayout.createSequentialGroup()
+				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+									 .addComponent(getLblName())
+									 .addComponent(getLblEmailAddress()))
+				.addGap(6)
+				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+									 .addComponent(getFFirstName(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									 .addComponent(getTextField1(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+				.addGap(11)
+				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+									 .addComponent(getLblFirstName())
+									 .addGroup(groupLayout.createSequentialGroup()
+														  .addGap(5)
+														  .addComponent(getLblNewPw())))
+					.addGap(6)
+				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+									 .addComponent(getFLastName(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									 .addComponent(getPwdFieldChange(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+				.addGap(11)
+				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+									 .addComponent(getLblPseudo())
+									 .addComponent(getLblPwConfirmation()))
+				.addGap(11)
+				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+									 .addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									 .addComponent(getPwdFieldConfirm(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))));
 		setLayout(groupLayout);
 
 	}
@@ -128,5 +174,37 @@ public class ProfileView extends JPanel
 			this.fLastName.setColumns(10);
 		}
 		return this.fLastName;
+	}
+
+	public JButton getBtnSubmit()
+	{
+		if(this.btnSubmit == null)
+		{
+			this.btnSubmit = new JButton("Valider");
+			this.btnSubmit.addActionListener(new BtnListener());
+		}
+		return btnSubmit;
+	}
+
+	public JButton getBtnCancel()
+	{
+		if(this.btnCancel == null)
+		{
+			this.btnCancel = new JButton("Annuler");
+			this.btnCancel.addActionListener(new BtnListener());
+		}
+		return btnCancel;
+	}
+
+	private class BtnListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			if(e.getSource().equals(ProfileView.this.btnCancel))
+				ProfileView.this.controller.closeProfileFrame();
+			//FIXME finaliser !
+			//ProfileView.this.controller.updateInformations();
+		}
 	}
 }

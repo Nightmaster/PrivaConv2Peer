@@ -2,6 +2,8 @@ package fr.esgi.annuel.gui;
 
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import com.google.common.base.Strings;
@@ -99,6 +101,7 @@ public class IdentificationView extends JPanel implements Resettable
 		if (this.btnConnection == null)
 		{
 			this.btnConnection = new JButton("Connnexion");
+			this.btnConnection.setEnabled(false);
 			this.btnConnection.addActionListener(new BtnListener());
 		}
 		return this.btnConnection;
@@ -111,7 +114,6 @@ public class IdentificationView extends JPanel implements Resettable
 			this.btnRegister = new JButton("S'enregistrer");
 			this.btnRegister.addActionListener(new ActionListener()
 			{
-
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
@@ -134,6 +136,7 @@ public class IdentificationView extends JPanel implements Resettable
 		if (this.fLoginValue == null)
 		{
 			this.fLoginValue = new JTextField(10);
+			this.fLoginValue.getDocument().addDocumentListener(new FieldListener());
 			PromptSupport.setPrompt("Pseudo ou @ mail", this.fLoginValue);
 			PromptSupport.setFocusBehavior(FocusBehavior.SHOW_PROMPT, this.fLoginValue);
 		}
@@ -145,6 +148,7 @@ public class IdentificationView extends JPanel implements Resettable
 		if (this.fPassword == null)
 		{
 			this.fPassword = new JPasswordField();
+			this.fPassword.getDocument().addDocumentListener(new FieldListener());
 			PromptSupport.setPrompt("Mot de passe", this.fPassword);
 			PromptSupport.setFocusBehavior(FocusBehavior.SHOW_PROMPT, this.fPassword);
 		}
@@ -175,7 +179,7 @@ public class IdentificationView extends JPanel implements Resettable
 	private JLabel getLblPwd()
 	{
 		if (this.lblPwd == null)
-			this.lblPwd = new JLabel("Mot de passe :");
+			this.lblPwd = new JLabel("Mot de passe");
 		return this.lblPwd;
 	}
 
@@ -196,7 +200,7 @@ public class IdentificationView extends JPanel implements Resettable
 	**/
 	public final String getLogin()
 	{
-		return this.fLoginValue.getText();
+		return this.fLoginValue.getText().trim();
 	}
 
 	/**
@@ -252,11 +256,12 @@ public class IdentificationView extends JPanel implements Resettable
 		{
 			final String login = getLogin(),
 						 password = getHashedPassword();
-
+			if(IdentificationView.this.chckbxRememberMe.isSelected())
+				IdentificationView.this.controller.getPropertiesController().storeLogin(login);
 			if (Strings.isNullOrEmpty(password))
 				return;
 			if (login.contains("@"))
-				if (!isValidFieldContent(login, EMAIL))
+				if (! isValidFieldContent(login, EMAIL))
 					JOptionPane.showMessageDialog(IdentificationView.this, getErrorMessageFor(EMAIL), "Identifiant incorrect", JOptionPane.ERROR_MESSAGE);
 				else
 					IdentificationView.this.controller.connect(null, login, password);
@@ -264,6 +269,39 @@ public class IdentificationView extends JPanel implements Resettable
 				JOptionPane.showMessageDialog(IdentificationView.this, getErrorMessageFor(PSEUDO), "Identifiant incorrect", JOptionPane.ERROR_MESSAGE);
 			else
 				IdentificationView.this.controller.connect(login, null, password);
+		}
+	}
+
+	private class FieldListener implements DocumentListener
+	{
+		private void checkFieldsContent()
+		{
+			String pw = String.valueOf(IdentificationView.this.fPassword.getPassword()).trim();
+			boolean lengthOk = 2 < getLogin().length() && 7 < pw.length();
+			if (! lengthOk)
+			{
+				IdentificationView.this.btnConnection.setEnabled(false);
+				return;
+			}
+			IdentificationView.this.btnConnection.setEnabled(true);
+		}
+
+		@Override
+		public void insertUpdate(DocumentEvent e)
+		{
+			checkFieldsContent();
+		}
+
+		@Override
+		public void removeUpdate(DocumentEvent e)
+		{
+			checkFieldsContent();
+		}
+
+		@Override
+		public void changedUpdate(DocumentEvent e)
+		{
+			checkFieldsContent();
 		}
 	}
 }

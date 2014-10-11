@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import fr.esgi.annuel.client.ClientInfo;
 import fr.esgi.annuel.client.contact.Contacts;
+import fr.esgi.annuel.ctrl.MasterController;
 import fr.esgi.annuel.message.Message;
 import fr.esgi.annuel.message.MessageQueue;
 import fr.esgi.annuel.server.Server;
@@ -22,44 +23,26 @@ public class ChatWindow
 	protected static final int MAJ_KEY = 16;
 	boolean clearArea = false;
 	String currentInterlocuteur = "";
-	Map<String, String> discution = new HashMap<String, String>();
+	Map<String, String> discution = new HashMap<>();
 	JList<String> list;
 	JTextPane text;
 	JTextArea textArea;
 	JScrollPane textPane;
 	private DefaultListModel<String> contacts;
-	private JButton envoyer;
+	private JButton send;
 	private JFrame frame;
 	private JPanel panel;
 
 	//FIXME Mettre à jour cette classe !!!
-	public ChatWindow()
+	public ChatWindow(MasterController controller)
 	{
+		controller.setLookAndFeel();
 		initialize();
 	}
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args)
+
+	public void launchServer()
 	{
-		EventQueue.invokeLater(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				try
-				{
-					new Thread(new Server()).start();
-					//new Thread(new Client(logedUser)).start();
-					ChatWindow window = new ChatWindow();
-					window.frame.setVisible(true);
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-				}
-			}
-		});
+		new Thread(new Server()).start();
 	}
 
 	/**
@@ -80,6 +63,7 @@ public class ChatWindow
 		this.list.setPreferredSize(new Dimension(100, 100));
 		if (this.contacts.size() > 0)
 			this.currentInterlocuteur = this.contacts.firstElement();
+		frame.setVisible(true);
 		MouseListener l = new MouseListener()
 		{
 			@Override
@@ -149,13 +133,13 @@ public class ChatWindow
 		this.frame.getContentPane().add(this.panel, BorderLayout.SOUTH);
 		this.textArea = new JTextArea();
 		this.textArea.setColumns(30);
-		this.envoyer = new JButton("Envoyer");
+		this.send = new JButton("Envoyer");
 		GroupLayout glPanel = new GroupLayout(this.panel);
-		glPanel.setHorizontalGroup(glPanel.createParallelGroup(Alignment.LEADING).addGroup(glPanel.createSequentialGroup().addComponent(this.textArea, GroupLayout.PREFERRED_SIZE, 319, GroupLayout.PREFERRED_SIZE).addPreferredGap(ComponentPlacement.UNRELATED).addComponent(this.envoyer, GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)));
-		glPanel.setVerticalGroup(glPanel.createParallelGroup(Alignment.LEADING).addComponent(this.envoyer, GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE).addComponent(this.textArea, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE));
+		glPanel.setHorizontalGroup(glPanel.createParallelGroup(Alignment.LEADING).addGroup(glPanel.createSequentialGroup().addComponent(this.textArea, GroupLayout.PREFERRED_SIZE, 319, GroupLayout.PREFERRED_SIZE).addPreferredGap(ComponentPlacement.UNRELATED).addComponent(this.send, GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)));
+		glPanel.setVerticalGroup(glPanel.createParallelGroup(Alignment.LEADING).addComponent(this.send, GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE).addComponent(this.textArea, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE));
 		this.panel.setLayout(glPanel);
 
-		this.envoyer.addActionListener(new ActionListener()
+		this.send.addActionListener(new ActionListener()
 		{
 
 			@Override

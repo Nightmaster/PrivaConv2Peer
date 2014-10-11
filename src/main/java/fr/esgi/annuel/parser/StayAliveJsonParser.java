@@ -25,7 +25,7 @@ public class StayAliveJsonParser
 	{
 		JSONArray ask = null, fList = null;
 		this.error = json.getBoolean("error");
-		if (true == this.error)
+		if (this.error)
 		{
 			this.displayMessage = json.getString("displayMessage");
 			this.httpCode = json.getInt("httpErrorCode");
