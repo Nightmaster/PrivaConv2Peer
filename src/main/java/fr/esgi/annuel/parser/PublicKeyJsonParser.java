@@ -1,15 +1,16 @@
 package fr.esgi.annuel.parser;
 
+import java.io.UnsupportedEncodingException;
 import org.json.JSONException;
 import org.json.JSONObject;
-import fr.esgi.annuel.parser.subclasses.UserPrivateKeyInfos;
 
 public class PublicKeyJsonParser
 {
-	private String displayMessage = null;
+	private String displayMessage = null,
+			username = null,
+			publicKey = null;
 	private boolean error;
 	private int httpCode = 200;
-	private UserPrivateKeyInfos userInfos = null;
 
 	/**
 	 * This class is made to parse the JSON returned by the server's web service when a private key demand is done
@@ -26,12 +27,26 @@ public class PublicKeyJsonParser
 			this.httpCode = json.getInt("httpErrorCode");
 		}
 		else
-			this.userInfos = new UserPrivateKeyInfos(json.getJSONObject("user"));
+		{
+			try
+			{
+				this.username = json.getJSONObject("user").getString("username");
+				this.publicKey = json.getJSONObject("user").getString("pubKey");
+			}
+			catch (JSONException ignored) {}
+		}
 	}
 
 	public String getDisplayMessage()
 	{
-		return this.displayMessage;
+		try
+		{
+			return new String(this.displayMessage.getBytes("ISO-8859-1"), "UTF-8");
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			return this.displayMessage;
+		}
 	}
 
 	public int getHttpCode()
@@ -39,13 +54,25 @@ public class PublicKeyJsonParser
 		return this.httpCode;
 	}
 
-	public UserPrivateKeyInfos getUserInfos()
-	{
-		return this.userInfos;
-	}
-
 	public boolean isError()
 	{
 		return this.error;
+	}
+
+	public String getPublicKey()
+	{
+		try
+		{
+			return new String(this.publicKey.getBytes("ISO-8859-1"), "UTF-8");
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			return this.publicKey;
+		}
+	}
+
+	public String getUsername()
+	{
+		return username;
 	}
 }

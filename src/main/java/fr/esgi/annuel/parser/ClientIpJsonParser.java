@@ -1,5 +1,6 @@
 package fr.esgi.annuel.parser;
 
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import org.json.JSONException;
@@ -38,7 +39,14 @@ public class ClientIpJsonParser
 
 	public String getDisplayMessage()
 	{
-		return this.displayMessage;
+		try
+		{
+			return new String(this.displayMessage.getBytes("ISO-8859-1"), "UTF-8");
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			return this.displayMessage;
+		}
 	}
 
 	public int getHttpCode()

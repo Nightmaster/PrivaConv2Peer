@@ -1,5 +1,6 @@
 package fr.esgi.annuel.parser;
 
+import java.io.UnsupportedEncodingException;
 import fr.esgi.annuel.client.Friend;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,7 +60,14 @@ public class StayAliveJsonParser
 
 	public String getDisplayMessage()
 	{
-		return this.displayMessage;
+		try
+		{
+			return new String(this.displayMessage.getBytes("ISO-8859-1"), "UTF-8");
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			return this.displayMessage;
+		}
 	}
 
 	public Friend[] getFriendList()

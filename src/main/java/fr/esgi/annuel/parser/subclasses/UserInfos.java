@@ -34,7 +34,7 @@ public class UserInfos
 		return this.email;
 	}
 
-	public String getFirstname()
+	public String getFirstName()
 	{
 		return this.firstname;
 	}

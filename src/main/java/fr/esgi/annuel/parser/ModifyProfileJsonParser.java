@@ -1,5 +1,6 @@
 package fr.esgi.annuel.parser;
 
+import java.io.UnsupportedEncodingException;
 import fr.esgi.annuel.parser.subclasses.ChangedValues;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,7 +29,14 @@ public class ModifyProfileJsonParser
 
 	public String getDisplayMessage()
 	{
-		return this.displayMessage;
+		try
+		{
+			return new String(this.displayMessage.getBytes("ISO-8859-1"), "UTF-8");
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			return this.displayMessage;
+		}
 	}
 
 	public int getHttpCode()
