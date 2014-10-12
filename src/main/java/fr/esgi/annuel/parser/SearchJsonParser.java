@@ -25,16 +25,23 @@ public class SearchJsonParser
 	 **/
 	SearchJsonParser(JSONObject json) throws JSONException
 	{
-		JSONArray profiles = json.getJSONArray("profiles");
-		this.profiles = new UserInfos[profiles.length()];
 		this.error = json.getBoolean("error");
 		if (this.error)
 		{
 			this.displayMessage = json.getString("displayMessage");
 			this.httpCode = json.getInt("httpErrorCode");
 		}
-		for (int i = 0; i < profiles.length(); i++ )
-			this.profiles[i] = new UserInfos(profiles.getJSONObject(i));
+		if(json.isNull("profiles"))
+		{
+			this.profiles = null;
+		}
+		else
+		{
+			JSONArray profiles = json.getJSONArray("profiles");
+			this.profiles = new UserInfos[profiles.length()];
+			for (int i = 0; i < profiles.length(); i++)
+				this.profiles[i] = new UserInfos(profiles.getJSONObject(i));
+		}
 	}
 
 	public String getDisplayMessage()

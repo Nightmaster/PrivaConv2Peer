@@ -32,15 +32,22 @@ public class ConnectionJsonParser
 		}
 		else
 		{
-			ask = json.getJSONArray("askFriend");
-			fList = json.getJSONArray("friends");
-			this.askFriendship = new String[ask.length()];
-			for (int i = 0; i < ask.length(); i++ )
-				this.askFriendship[i] = ask.get(i).toString();
+			this.validity = json.getInt("validity");
+			if(! json.isNull("askFriend"))
+			{
+				ask = json.getJSONArray("askFriend");
+				this.askFriendship = new String[ask.length()];
+				for (int i = 0; i < ask.length(); i++)
+					this.askFriendship[i] = ask.get(i).toString();
+			}
+			if(! json.isNull("friends"))
+			{
+				fList = json.getJSONArray("friends");
+				this.fl = new Friend[fList.length()];
+				for (int i = 0; i < fList.length(); i++)
+					this.fl[i] = new Friend(fList.getJSONObject(i));
+			}
 			this.userInfos = new UserInfos(json.getJSONObject("user"));
-			this.fl = new Friend[fList.length()];
-			for (int i = 0; i < fList.length(); i++ )
-				this.fl[i] = new Friend(fList.getJSONObject(i));
 		}
 		this.connection = json.getBoolean("connection");
 	}

@@ -1,10 +1,9 @@
 package fr.esgi.annuel.parser;
 
+import fr.esgi.annuel.client.Friend;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import fr.esgi.annuel.client.Friend;
-import fr.esgi.annuel.parser.subclasses.UserInfos;
 
 public class StayAliveJsonParser
 {
@@ -13,7 +12,6 @@ public class StayAliveJsonParser
 	private boolean error, statusOk;
 	private Friend[] fl;
 	private int httpCode = 200, validity;
-	private UserInfos userInfos;
 
 	/**
 	 * This class is made to parse the JSON returned by the server's web service when a stay alive action is performed
@@ -32,15 +30,23 @@ public class StayAliveJsonParser
 		}
 		else
 		{
-			ask = json.getJSONArray("askFriend");
-			fList = json.getJSONArray("friends");
-			this.askFriendship = new String[ask.length()];
-			for (int i = 0; i < ask.length(); i++ )
-				this.askFriendship[i] = ask.get(i).toString();
-			this.userInfos = new UserInfos(json.getJSONObject("user"));
-			this.fl = new Friend[fList.length()];
-			for (int i = 0; i < fList.length(); i++ )
-				this.fl[i] = new Friend(fList.getJSONObject(i));
+			if(json.isNull("askFriend"))
+				this.askFriendship = null;
+			else
+			{
+				this.askFriendship = new String[ask.length()];
+				for (int i = 0; i < ask.length(); i++ )
+					this.askFriendship[i] = ask.get(i).toString();
+			}
+			if(json.isNull("friends"))
+				this.fl = null;
+			else
+			{
+				fList = json.getJSONArray("friends");
+				this.fl = new Friend[fList.length()];
+				for (int i = 0; i < fList.length(); i++)
+					this.fl[i] = new Friend(fList.getJSONObject(i));
+			}
 		}
 		this.statusOk = json.getBoolean("stayAlive");
 		this.validity = json.getInt("validity");
@@ -64,11 +70,6 @@ public class StayAliveJsonParser
 	public int getHttpCode()
 	{
 		return this.httpCode;
-	}
-
-	public UserInfos getUserInfos()
-	{
-		return this.userInfos;
 	}
 
 	public int getValidity()

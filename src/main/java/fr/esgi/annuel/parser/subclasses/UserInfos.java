@@ -9,7 +9,14 @@ public class UserInfos
 
 	public UserInfos(JSONObject json) throws JSONException
 	{
-		this.login = json.getString("username");
+		try
+		{
+			this.login = json.getString("username");
+		}
+		catch (JSONException e)
+		{
+			this.login = json.getString("login");
+		}
 		try
 		{
 			this.email = json.getString("email");
