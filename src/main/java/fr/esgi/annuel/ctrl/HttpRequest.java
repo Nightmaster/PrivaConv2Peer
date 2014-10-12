@@ -15,16 +15,14 @@ import fr.esgi.annuel.constants.ServerAction;
 public class HttpRequest
 {
 	private final String serverAddress, serverPort;
-	private URLConnection connection = null;
-	private CookieStore store;
+	private HttpURLConnection  connection = null;
+	private MasterController controller;
 
 	public HttpRequest(MasterController controller)
 	{
+		this.controller = controller;
 		this.serverAddress = controller.getPropertiesController().getProperties().getProperty("server.address");
 		this.serverPort = controller.getPropertiesController().getProperties().getProperty("server.port");
-		CookieManager manager = new CookieManager();
-		CookieHandler.setDefault(manager);
-		this.store = manager.getCookieStore();
 	}
 
 	/**
@@ -303,13 +301,13 @@ public class HttpRequest
 					sb.append(param);
 				}
 			//System.out.println(this.serverAddress + ":" + this.serverPort + "/" + action.getAddressFor() + sb.toString());
-			this.connection = new URL(this.serverAddress + ":" + this.serverPort + "/" + action.getAddressFor() + sb.toString()).openConnection();
+			this.connection = (HttpURLConnection) new URL(this.serverAddress + ":" + this.serverPort + "/" + action.getAddressFor() + sb.toString()).openConnection();
 		}
 	}
 
 	private void initConnection(ServerAction action) throws IOException
 	{
-		connection = new URL(this.serverAddress + ":" + this.serverPort + "/" + action.getAddressFor()).openConnection();
+		connection = (HttpURLConnection) new URL(this.serverAddress + ":" + this.serverPort + "/" + action.getAddressFor()).openConnection();
 	}
 
 	/**
@@ -322,7 +320,12 @@ public class HttpRequest
 	{
 		if (null != this.connection)
 		{
-			return this.store.getCookies().get(0);
+			String headerName, cookie = "", uuid;
+			for (int i = 1; (headerName = this.connection.getHeaderFieldKey(i)) != null; i++)
+				if (headerName.equals("Set-Cookie"))
+					cookie = this.connection.getHeaderField(i);
+			uuid = cookie.split("=")[1].substring(0, 36);
+			return new HttpCookie("sessId", uuid);
 		}
 		throw new ConnectException("Connection not already established!");
 	}
@@ -338,7 +341,11 @@ public class HttpRequest
 		if (null != this.connection)
 		{
 			StringBuilder sb = new StringBuilder(this.connection.getContentLength());
-			BufferedReader buff = new BufferedReader(new InputStreamReader((InputStream) this.connection.getContent()));
+			BufferedReader buff;
+			if(400 <= this.connection.getResponseCode())
+				buff = new BufferedReader(new InputStreamReader(this.connection.getErrorStream()));
+			else
+				buff = new BufferedReader(new InputStreamReader((InputStream) this.connection.getContent()));
 			String content;
 			do
 			{
