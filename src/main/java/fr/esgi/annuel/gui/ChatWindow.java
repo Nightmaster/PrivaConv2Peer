@@ -14,12 +14,11 @@ import fr.esgi.annuel.client.contact.Contacts;
 import fr.esgi.annuel.ctrl.MasterController;
 import fr.esgi.annuel.message.Message;
 import fr.esgi.annuel.message.MessageQueue;
-import fr.esgi.annuel.server.Server;
 
 public class ChatWindow
 {
 
-	static ClientInfo logedUser = new ClientInfo();
+	static ClientInfo logedUser;
 	protected static final int MAJ_KEY = 16;
 	boolean clearArea = false;
 	String currentInterlocuteur = "";
@@ -33,16 +32,13 @@ public class ChatWindow
 	private JFrame frame;
 	private JPanel panel;
 
+
 	//FIXME Mettre à jour cette classe !!!
-	public ChatWindow(MasterController controller)
+	public ChatWindow(MasterController controller, ClientInfo user)
 	{
 		MasterController.setLookAndFeel();
+        logedUser = user;
 		initialize();
-	}
-
-	public void launchServer()
-	{
-		new Thread(new Server()).start();
 	}
 
 	/**
@@ -53,6 +49,7 @@ public class ChatWindow
 		this.frame = new JFrame();
 		this.text = new JTextPane();
 		this.textPane = new JScrollPane(this.text);
+
         this.frame.setTitle("PrivaConv2Peer");
 		this.frame.setBounds(100, 100, 450, 300);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -120,8 +117,14 @@ public class ChatWindow
 					{
 						StringBuilder sb = new StringBuilder();
 						sb.append(ChatWindow.this.text.getText());
-						for (Message message : listM)
-							sb.append(message.getMessage() + "\n");
+						for (Message message : listM) {
+                            sb.append(logedUser.getLogin());
+                            sb.append(" (");
+                            sb.append(message.getReceiveDate().getHours()+":"+message.getReceiveDate().getMinutes()+":"+message.getReceiveDate().getSeconds() );
+                            sb.append(")");
+                            sb.append(" : ");
+                            sb.append(message.getMessage() + "\n");
+                        }
 						ChatWindow.this.text.setText(sb.toString());
 					}
 				}
@@ -150,7 +153,8 @@ public class ChatWindow
 				mess.setMessage(ChatWindow.this.textArea.getText());
 				mess.setReceiveDate(new Date());
 				MessageQueue.addMessage(logedUser.getLogin(), mess);
-				ChatWindow.this.textArea.setText("");
+                MessageQueue.addMessageToPrint(logedUser.getLogin(), mess);
+                ChatWindow.this.textArea.setText("");
 
 			}
 		});
@@ -169,6 +173,7 @@ public class ChatWindow
 					mess.setMessage(ChatWindow.this.textArea.getText());
 					mess.setReceiveDate(new Date());
 					MessageQueue.addMessage(logedUser.getLogin(), mess);
+                    MessageQueue.addMessageToPrint(logedUser.getLogin(), mess);
 					ChatWindow.this.clearArea = true;
 				}
 				ChatWindow.this.textPane.getVerticalScrollBar().setValue(ChatWindow.this.text.getText().length());

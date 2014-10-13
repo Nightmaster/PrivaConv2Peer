@@ -274,7 +274,7 @@ public final class MasterController
                 //FIXME revoir ce comportement !
                 // Changer la vue
                 this.window.setVisible(false);
-                new ChatWindow(this);
+                new ChatWindow(this,user);
 			}
 		}
 		catch (JSONException ignored) {}
