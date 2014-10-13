@@ -15,6 +15,7 @@ import fr.esgi.annuel.parser.ConnectionJsonParser;
 import fr.esgi.annuel.parser.JSONParser;
 import fr.esgi.annuel.parser.ShowProfileJsonParser;
 import fr.esgi.annuel.parser.StayAliveJsonParser;
+import fr.esgi.annuel.server.Server;
 import org.json.JSONException;
 
 public final class MasterController
@@ -237,8 +238,13 @@ public final class MasterController
 			else if (connectionJson.isConnectionValidated())
 			{
 				this.user = new ClientInfo(connectionJson);
-				//FIXME revoir ce comportement !
-				//Chatthis.window.main(null);
+                // Démarrer le serveur
+                Thread t = new Thread(new Server());
+                t.start();
+                //FIXME revoir ce comportement !
+                // Changer la vue
+                this.window.setVisible(false);
+                new ChatWindow(this);
 			}
 		}
 		catch (JSONException ignored) {}

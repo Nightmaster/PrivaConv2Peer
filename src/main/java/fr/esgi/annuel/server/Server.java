@@ -12,7 +12,8 @@ public class Server implements Runnable
 		try
 		{
 			ServerSocket server = new ServerSocket(6991);
-			while (true)
+            System.out.println("Server Launched");
+            while (true)
 			{
 				Socket socket = server.accept();
 				System.out.println(socket.getInetAddress() + " " + socket.getPort());

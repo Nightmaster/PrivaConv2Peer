@@ -48,7 +48,7 @@ public class ClientInfo
 		this(connectionJson.getUserInfos().getLogin(),
 			 connectionJson.getUserInfos().getEmail(),
 			 connectionJson.getUserInfos().getName(),
-			 connectionJson.getUserInfos().getFirstname(),
+			 connectionJson.getUserInfos().getFirstName(),
 			 Arrays.asList(connectionJson.getFriendList()));
 	}
 

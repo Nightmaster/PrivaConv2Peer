@@ -53,6 +53,7 @@ public class ChatWindow
 		this.frame = new JFrame();
 		this.text = new JTextPane();
 		this.textPane = new JScrollPane(this.text);
+        this.frame.setTitle("PrivaConv2Peer");
 		this.frame.setBounds(100, 100, 450, 300);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.frame.getContentPane().setLayout(new BorderLayout(10, 10));
