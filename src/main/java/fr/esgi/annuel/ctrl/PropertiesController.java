@@ -14,18 +14,28 @@ import fr.esgi.util.Outils;
  */
 public class PropertiesController
 {
+	private static String directoryName;
 	private boolean fileCreated;
 	private Properties properties;
 	private Properties registeredProperties;
 	private File configFile;
 
+	static
+	{
+		if (System.getProperty("os.name").toUpperCase().contains("WIN"))
+			directoryName = "/pc2p/";
+		else
+			directoryName = "/.pc2p/";
+	}
+
 	PropertiesController(Properties properties)
 	{
+
 		this.properties = properties;
 		boolean created = false;
 		String defaultDir = Outils.getDefaultDirectory();
 		boolean dirCreated;
-		File directory = new File(defaultDir + "/pc2p/");
+		File directory = new File(defaultDir + directoryName);
 		if (!(dirCreated = directory.exists()))
 			dirCreated = directory.mkdir();
 		if (dirCreated)

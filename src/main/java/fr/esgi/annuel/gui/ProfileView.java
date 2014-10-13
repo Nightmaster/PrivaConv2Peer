@@ -22,7 +22,7 @@ public class ProfileView extends JPanel
 	{
 		//FIXME ajouter le bouton de validation
 		this.controller = controller;
-		this.controller.setLookAndFeel();
+		MasterController.setLookAndFeel();
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 			.addGroup(groupLayout.createSequentialGroup()

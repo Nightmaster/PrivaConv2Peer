@@ -36,7 +36,7 @@ public class ChatWindow
 	//FIXME Mettre à jour cette classe !!!
 	public ChatWindow(MasterController controller)
 	{
-		controller.setLookAndFeel();
+		MasterController.setLookAndFeel();
 		initialize();
 	}
 

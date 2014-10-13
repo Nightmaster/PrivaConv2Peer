@@ -40,7 +40,7 @@ public class IdentificationView extends JPanel implements Resettable
 	public IdentificationView(MasterController controller)
 	{
 		this.controller = controller;
-		this.controller.setLookAndFeel();
+		MasterController.setLookAndFeel();
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)

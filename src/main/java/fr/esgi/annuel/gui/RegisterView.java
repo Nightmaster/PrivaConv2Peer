@@ -38,7 +38,7 @@ public class RegisterView extends JPanel implements Resettable
 	public RegisterView(MasterController controller, RegisterViewKeyPart nextView)
 	{
 		this.controller = controller;
-		this.controller.setLookAndFeel();
+		MasterController.setLookAndFeel();
 		this.nextView = nextView;
 		//@formatter:off
 		GroupLayout groupLayout = new GroupLayout(this);

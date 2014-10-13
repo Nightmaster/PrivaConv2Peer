@@ -41,7 +41,7 @@ public class RegisterViewKeyPart extends JPanel implements Resettable
 	public RegisterViewKeyPart(MasterController controller)
 	{
 		this.controller = controller;
-		this.controller.setLookAndFeel();
+		MasterController.setLookAndFeel();
 		//@formatter:off
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(

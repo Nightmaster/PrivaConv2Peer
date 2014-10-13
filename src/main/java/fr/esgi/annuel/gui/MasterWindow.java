@@ -16,8 +16,8 @@ public class MasterWindow extends JFrame
 	private Views actualView;
 	private MasterController controller;
 	private JMenuBar menuBar;
-	private JMenu mnFichier, menu;
-	private JMenuItem mntmLaunchConv, mntmPropos, mntmQuitter, mntmProfil, mntmAddUser, mntmAide, mntmDisconnect;
+	private JMenu mnFile, menu;
+	private JMenuItem mntmPropos, mntmQuit, mntmProfile, mntmAddUser, mntmHelp, mntmDisconnect;
 
 	public MasterWindow(MasterController controller)
 	{
@@ -29,12 +29,14 @@ public class MasterWindow extends JFrame
 		setView(panel, Views.IDENTIFICATION);
 	}
 
-	public void openDisconnectPopup()
+	private void autoEnableMenuItems()
 	{
-		JOptionPane.showMessageDialog(this,
-									  "Vous avez \u00E9t\u00E9 d\u00E9connect\u00E9 suite \u00E0 votre inactivit\u00E9 de plus de 15 minutes",
-									  "D\u00E9connexion automatique",
-									  JOptionPane.INFORMATION_MESSAGE);
+		if(Views.REGISTER.equals(this.actualView) || Views.IDENTIFICATION.equals(this.actualView))
+		{
+			this.mntmAddUser.setEnabled(false);
+			this.mntmDisconnect.setEnabled(false);
+			this.mntmProfile.setEnabled(false);
+		}
 	}
 
 	private JMenu getMenu()
@@ -43,7 +45,7 @@ public class MasterWindow extends JFrame
 		{
 			this.menu = new JMenu("?");
 			this.menu.add(getMntmPropos());
-			this.menu.add(getMntmAide());
+			this.menu.add(getMntmHelp());
 			this.menu.setMnemonic('?');
 		}
 		return this.menu;
@@ -62,17 +64,16 @@ public class MasterWindow extends JFrame
 
 	private JMenu getMnPC2P()
 	{
-		if (null == this.mnFichier)
+		if (null == this.mnFile)
 		{
-			this.mnFichier = new JMenu(Constants.APP_NAME);
-			this.mnFichier.add(getMntmAddUser());
-			this.mnFichier.add(getMntmLaunchConv());
-			this.mnFichier.add(getMntmProfil());
-			this.mnFichier.add(getMntmDisconnect());
-			this.mnFichier.add(getMntmQuitter());
-			this.mnFichier.setMnemonic('P');
+			this.mnFile = new JMenu(Constants.APP_NAME);
+			this.mnFile.add(getMntmAddUser());
+			this.mnFile.add(getMntmProfile());
+			this.mnFile.add(getMntmDisconnect());
+			this.mnFile.add(getMntmQuit());
+			this.mnFile.setMnemonic('P');
 		}
-		return this.mnFichier;
+		return this.mnFile;
 	}
 
 	private JMenuItem getMntmAddUser()
@@ -87,16 +88,16 @@ public class MasterWindow extends JFrame
 		return this.mntmAddUser;
 	}
 
-	private JMenuItem getMntmAide()
+	private JMenuItem getMntmHelp()
 	{
-		if (null == this.mntmAide)
+		if (null == this.mntmHelp)
 		{
-			this.mntmAide = new JMenuItem(Constants.HELP);
-			this.mntmAide.addActionListener(new MenuItemListener());
-			this.mntmAide.setMnemonic('H');
-			this.mntmAide.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
+			this.mntmHelp = new JMenuItem(Constants.HELP);
+			this.mntmHelp.addActionListener(new MenuItemListener());
+			this.mntmHelp.setMnemonic('H');
+			this.mntmHelp.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
 		}
-		return this.mntmAide;
+		return this.mntmHelp;
 	}
 
 	private JMenuItem getMntmDisconnect()
@@ -110,29 +111,17 @@ public class MasterWindow extends JFrame
 		return this.mntmDisconnect;
 	}
 
-	private JMenuItem getMntmLaunchConv()
+	private JMenuItem getMntmProfile()
 	{
-		if (null == this.mntmLaunchConv)
+		if (null == this.mntmProfile)
 		{
-			this.mntmLaunchConv = new JMenuItem(Constants.LAUNCH_CONVERSATION);
-			this.mntmLaunchConv.addActionListener(new MenuItemListener());
-			this.mntmLaunchConv.setMnemonic('O');
-			this.mntmLaunchConv.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
+			this.mntmProfile = new JMenuItem(Constants.PROFILE);
+			this.mntmProfile.addActionListener(new MenuItemListener());
+			this.mntmProfile.setMnemonic('P');
+			this.mntmProfile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_MASK));
 		}
-		return this.mntmLaunchConv;
-	}
-
-	private JMenuItem getMntmProfil()
-	{
-		if (null == this.mntmProfil)
-		{
-			this.mntmProfil = new JMenuItem(Constants.PROFILE);
-			this.mntmProfil.addActionListener(new MenuItemListener());
-			this.mntmProfil.setMnemonic('P');
-			this.mntmProfil.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_MASK));
-		}
-			this.mntmProfil.setEnabled(false);
-		return this.mntmProfil;
+		this.mntmProfile.setEnabled(false);
+		return this.mntmProfile;
 	}
 
 	private JMenuItem getMntmPropos()
@@ -147,24 +136,32 @@ public class MasterWindow extends JFrame
 		return this.mntmPropos;
 	}
 
-	private JMenuItem getMntmQuitter()
+	private JMenuItem getMntmQuit()
 	{
-		if (null == this.mntmQuitter)
+		if (null == this.mntmQuit)
 		{
-			this.mntmQuitter = new JMenuItem(Constants.QUIT);
-			this.mntmQuitter.addActionListener(new MenuItemListener());
-			this.mntmQuitter.setMnemonic('Q');
-			this.mntmQuitter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_MASK));
+			this.mntmQuit = new JMenuItem(Constants.QUIT);
+			this.mntmQuit.addActionListener(new MenuItemListener());
+			this.mntmQuit.setMnemonic('Q');
+			this.mntmQuit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_MASK));
 		}
-		return this.mntmQuitter;
+		return this.mntmQuit;
+	}
+
+	public void openDisconnectPopup()
+	{
+		JOptionPane.showMessageDialog(this,
+				"Vous avez \u00E9t\u00E9 d\u00E9connect\u00E9 suite \u00E0 votre inactivit\u00E9 de plus de 15 minutes",
+				"D\u00E9connexion automatique",
+				JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	/**
-	* Change the displayed view by the window
-	*
-	* @param panel {{@link javax.swing.JPanel}}: the view to display in the window
-	* @param view  {{@link fr.esgi.annuel.constants.Views}}: the enum defining the view
-	**/
+	 * Change the displayed view by the window
+	 *
+	 * @param panel {{@link javax.swing.JPanel}}: the view to display in the window
+	 * @param view  {{@link fr.esgi.annuel.constants.Views}}: the enum defining the view
+	 **/
 	public final void setView(JPanel panel, Views view)
 	{
 		setJMenuBar(getMnBar());
@@ -177,20 +174,8 @@ public class MasterWindow extends JFrame
 		this.pack();
 	}
 
-	private void autoEnableMenuItems()
-	{
-		if(Views.REGISTER.equals(this.actualView) || Views.IDENTIFICATION.equals(this.actualView))
-		{
-			this.mntmAddUser.setEnabled(false);
-			this.mntmDisconnect.setEnabled(false);
-			this.mntmLaunchConv.setEnabled(false);
-			this.mntmProfil.setEnabled(false);
-		}
-	}
-
 	private class MenuItemListener implements ActionListener
 	{
-
 		private void aboutChoice()
 		{
 			JOptionPane.showMessageDialog(null, "Private Conversations Over P2P v 1.0", "PrivaConv2Peer - Version", JOptionPane.PLAIN_MESSAGE);
@@ -198,11 +183,7 @@ public class MasterWindow extends JFrame
 
 		private void addUserWindows()
 		{
-			//FIXME faire une pop-up de recherche ici
-		}
-
-		private void conversationWindow()
-		{
+			MasterWindow.this.controller.changeView(Views.SEARCH);
 		}
 
 		private void helpChoice()
@@ -210,7 +191,7 @@ public class MasterWindow extends JFrame
 			JOptionPane.showMessageDialog(null, "Menu \u00E0 venir", "\u00C0 venir", JOptionPane.INFORMATION_MESSAGE);
 		}
 
-		private void profilWindow()
+		private void profileWindow()
 		{
 			MasterWindow.this.controller.changeView(Views.PROFILE);
 		}
@@ -221,12 +202,10 @@ public class MasterWindow extends JFrame
 			String str = ((JMenuItem) ev.getSource()).getText();
 			if (Constants.QUIT.equals(str))
 				Outils.breakPgm(true);
-			else if (Constants.LAUNCH_CONVERSATION.equals(str))
-				conversationWindow();
 			else if (Constants.ABOUT.equals(str))
 				aboutChoice();
 			else if (Constants.PROFILE.equals(str))
-				profilWindow();
+				profileWindow();
 			else if (Constants.ADD_USER.equals(str))
 				addUserWindows();
 			else if (Constants.HELP.equals(str))

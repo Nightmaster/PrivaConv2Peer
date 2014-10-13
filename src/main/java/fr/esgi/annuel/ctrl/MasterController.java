@@ -11,10 +11,7 @@ import java.util.Properties;
 import fr.esgi.annuel.client.ClientInfo;
 import fr.esgi.annuel.constants.Views;
 import fr.esgi.annuel.gui.*;
-import fr.esgi.annuel.parser.ConnectionJsonParser;
-import fr.esgi.annuel.parser.JSONParser;
-import fr.esgi.annuel.parser.ShowProfileJsonParser;
-import fr.esgi.annuel.parser.StayAliveJsonParser;
+import fr.esgi.annuel.parser.*;
 import fr.esgi.annuel.server.Server;
 import org.json.JSONException;
 
@@ -24,13 +21,16 @@ public final class MasterController
 	private final HttpRequest httpRequest;
 	private final PropertiesController propertiesController;
 	private ClientInfo user;
+	private MasterWindow window;
+	private JFrame profileFrame;
+	private SearchFrame searchFrame;
 	private HttpCookie cookie;
 	private IdentificationView identificationView;
-	private JFrame profileFrame;
-	private MasterWindow window;
 	private ProfileView profileView;
 	private RegisterView registerView;
 	private RegisterViewKeyPart registerKeyPartView;
+	private ResultView resultView;
+	private SearchView searchView;
 
 	/**
 	* Instantiate a new {@link fr.esgi.annuel.ctrl.MasterController} with the properties loaded on startup
@@ -41,10 +41,27 @@ public final class MasterController
 	{
 		propertiesController = new PropertiesController(properties);
 		this.httpRequest = new HttpRequest(this);
+	}
+
+	/**
+	* Initialize the main components of the controller
+	**/
+	public void initializeComponents()
+	{
 		this.identificationView = new IdentificationView(this);
 		this.registerKeyPartView = new RegisterViewKeyPart(this);
 		this.registerView = new RegisterView(this, this.registerKeyPartView);
 		this.profileView = new ProfileView(this);
+		EventQueue.invokeLater(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				MasterController.this.searchFrame = new SearchFrame(MasterController.this);
+				MasterController.this.searchView = new SearchView(MasterController.this);
+				MasterController.this.searchFrame.initializeContent(MasterController.this.searchView);
+			}
+		});
 	}
 
 	/**
@@ -66,10 +83,9 @@ public final class MasterController
 	private void popUpAskFriend(String username)
 	{
 		boolean exit = false;
-		JOptionPane jop = new JOptionPane();
 		do
 		{
-			int res = jop.showOptionDialog(actualPanel,
+			int res = JOptionPane.showOptionDialog(actualPanel,
 										   "L'utilisateur " + username + " souhaite vous ajouter dans sa liste d'amis. Que voulez-vous faire ?",
 										   "Demande d'amiti\u00E9",
 										   JOptionPane.YES_NO_CANCEL_OPTION,
@@ -77,10 +93,10 @@ public final class MasterController
 										   null,
 										   new String[]{"Voir le profil", "Accepter", "Refuser"},
 										   "Voir le profil");
-			if (res == JOptionPane.CLOSED_OPTION && 0 == JOptionPane.showConfirmDialog(jop, "Voulez-vous refuser la demande ?", "Refus ?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE))
+			if (res == JOptionPane.CLOSED_OPTION && 0 == JOptionPane.showConfirmDialog(this.window, "Voulez-vous refuser la demande ?", "Refus ?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE))
 				exit = true;
 			else if (0 == res)
-				showProfile(username, jop);
+				showProfile(username, this.window);
 			else if (1 == res)
 				answerRequest(username, true);
 			else
@@ -112,20 +128,32 @@ public final class MasterController
 		{
 			setLookAndFeel();
 			this.profileFrame = new JFrame();
+			this.profileFrame.setResizable(false);
 			this.profileFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			this.profileFrame.setContentPane(this.profileView);
 			this.profileFrame.setVisible(true);
+			//TODO vérifier le comportement !!!
 		}
+		else if (Views.SEARCH.equals(view))
+			this.searchFrame.setVisible(true);
 		// else if (Views.CHAT.equals(view))
 		// this.window.setView();
 	}
 
 	/**
-	* Close the {@link javax.swing.JFrame profile frame}
+	* Close the {@link javax.swing.JFrame profile frame} by calling the {@link javax.swing.JFrame#dispose()} function
 	**/
 	public final void closeProfileFrame()
 	{
 		this.profileFrame.dispose();
+	}
+
+	/**
+	* Close the {@link fr.esgi.annuel.gui.SearchFrame profile frame} by calling its {@link fr.esgi.annuel.gui.SearchFrame#closeFrame()}  dispose} function
+	**/
+	public final void closeSearchFrame()
+	{
+		this.searchFrame.closeFrame();
 	}
 
 	/**
@@ -144,6 +172,7 @@ public final class MasterController
 	**/
 	public final void launch()
 	{
+		initializeComponents();
 		EventQueue.invokeLater(new Runnable()
 		{
 			@Override
@@ -172,7 +201,7 @@ public final class MasterController
 	/**
 	* Set the look and feel of the cally {@link javax.swing.JPanel view}
 	**/
-	public final void setLookAndFeel()
+	public static void setLookAndFeel()
 	{
 		try // Set System L&F
 		{
@@ -233,8 +262,9 @@ public final class MasterController
 		{
 			this.cookie = this.httpRequest.sendConnectionRequest(username, emailAddress, hashPw).getCookie();
 			ConnectionJsonParser connectionJson = JSONParser.getConnectionParser(this.httpRequest.getContent());
+			System.out.println(this.httpRequest.getContent());
 			if (connectionJson.isError())
-				System.err.println(connectionJson.getDisplayMessage());
+				JOptionPane.showMessageDialog(this.identificationView, connectionJson.getDisplayMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
 			else if (connectionJson.isConnectionValidated())
 			{
 				this.user = new ClientInfo(connectionJson);
@@ -250,6 +280,7 @@ public final class MasterController
 		catch (JSONException ignored) {}
 		catch (IOException ioe)
 		{
+			ioe.printStackTrace();
 			popUpErrorConnection();
 		}
 	}
@@ -324,16 +355,86 @@ public final class MasterController
 	* Perform a show profile request, and display the content in a pop-up
 	*
 	* @param username {{@link java.lang.String}}: the user's username that the actual user want to see
-	* @param component {{@link javax.swing.JComponent}}: the component used when the function has been called (to maintain order in pop-up closing)
+	* @param component {{@link java.awt.Component}}: the component used when the function has been called (to maintain order in pop-up closing)
 	**/
-	public final void showProfile(String username, JComponent component)
+	public final void showProfile(String username, Component component)
 	{
-		//TODO si les utilisateurs ne sont pas en demande d'amis, ni amis, faire une pop-up de demande d'amitié
 		if (0 < new Date().compareTo(new Date(this.cookie.getMaxAge() * 1000)))
 			try
 			{
 				ShowProfileJsonParser showProfileJson = JSONParser.getShowProfileParser(this.httpRequest.sendShowProfileRequest(username, this.cookie).getContent());
+				if(showProfileJson.isError())
+					JOptionPane.showMessageDialog(component, showProfileJson.getDisplayMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
 				JOptionPane.showMessageDialog(component, showProfileJson.getProfile().toString(), "Profil de " + username, JOptionPane.PLAIN_MESSAGE);
+			}
+			catch (JSONException ignored) {}
+			catch (IOException e)
+			{
+				popUpErrorConnection();
+			}
+			finally
+			{
+				stayAlive();
+			}
+		else
+		{
+			this.window.setView(actualPanel = this.identificationView.reset(), Views.IDENTIFICATION);
+			this.window.openDisconnectPopup();
+		}
+	}
+
+	/**
+	* Perform a send invitation request
+	*
+	* @param login {{@link java.lang.String}}: the login value of the user to invite
+	* @param componentCallee {{@link java.awt.Component}}: the callee component to refer to when open the validation/error pop-up
+	**/
+	public void addFriend(String login, Component componentCallee)
+	{
+		if (0 < new Date().compareTo(new Date(this.cookie.getMaxAge() * 1000)))
+			try
+			{
+				String username = login.contains("@") ? null : login, email = login.contains("@") ? login : null;
+				AddFriendJsonParser addFriendJson = JSONParser.getAddFriendParser(this.httpRequest.sendAddFriendRequest(username, email, this.cookie).getContent());
+				if (addFriendJson.isError())
+					JOptionPane.showMessageDialog(componentCallee, addFriendJson.getDisplayMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+				else
+					JOptionPane.showMessageDialog(componentCallee, "Votre invitation a \u00E9t\u00E9 correctement envoy\u00E9e", "Invitation envoy\u00E9e", JOptionPane.INFORMATION_MESSAGE);
+			}
+			catch (JSONException ignored) {}
+			catch (IOException e)
+			{
+				popUpErrorConnection();
+			}
+			finally
+			{
+				stayAlive();
+			}
+		else
+		{
+			this.window.setView(actualPanel = this.identificationView.reset(), Views.IDENTIFICATION);
+			this.window.openDisconnectPopup();
+		}
+	}
+
+	/**
+	* Perform a search profiles request, and display the result in the {@link fr.esgi.annuel.gui.SearchFrame}
+	*
+	* @param username {{@link java.lang.String}}: the searched username
+	* @param email {{@link java.lang.String}}: the searched email address
+	* @param lastName {{@link java.lang.String}}: the searched lastName
+	* @param firstName {{@link java.lang.String}}: the searched firstName
+	**/
+	public final void search(String username, String email, String lastName, String firstName)
+	{
+		if (0 < new Date().compareTo(new Date(this.cookie.getMaxAge() * 1000)))
+			try
+			{
+				SearchJsonParser searchJson = JSONParser.getSearchParser(this.httpRequest.sendSearchRequest(username, email, firstName, lastName, this.cookie).getContent());
+				if (searchJson.isError())
+					JOptionPane.showMessageDialog(this.searchFrame, searchJson.getDisplayMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+				else
+					this.searchFrame.setResultView(this.resultView = new ResultView(this, searchJson.getProfiles()));
 			}
 			catch (JSONException ignored) {}
 			catch (IOException e)
