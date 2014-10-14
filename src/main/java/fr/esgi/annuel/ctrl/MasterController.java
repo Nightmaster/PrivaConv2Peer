@@ -1,13 +1,14 @@
 package fr.esgi.annuel.ctrl;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.io.IOException;
 import java.net.HttpCookie;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Properties;
 import fr.esgi.annuel.client.ClientInfo;
 import fr.esgi.annuel.constants.Views;
 import fr.esgi.annuel.gui.*;
@@ -20,6 +21,7 @@ public final class MasterController
 	private static JPanel actualPanel;
 	private final HttpRequest httpRequest;
 	private final PropertiesController propertiesController;
+	private boolean userConnected = false;
 	private ClientInfo user;
 	private ChatView chatView;
 	private MasterWindow window;
@@ -35,12 +37,77 @@ public final class MasterController
 	/**
 	* Instantiate a new {@link fr.esgi.annuel.ctrl.MasterController} with the properties loaded on startup
 	*
-	* @param properties {{@link java.util.Properties}}the properties loaded on startup
+	* @param propertiesController {{@link fr.esgi.annuel.ctrl.PropertiesController}}the properties controller with all the properties loaded on startup
 	**/
-	public MasterController(Properties properties)
+	public MasterController(PropertiesController propertiesController)
 	{
-		propertiesController = new PropertiesController(properties);
+		this.propertiesController = propertiesController;
 		this.httpRequest = new HttpRequest(this);
+	}
+
+	/**
+	* Display a {@link javax.swing.JOptionPane} pop-up that display a warning about error connection with the remote server
+	**/
+	private static void popUpErrorConnection()
+	{
+		JOptionPane.showMessageDialog(actualPanel,
+									  "La connection au serveur a \u00E9chou\u00E9e !\nVeuillez r\u00E9essayer plus tard. Si le probl\u00E8me persiste, veuillez le reporter sur la page Github du projet",
+									  "Erreur de connexion",
+									  JOptionPane.ERROR_MESSAGE);
+	}
+
+	/**
+	 * Display a {@link javax.swing.JOptionPane} pop-up that display a warning about error connection with the remote server
+	 *
+	 * @param username {{@link String}} the username of the person asking for friendship
+	 **/
+	private void popUpAskFriend(String username)
+	{
+		boolean exit = false;
+		do
+		{
+			int res = JOptionPane.showOptionDialog(actualPanel,
+												   "L'utilisateur " + username + " souhaite vous ajouter dans sa liste d'amis. Que voulez-vous faire ?",
+												   "Demande d'amiti\u00E9",
+												   JOptionPane.YES_NO_CANCEL_OPTION,
+												   JOptionPane.INFORMATION_MESSAGE,
+												   null,
+												   new String[]{"Voir le profil", "Accepter", "Refuser"},
+												   "Voir le profil");
+			if (res == JOptionPane.CLOSED_OPTION && 0 == JOptionPane.showConfirmDialog(this.window, "Voulez-vous refuser la demande ?", "Refus ?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE))
+				exit = true;
+			else if (0 == res)
+				showProfile(username, this.window);
+			else if (1 == res)
+				answerRequest(username, true);
+			else
+				answerRequest(username, false);
+		}
+		while (!exit);
+	}
+
+	private void openDisconnectPopup()
+	{
+		this.userConnected = false;
+		this.user = null;
+		JOptionPane.showMessageDialog(this.window,
+									  "Vous avez \u00E9t\u00E9 d\u00E9connect\u00E9 suite \u00E0 votre inactivit\u00E9 de plus de 15 minutes",
+									  "D\u00E9connexion automatique",
+									  JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	/**
+	* Set the look and feel of the cally {@link javax.swing.JPanel view}
+	**/
+	public static void setLookAndFeel()
+	{
+		try // Set System L&F
+		{
+			javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
+		}
+		catch (javax.swing.UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException ignored)
+		{
+		}
 	}
 
 	/**
@@ -62,46 +129,6 @@ public final class MasterController
 				MasterController.this.searchFrame.initializeContent(MasterController.this.searchView);
 			}
 		});
-	}
-
-	/**
-	* Display a {@link javax.swing.JOptionPane} pop-up that display a warning about error connection with the remote server
-	**/
-	private static void popUpErrorConnection()
-	{
-		JOptionPane.showMessageDialog(actualPanel,
-									  "La connection au serveur a \u00E9chou\u00E9e !\nVeuillez r\u00E9essayer plus tard. Si le probl\u00E8me persiste, veuillez le reporter sur la page Github du projet",
-									  "Erreur de connexion",
-									  JOptionPane.ERROR_MESSAGE);
-	}
-
-	/**
-	* Display a {@link javax.swing.JOptionPane} pop-up that display a warning about error connection with the remote server
-	*
-	* @param username {{@link String}} the username of the person asking for friendship
-	**/
-	private void popUpAskFriend(String username)
-	{
-		boolean exit = false;
-		do
-		{
-			int res = JOptionPane.showOptionDialog(actualPanel,
-										   "L'utilisateur " + username + " souhaite vous ajouter dans sa liste d'amis. Que voulez-vous faire ?",
-										   "Demande d'amiti\u00E9",
-										   JOptionPane.YES_NO_CANCEL_OPTION,
-										   JOptionPane.INFORMATION_MESSAGE,
-										   null,
-										   new String[]{"Voir le profil", "Accepter", "Refuser"},
-										   "Voir le profil");
-			if (res == JOptionPane.CLOSED_OPTION && 0 == JOptionPane.showConfirmDialog(this.window, "Voulez-vous refuser la demande ?", "Refus ?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE))
-				exit = true;
-			else if (0 == res)
-				showProfile(username, this.window);
-			else if (1 == res)
-				answerRequest(username, true);
-			else
-				answerRequest(username, false);
-		} while (!exit);
 	}
 
 	public final void changeView(Views view/*, Map<String, Object> map*/)
@@ -130,8 +157,10 @@ public final class MasterController
 			this.profileFrame = new JFrame();
 			this.profileFrame.setResizable(false);
 			this.profileFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+			this.profileView.setBorder(new EmptyBorder(5, 5, 5, 5));
 			this.profileFrame.setContentPane(this.profileView);
 			this.profileFrame.setVisible(true);
+			this.profileFrame.pack();
 		}
 		else if (Views.SEARCH.equals(view))
 			this.searchFrame.setVisible(true);
@@ -192,24 +221,8 @@ public final class MasterController
 					}
 				});
 				MasterController.this.window.setVisible(true);
-				if (! MasterController.this.propertiesController.isFileCreated())
-					MasterController.this.identificationView.setEnabledChckBox(false);
-				else
-					MasterController.this.identificationView.setLoginValue(MasterController.this.propertiesController.getRegisteredProperties().getProperty("login"));
 			}
 		});
-	}
-
-	/**
-	* Set the look and feel of the cally {@link javax.swing.JPanel view}
-	**/
-	public static void setLookAndFeel()
-	{
-		try // Set System L&F
-		{
-			javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
-		}
-		catch (javax.swing.UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException ignored) {}
 	}
 
 	/**
@@ -225,14 +238,13 @@ public final class MasterController
 	/**
 	* Launch a register request to the server, and return the answer to the callee
 	*
-	* @param username {{@link java.lang.String}}: The chosen username
+	* @param username     {{@link java.lang.String}}: The chosen username
 	* @param emailAddress {{@link java.lang.String}}: The user's email address
-	* @param hashPw {{@link java.lang.String}}: The MD5 hash of the user's password
-	* @param firstName {{@link java.lang.String}}: The user's first name
-	* @param lastName {{@link java.lang.String}}: The user's last name
-	* @param keyLength {<ocde>int</ocde>}: The chosen key length
-	* @param hashPwKey {{@link java.lang.String}}: The user's password for his private key
-	*
+	* @param hashPw       {{@link java.lang.String}}: The MD5 hash of the user's password
+	* @param firstName    {{@link java.lang.String}}: The user's first name
+	* @param lastName     {{@link java.lang.String}}: The user's last name
+	* @param keyLength    {<ocde>int</ocde>}: The chosen key length
+	* @param hashPwKey    {{@link java.lang.String}}: The user's password for his private key
 	* @return {{@link java.lang.String}}: The stringified answer returned by the server after the request
 	*
 	* @throws java.lang.IllegalArgumentException if password are not MD5 hashed
@@ -254,9 +266,9 @@ public final class MasterController
 	/**
 	* Perform a connection request to the server, and log the user in if credentials are good. If an error has occurred, it will display a message
 	*
-	* @param username {{@link java.lang.String}}: The user's username. Set null if email is used to connect
+	* @param username     {{@link java.lang.String}}: The user's username. Set null if email is used to connect
 	* @param emailAddress {{@link java.lang.String}}: The user's email. Set null if username is used to connect
-	* @param hashPw {{@link java.lang.String}}: The MD5 hash of the user's password
+	* @param hashPw       {{@link java.lang.String}}: The MD5 hash of the user's password
 	**/
 	public final void connect(String username, String emailAddress, String hashPw)
 	{
@@ -268,6 +280,7 @@ public final class MasterController
 				JOptionPane.showMessageDialog(this.identificationView, connectionJson.getDisplayMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
 			else if (connectionJson.isConnectionValidated())
 			{
+				this.userConnected = true;
 				this.user = new ClientInfo(connectionJson);
                 // Démarrer le serveur
                 this.chatView = new ChatView(this.user);
@@ -296,16 +309,19 @@ public final class MasterController
 			try
 			{
 				StayAliveJsonParser stAlJson = JSONParser.getStayAliveParser(this.httpRequest.sendStayAliveRequest(this.cookie).getContent());
-				if(stAlJson.isError())
+				if (stAlJson.isError())
 				{
 					JOptionPane.showMessageDialog(MasterController.this.window, stAlJson.getDisplayMessage(), "Erreur Stay Alive !!!", JOptionPane.ERROR_MESSAGE);
 					this.window.setView(actualPanel = this.identificationView.reset(), Views.IDENTIFICATION);
-					this.window.openDisconnectPopup();
+					openDisconnectPopup();
 					return;
 				}
 				boolean newFriends = false;
-				this.user.setFriendList(Arrays.asList(stAlJson.getFriendList()));
-				if(null != stAlJson.getAskList())
+				if (null != stAlJson.getFriendList())
+					this.user.setFriendList(Arrays.asList(stAlJson.getFriendList()));
+				else
+					this.user.setFriendList(null);
+				if (null != stAlJson.getAskList())
 					for (String ask : stAlJson.getAskList())
 					{
 						popUpAskFriend(ask);
@@ -319,14 +335,15 @@ public final class MasterController
 		else
 		{
 			this.window.setView(actualPanel = this.identificationView.reset(), Views.IDENTIFICATION);
-			this.window.openDisconnectPopup();
+			openDisconnectPopup();
 		}
 	}
 
 	/**
 	* Perform a request to answer a friendship ask
+	*
 	* @param askerName {{@link java.lang.String}}: the username of the user that asked the friendship
-	* @param answer {<code>boolean</code>}: <code>true</code> if the answer if yes, <code>false</code> otherwise
+	* @param answer    {<code>boolean</code>}: <code>true</code> if the answer if yes, <code>false</code> otherwise
 	**/
 	public final void answerRequest(String askerName, boolean answer)
 	{
@@ -347,14 +364,14 @@ public final class MasterController
 		else
 		{
 			this.window.setView(actualPanel = this.identificationView.reset(), Views.IDENTIFICATION);
-			this.window.openDisconnectPopup();
+			openDisconnectPopup();
 		}
 	}
 
 	/**
 	* Perform a show profile request, and display the content in a pop-up
 	*
-	* @param username {{@link java.lang.String}}: the user's username that the actual user want to see
+	* @param username  {{@link java.lang.String}}: the user's username that the actual user want to see
 	* @param component {{@link java.awt.Component}}: the component used when the function has been called (to maintain order in pop-up closing)
 	**/
 	public final void showProfile(String username, Component component)
@@ -363,7 +380,7 @@ public final class MasterController
 			try
 			{
 				ShowProfileJsonParser showProfileJson = JSONParser.getShowProfileParser(this.httpRequest.sendShowProfileRequest(username, this.cookie).getContent());
-				if(showProfileJson.isError())
+				if (showProfileJson.isError())
 					JOptionPane.showMessageDialog(component, showProfileJson.getDisplayMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
 				JOptionPane.showMessageDialog(component, showProfileJson.getProfile().toString(), "Profil de " + username, JOptionPane.PLAIN_MESSAGE);
 			}
@@ -379,14 +396,14 @@ public final class MasterController
 		else
 		{
 			this.window.setView(actualPanel = this.identificationView.reset(), Views.IDENTIFICATION);
-			this.window.openDisconnectPopup();
+			openDisconnectPopup();
 		}
 	}
 
 	/**
 	* Perform a send invitation request
 	*
-	* @param login {{@link java.lang.String}}: the login value of the user to invite
+	* @param login           {{@link java.lang.String}}: the login value of the user to invite
 	* @param componentCallee {{@link java.awt.Component}}: the callee component to refer to when open the validation/error pop-up
 	**/
 	public void addFriend(String login, Component componentCallee)
@@ -413,16 +430,16 @@ public final class MasterController
 		else
 		{
 			this.window.setView(actualPanel = this.identificationView.reset(), Views.IDENTIFICATION);
-			this.window.openDisconnectPopup();
+			openDisconnectPopup();
 		}
 	}
 
 	/**
 	* Perform a search profiles request, and display the result in the {@link fr.esgi.annuel.gui.SearchFrame}
 	*
-	* @param username {{@link java.lang.String}}: the searched username
-	* @param email {{@link java.lang.String}}: the searched email address
-	* @param lastName {{@link java.lang.String}}: the searched lastName
+	* @param username  {{@link java.lang.String}}: the searched username
+	* @param email     {{@link java.lang.String}}: the searched email address
+	* @param lastName  {{@link java.lang.String}}: the searched lastName
 	* @param firstName {{@link java.lang.String}}: the searched firstName
 	**/
 	public final void search(String username, String email, String lastName, String firstName)
@@ -448,12 +465,17 @@ public final class MasterController
 		else
 		{
 			this.window.setView(actualPanel = this.identificationView.reset(), Views.IDENTIFICATION);
-			this.window.openDisconnectPopup();
+			openDisconnectPopup();
 		}
 	}
 
 	public final void disconnect()
 	{
-		System.out.println("Déconnexion");
+		if (userConnected)
+			//FIXME remplacer
+			System.out.println("Déconnexion");
+
+		this.userConnected = false;
+		this.user = null;
 	}
 }

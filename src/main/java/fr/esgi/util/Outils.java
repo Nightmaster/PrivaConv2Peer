@@ -341,6 +341,7 @@ public class Outils
 				{}
 		}
 	}
+
 	public static final Properties readPropertyFile(String pathToFile)
 	{
 		try

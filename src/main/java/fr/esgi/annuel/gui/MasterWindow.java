@@ -152,14 +152,6 @@ public class MasterWindow extends JFrame
 		return this.mntmQuit;
 	}
 
-	public void openDisconnectPopup()
-	{
-		JOptionPane.showMessageDialog(this,
-				"Vous avez \u00E9t\u00E9 d\u00E9connect\u00E9 suite \u00E0 votre inactivit\u00E9 de plus de 15 minutes",
-				"D\u00E9connexion automatique",
-				JOptionPane.INFORMATION_MESSAGE);
-	}
-
 	/**
 	 * Change the displayed view by the window
 	 *
