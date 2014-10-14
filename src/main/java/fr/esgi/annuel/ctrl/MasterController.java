@@ -263,8 +263,7 @@ public final class MasterController
 		try
 		{
 			this.cookie = this.httpRequest.sendConnectionRequest(username, emailAddress, hashPw).getCookie();
-			ConnectionJsonParser connectionJson = JSONParser.getConnectionParser(this.httpRequest.getContent());
-			System.out.println(this.httpRequest.getContent());
+            ConnectionJsonParser connectionJson = JSONParser.getConnectionParser(this.httpRequest.getContent());
 			if (connectionJson.isError())
 				JOptionPane.showMessageDialog(this.identificationView, connectionJson.getDisplayMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
 			else if (connectionJson.isConnectionValidated())

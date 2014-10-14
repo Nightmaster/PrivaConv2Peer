@@ -206,7 +206,7 @@ public class SearchView extends JPanel
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
-			if (e.getSource().equals(SearchView.this.btnCancel))
+            if (e.getSource().equals(SearchView.this.btnCancel))
 			{
 				SearchView.this.controller.stayAlive();
 				SearchView.this.controller.closeSearchFrame();
