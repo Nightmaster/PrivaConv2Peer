@@ -17,7 +17,7 @@ import fr.esgi.annuel.message.MessageQueue;
 
 public class ChatView extends JPanel
 {
-	private static ClientInfo logedUser = new ClientInfo();
+	private static ClientInfo logedUser;
 	private boolean clearArea = false;
 	private String currentInterlocuteur = "";;
 	private Map<String, String> discution = new HashMap<>();
@@ -32,10 +32,11 @@ public class ChatView extends JPanel
 	/**
 	 * Create the panel.
 	 */
-	public ChatView()
+	public ChatView(ClientInfo user)
 	{
 		MasterController.setLookAndFeel();
-		initialize();
+
+		initialize(user);
 		setLayout(new BorderLayout(10, 10));
 		add(this.list, BorderLayout.EAST);
 		add(this.textPane, BorderLayout.CENTER);
@@ -58,8 +59,9 @@ public class ChatView extends JPanel
 		this.textArea.addKeyListener(new EnterListener());
 	}
 
-	private void initialize()
+	private void initialize(ClientInfo user)
 	{
+        logedUser = user;
 		for (String pseudo : Contacts.getAllPseudo())
 			this.contacts.addElement(pseudo);
 		if (this.contacts.size() > 0)
@@ -77,14 +79,21 @@ public class ChatView extends JPanel
 				{
 					// Récupération des nouveaux messages à afficher chez l'utilisateur
 					List<Message> listM = MessageQueue.getAllMessagesToPrint(logedUser.getLogin());
-					if (listM != null && !listM.isEmpty())
-					{
-						StringBuilder sb = new StringBuilder();
-						sb.append(ChatView.this.text.getText());
-						for (Message message : listM)
-							sb.append(message.getMessage() + "\n");
-						ChatView.this.text.setText(sb.toString());
-					}
+                    if (listM != null && !listM.isEmpty())
+                    {
+                        StringBuilder sb = new StringBuilder();
+                        sb.append(ChatView.this.text.getText());
+                        for (Message message : listM) {
+                            sb.append(logedUser.getLogin());
+                            sb.append(" (");
+                            sb.append(message.getReceiveDate().getHours()+":"+message.getReceiveDate().getMinutes()+":"+message.getReceiveDate().getSeconds() );
+                            sb.append(")");
+                            sb.append(" : ");
+                            sb.append(message.getMessage() + "\n");
+                            System.out.println(sb.toString());
+                        }
+                        ChatView.this.text.setText(sb.toString());
+                    }
 				}
 			}
 		}).start();
@@ -100,7 +109,9 @@ public class ChatView extends JPanel
 			mess.setMessage(ChatView.this.textArea.getText());
 			mess.setReceiveDate(new Date());
 			MessageQueue.addMessage(logedUser.getLogin(), mess);
+            MessageQueue.addMessageToPrint(logedUser.getLogin(), mess);
 			ChatView.this.textArea.setText("");
+            ChatView.this.repaint();
 		}
 
 	}
@@ -119,9 +130,11 @@ public class ChatView extends JPanel
 				mess.setMessage(ChatView.this.textArea.getText());
 				mess.setReceiveDate(new Date());
 				MessageQueue.addMessage(logedUser.getLogin(), mess);
+                MessageQueue.addMessageToPrint(logedUser.getLogin(), mess);
 				ChatView.this.clearArea = true;
 			}
 			ChatView.this.textPane.getVerticalScrollBar().setValue(ChatView.this.text.getText().length());
+            ChatView.this.repaint();
 		}
 
 		@Override

@@ -52,7 +52,6 @@ public final class MasterController
 		this.registerKeyPartView = new RegisterViewKeyPart(this);
 		this.registerView = new RegisterView(this, this.registerKeyPartView);
 		this.profileView = new ProfileView(this);
-		this.chatView = new ChatView();
 		EventQueue.invokeLater(new Runnable()
 		{
 			@Override
@@ -272,6 +271,7 @@ public final class MasterController
 			{
 				this.user = new ClientInfo(connectionJson);
                 // Démarrer le serveur
+                this.chatView = new ChatView(this.user);
                 Thread t = new Thread(new Server());
                 t.start();
 				changeView(Views.CHAT);
