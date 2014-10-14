@@ -36,7 +36,11 @@ public class MasterWindow extends JFrame
 			this.mntmAddUser.setEnabled(false);
 			this.mntmDisconnect.setEnabled(false);
 			this.mntmProfile.setEnabled(false);
+			return;
 		}
+		this.mntmAddUser.setEnabled(true);
+		this.mntmDisconnect.setEnabled(true);
+		this.mntmProfile.setEnabled(true);
 	}
 
 	private JMenu getMenu()

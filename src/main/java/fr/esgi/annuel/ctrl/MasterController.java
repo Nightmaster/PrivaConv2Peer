@@ -21,6 +21,7 @@ public final class MasterController
 	private final HttpRequest httpRequest;
 	private final PropertiesController propertiesController;
 	private ClientInfo user;
+	private ChatView chatView;
 	private MasterWindow window;
 	private JFrame profileFrame;
 	private SearchFrame searchFrame;
@@ -29,7 +30,6 @@ public final class MasterController
 	private ProfileView profileView;
 	private RegisterView registerView;
 	private RegisterViewKeyPart registerKeyPartView;
-	private ResultView resultView;
 	private SearchView searchView;
 
 	/**
@@ -52,6 +52,7 @@ public final class MasterController
 		this.registerKeyPartView = new RegisterViewKeyPart(this);
 		this.registerView = new RegisterView(this, this.registerKeyPartView);
 		this.profileView = new ProfileView(this);
+		this.chatView = new ChatView();
 		EventQueue.invokeLater(new Runnable()
 		{
 			@Override
@@ -136,8 +137,11 @@ public final class MasterController
 		}
 		else if (Views.SEARCH.equals(view))
 			this.searchFrame.setVisible(true);
-		// else if (Views.CHAT.equals(view))
-		// this.window.setView();
+		else if (Views.CHAT.equals(view))
+		{
+			this.window.setView(this.chatView, view);
+			setActualPanel(this.chatView);
+		}
 	}
 
 	/**
@@ -271,10 +275,7 @@ public final class MasterController
                 // Démarrer le serveur
                 Thread t = new Thread(new Server());
                 t.start();
-                //FIXME revoir ce comportement !
-                // Changer la vue
-                this.window.setVisible(false);
-                new ChatWindow(this);
+				changeView(Views.CHAT);
 			}
 		}
 		catch (JSONException ignored) {}
@@ -434,7 +435,7 @@ public final class MasterController
 				if (searchJson.isError())
 					JOptionPane.showMessageDialog(this.searchFrame, searchJson.getDisplayMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
 				else
-					this.searchFrame.setResultView(this.resultView = new ResultView(this, searchJson.getProfiles()));
+					this.searchFrame.setResultView(new ResultView(this, searchJson.getProfiles()));
 			}
 			catch (JSONException ignored) {}
 			catch (IOException e)
