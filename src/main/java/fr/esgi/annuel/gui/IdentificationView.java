@@ -94,6 +94,7 @@ public class IdentificationView extends JPanel implements Resettable
 					.addComponent(getBtnRegister()))
 		);
 		setLayout(groupLayout);
+		setLoginValue();
 	}
 
 	private JButton getBtnConnection()
@@ -136,9 +137,9 @@ public class IdentificationView extends JPanel implements Resettable
 		if (this.fLoginValue == null)
 		{
 			this.fLoginValue = new JTextField(10);
-			this.fLoginValue.getDocument().addDocumentListener(new FieldListener());
 			PromptSupport.setPrompt("Pseudo ou @ mail", this.fLoginValue);
 			PromptSupport.setFocusBehavior(FocusBehavior.SHOW_PROMPT, this.fLoginValue);
+			this.fLoginValue.getDocument().addDocumentListener(new FieldListener());
 		}
 		return this.fLoginValue;
 	}
@@ -228,25 +229,22 @@ public class IdentificationView extends JPanel implements Resettable
 	}
 
 	/**
-	* Set the "Remember me" checkbox to the value passed as parameter.
-	* This function is to use when the status of the saved properties file is known
-	*
-	* @param enabled {<code>boolean</code>}: <code>true</code> to enable the checkbox, <code>false</code> otherwise
-	**/
-	public synchronized final void setEnabledChckBox(boolean enabled)
-	{
-		this.chckbxRememberMe.setEnabled(enabled);
-	}
-
-	/**
 	* Initialize the {@link javax.swing.JTextField login field} with a default value.
 	* This function is to used when the status of the saved properties file is known as read, and contains a default login value
 	*
 	* @param value {@link java.lang.String}: the login to set in the {@link javax.swing.JTextField login field}
 	**/
-	public synchronized final void setLoginValue(String value)
+	private void setLoginValue()
 	{
-		this.fLoginValue.setText(value);
+		if (this.controller.getPropertiesController().isFileCreated())
+		{
+			this.fLoginValue.setText(this.controller.getPropertiesController().getRegisteredProperty("login"));
+			this.chckbxRememberMe.setSelected(true);
+			if (! this.fPassword.requestFocusInWindow())
+				this.fPassword.requestFocus();
+		}
+		else
+			this.chckbxRememberMe.setEnabled(false);
 	}
 
 	private final class BtnListener implements ActionListener
@@ -255,9 +253,9 @@ public class IdentificationView extends JPanel implements Resettable
 		public void actionPerformed(ActionEvent e)
 		{
 			final String login = getLogin(),
-						 password = getHashedPassword();
-			if(IdentificationView.this.chckbxRememberMe.isSelected())
-				IdentificationView.this.controller.getPropertiesController().storeLogin(login);
+						 password = getHashedPassword(),
+						 toRegister = IdentificationView.this.chckbxRememberMe.isSelected() ? login : "";
+			IdentificationView.this.controller.getPropertiesController().storeLogin(toRegister);
 			if (Strings.isNullOrEmpty(password))
 				return;
 			if (login.contains("@"))

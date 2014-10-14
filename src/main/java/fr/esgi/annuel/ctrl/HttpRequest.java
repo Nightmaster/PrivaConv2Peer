@@ -16,13 +16,11 @@ public class HttpRequest
 {
 	private final String serverAddress, serverPort;
 	private HttpURLConnection  connection = null;
-	private MasterController controller;
 
 	public HttpRequest(MasterController controller)
 	{
-		this.controller = controller;
-		this.serverAddress = controller.getPropertiesController().getProperties().getProperty("server.address");
-		this.serverPort = controller.getPropertiesController().getProperties().getProperty("server.port");
+		this.serverAddress = controller.getPropertiesController().getProperty("server.address");
+		this.serverPort = controller.getPropertiesController().getProperty("server.port");
 	}
 
 	/**

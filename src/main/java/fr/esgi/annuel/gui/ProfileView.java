@@ -6,6 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import fr.esgi.annuel.ctrl.MasterController;
 
+import static org.jdesktop.xswingx.PromptSupport.FocusBehavior.SHOW_PROMPT;
+import static org.jdesktop.xswingx.PromptSupport.setFocusBehavior;
+import static org.jdesktop.xswingx.PromptSupport.setPrompt;
+
 @SuppressWarnings("serial")
 public class ProfileView extends JPanel
 {
@@ -52,30 +56,30 @@ public class ProfileView extends JPanel
 		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 			.addGroup(groupLayout.createSequentialGroup()
 				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-									 .addComponent(getLblName())
-									 .addComponent(getLblEmailAddress()))
+					.addComponent(getLblName())
+					.addComponent(getLblEmailAddress()))
 				.addGap(6)
 				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-									 .addComponent(getFFirstName(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-									 .addComponent(getTextField1(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addComponent(getFFirstName(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addComponent(getTextField1(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 				.addGap(11)
 				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-									 .addComponent(getLblFirstName())
-									 .addGroup(groupLayout.createSequentialGroup()
-														  .addGap(5)
-														  .addComponent(getLblNewPw())))
+					.addComponent(getLblFirstName())
+					.addGroup(groupLayout.createSequentialGroup()
+						.addGap(5)
+						.addComponent(getLblNewPw())))
 					.addGap(6)
 				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-									 .addComponent(getFLastName(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-									 .addComponent(getPwdFieldChange(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addComponent(getFLastName(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addComponent(getPwdFieldChange(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 				.addGap(11)
 				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-									 .addComponent(getLblPseudo())
-									 .addComponent(getLblPwConfirmation()))
+					.addComponent(getLblPseudo())
+					.addComponent(getLblPwConfirmation()))
 				.addGap(11)
 				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-									 .addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-									 .addComponent(getPwdFieldConfirm(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))));
+					.addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addComponent(getPwdFieldConfirm(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))));
 		setLayout(groupLayout);
 
 	}
@@ -125,14 +129,22 @@ public class ProfileView extends JPanel
 	private JPasswordField getPwdFieldChange()
 	{
 		if (this.pwdFieldChange == null)
+		{
 			this.pwdFieldChange = new JPasswordField();
+			setPrompt("Nouveau mot de passe souhaité", this.pwdFieldChange);
+			setFocusBehavior(SHOW_PROMPT, this.pwdFieldChange);
+		}
 		return this.pwdFieldChange;
 	}
 
 	private JPasswordField getPwdFieldConfirm()
 	{
 		if (this.pwdFieldConfirm == null)
+		{
 			this.pwdFieldConfirm = new JPasswordField();
+			setPrompt("Confirmation du mot de passe", this.pwdFieldConfirm);
+			setFocusBehavior(SHOW_PROMPT, this.pwdFieldConfirm);
+		}
 		return this.pwdFieldConfirm;
 	}
 
@@ -201,6 +213,8 @@ public class ProfileView extends JPanel
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
+			ProfileView.this.controller.stayAlive();
+			//FIXME vérifier les nouvelles valeurs
 			if(e.getSource().equals(ProfileView.this.btnCancel))
 				ProfileView.this.controller.closeProfileFrame();
 			//FIXME finaliser !

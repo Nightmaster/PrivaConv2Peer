@@ -32,8 +32,6 @@ public class ChatWindow
 	private JFrame frame;
 	private JPanel panel;
 
-
-	//FIXME Mettre à jour cette classe !!!
 	public ChatWindow(MasterController controller, ClientInfo user)
 	{
 		MasterController.setLookAndFeel();

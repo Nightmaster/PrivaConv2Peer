@@ -16,8 +16,7 @@ public class PropertiesController
 {
 	private static String directoryName;
 	private boolean fileCreated;
-	private Properties properties;
-	private Properties registeredProperties;
+	private Properties properties, registeredProperties;
 	private File configFile;
 
 	static
@@ -28,7 +27,7 @@ public class PropertiesController
 			directoryName = "/.pc2p/";
 	}
 
-	PropertiesController(Properties properties)
+	public PropertiesController(Properties properties)
 	{
 
 		this.properties = properties;
@@ -74,14 +73,14 @@ public class PropertiesController
 		catch (IOException ignored) {}
 	}
 
-	public Properties getRegisteredProperties()
+	public String getRegisteredProperty(String property)
 	{
-		return this.registeredProperties;
+		return this.registeredProperties.getProperty(property);
 	}
 
-	public Properties getProperties()
+	public String getProperty(String property)
 	{
-		return properties;
+		return properties.getProperty(property);
 	}
 
 	public boolean isFileCreated()
