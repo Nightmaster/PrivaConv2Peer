@@ -35,6 +35,7 @@ public class StayAliveJsonParser
 				this.askFriendship = null;
 			else
 			{
+				ask = json.getJSONArray("askFriend");
 				this.askFriendship = new String[ask.length()];
 				for (int i = 0; i < ask.length(); i++ )
 					this.askFriendship[i] = ask.get(i).toString();

@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static fr.esgi.annuel.parser.JSONParser.DISCONNECTION;
 import static fr.esgi.annuel.parser.JSONParser.REGISTRATION;
 
 public class SimpleJsonParser
@@ -31,8 +32,10 @@ public class SimpleJsonParser
 		}
 		if(REGISTRATION.equals(action))
 			this.status = json.getBoolean("validation");
-		else
+		else if(DISCONNECTION.equals(action))
 			this.status = json.getBoolean("disconnect");
+		else
+			this.status = json.getBoolean("portRegistered");
 	}
 
 	public String getDisplayMessage()

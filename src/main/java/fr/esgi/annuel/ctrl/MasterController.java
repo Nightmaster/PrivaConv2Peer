@@ -134,7 +134,6 @@ public final class MasterController
 			{
 				MasterController.this.searchFrame = new SearchFrame(MasterController.this);
 				MasterController.this.searchView = new SearchView(MasterController.this);
-				MasterController.this.searchFrame.initializeContent(MasterController.this.searchView);
 			}
 		});
 	}
@@ -171,7 +170,10 @@ public final class MasterController
 			this.profileFrame.pack();
 		}
 		else if (Views.SEARCH.equals(view))
+		{
+			this.searchFrame.initializeContent(MasterController.this.searchView.reset());
 			this.searchFrame.setVisible(true);
+		}
 		else if (Views.CHAT.equals(view))
 		{
 			this.window.setView(this.chatView, view);
@@ -635,5 +637,41 @@ public final class MasterController
 			openDisconnectPopup();
 			return null;
 		}
+	}
+
+	/**
+	* Perform a databse registration of the listening port request to the server
+	*
+	* @param port {<code>int</code>}: the port value
+	**/
+	public final void setListeningPort(int port)
+	{
+		if (0 < new Date().compareTo(new Date(this.cookie.getMaxAge() * 1000)))
+			try
+			{
+				this.cookie = this.httpRequest.sendSetListeningPortRequest(port, this.cookie).getCookie();
+				SimpleJsonParser listeningPortJson = JSONParser.getListeningPortJsonParser(this.httpRequest.getContent());
+				if (listeningPortJson.isError())
+					openErrorPopup(listeningPortJson.getDisplayMessage(), this.window);
+			}
+			catch (JSONException ignored) {}
+			catch (IOException e)
+			{
+				popUpErrorConnection();
+			}
+			finally
+			{
+				stayAlive();
+			}
+		else
+		{
+			this.window.setView(actualPanel = this.identificationView.reset(), Views.IDENTIFICATION);
+			openDisconnectPopup();
+		}
+	}
+
+	public final void repaintSearchFrame()
+	{
+		this.searchFrame.repaint();
 	}
 }

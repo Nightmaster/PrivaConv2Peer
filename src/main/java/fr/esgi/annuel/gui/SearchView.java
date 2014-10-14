@@ -12,7 +12,7 @@ import static org.jdesktop.xswingx.PromptSupport.FocusBehavior.SHOW_PROMPT;
 import static org.jdesktop.xswingx.PromptSupport.setFocusBehavior;
 import static org.jdesktop.xswingx.PromptSupport.setPrompt;
 
-public class SearchView extends JPanel
+public class SearchView extends JPanel implements Resettable
 {
 	private static final String TOOL_TIP_TEXT = "<html>\r\n\t<p>\r\n\t\tUtilisez * comme un joker pour des recherches partielles.\r\n\t\t<br/>\r\n\t\tLaissez vide si inutilis\u00E9\r\n\t</p>\r\n</html>";
 	private JButton btnCancel, btnSearch;
@@ -199,6 +199,21 @@ public class SearchView extends JPanel
 		if (this.lblUsername == null)
 			this.lblUsername = new JLabel("Nom d'utilisateur");
 		return this.lblUsername;
+	}
+
+	/**
+	* Reset the components of the {@link fr.esgi.annuel.gui.SearchView}, and return it
+	*
+	* @return {{@link fr.esgi.annuel.gui.SearchView}}: the actual instance with all fields contents set empty
+	**/
+	@Override
+	public SearchView reset()
+	{
+		this.fUsername.setText(null);
+		this.fEmail.setText(null);
+		this.fFirstName.setText(null);
+		this.fName.setText(null);
+		return this;
 	}
 
 	private class BtnListener implements ActionListener

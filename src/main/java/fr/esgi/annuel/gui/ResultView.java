@@ -83,8 +83,8 @@ public class ResultView extends JPanel
 							.addComponent(getBtnLaunchAnotherSearch())
 							.addComponent(getBtnOk())))
 			);
-			setLayout(groupLayout);
 		}
+		setLayout(groupLayout);
 	}
 
 	private JButton getBtnCancel()
@@ -184,7 +184,9 @@ public class ResultView extends JPanel
 		if (this.txtrDescription == null)
 		{
 			this.txtrDescription = new JTextArea();
-			this.txtrDescription.setText("Identifiant de connexion :\r\n" + this.results[this.index].getLogin() + "\r\n___________________________\r\nNom :\r\n" + this.results[this.index].getName() + "\r\n___________________________\r\nPr\u00E9nom :\r\n" + this.results[this.index].getFirstName());
+			this.txtrDescription.setText("Identifiant de connexion :\r\n" + this.results[this.index].getLogin()
+										 + "\r\n___________________________\r\nNom :\r\n" + this.results[this.index].getName()
+										 + "\r\n___________________________\r\nPr\u00E9nom :\r\n" + this.results[this.index].getFirstName());
 		}
 		return this.txtrDescription;
 	}
@@ -192,7 +194,15 @@ public class ResultView extends JPanel
 	private void updateButtons()
 	{
 		this.btnPrevious.setEnabled(0 != this.index);
-		this.btnNext.setEnabled(this.results.length != this.index);
+		this.btnNext.setEnabled(this.results.length -1 != this.index);
+	}
+
+	private void updateLabels()
+	{
+		this.lblCorrespondingUser.setText("Utilisateur correspondant \u00E0 vos crit\u00E8res n\u00B0" + Integer.toString(this.index));
+		this.txtrDescription.setText("Identifiant de connexion :\r\n" + this.results[this.index].getLogin() + "\r\n___________________________\r\nNom :\r\n"
+									 + this.results[this.index].getName()
+									 + "\r\n___________________________\r\nPr\u00E9nom :\r\n" + this.results[this.index].getFirstName());
 	}
 
 	private class BtnListener implements ActionListener
@@ -206,22 +216,24 @@ public class ResultView extends JPanel
 			else if (e.getSource().equals(ResultView.this.btnInvite))
 			{
 				int res = JOptionPane.showConfirmDialog(ResultView.this,
-											  "Vous allez envoyer une demande d'ami à " + ResultView.this.results[ResultView.this.index].getLogin() + ".\nValider ?",
-											  "Validation",
-											  JOptionPane.YES_NO_OPTION);
+														"Vous allez envoyer une demande d'ami \u00E0 " + ResultView.this.results[ResultView.this.index].getLogin() + ".\nValider ?",
+														"Validation",
+														JOptionPane.YES_NO_OPTION);
 				if (-1 == res)
 					ResultView.this.controller.closeSearchFrame();
-				else if (1 == res)
+				else if (0 == res)
 					ResultView.this.controller.addFriend(ResultView.this.results[ResultView.this.index].getLogin(), ResultView.this);
 			}
 			else if (e.getSource().equals(ResultView.this.btnNext))
 			{
 				ResultView.this.index ++;
 				ResultView.this.updateButtons();
+				ResultView.this.updateLabels();
 			}
 			else if (e.getSource().equals(ResultView.this.btnPrevious))
 			{
 				ResultView.this.index --;
+				ResultView.this.updateLabels();
 				ResultView.this.updateButtons();
 			}
 			else // if (e.getSource().equals(ResultView.this.btnLaunchAnotherSearch))

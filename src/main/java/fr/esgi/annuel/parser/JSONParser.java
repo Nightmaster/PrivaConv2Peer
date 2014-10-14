@@ -10,7 +10,7 @@ import org.json.JSONObject;
  */
 public class JSONParser
 {
-	static final String DISCONNECTION = "Disconnection", REGISTRATION = "Registration";
+	static final String DISCONNECTION = "Disconnection", REGISTRATION = "Registration", SET_LISTENING_PORT = "Listening port";
 
 	/**
 	 * Create an instance of {@link AddFriendJsonParser}
@@ -154,5 +154,10 @@ public class JSONParser
 	public static StayAliveJsonParser getStayAliveParser(String json) throws JSONException
 	{
 		return new StayAliveJsonParser(new JSONObject(json));
+	}
+
+	public static SimpleJsonParser getListeningPortJsonParser(String json) throws JSONException
+	{
+		return new SimpleJsonParser(new JSONObject(json), SET_LISTENING_PORT);
 	}
 }

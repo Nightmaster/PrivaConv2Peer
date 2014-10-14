@@ -3,6 +3,8 @@ package fr.esgi.annuel.gui;
 import javax.swing.JPanel;
 
 /**
+* Specify that a class that extends {@link javax.swing.JPanel} can be reset
+*
 * @author Gaël B.
 **/
 public interface Resettable<T extends JPanel>
