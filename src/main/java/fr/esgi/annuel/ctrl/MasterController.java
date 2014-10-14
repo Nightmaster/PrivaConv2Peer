@@ -133,7 +133,6 @@ public final class MasterController
 			this.profileFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			this.profileFrame.setContentPane(this.profileView);
 			this.profileFrame.setVisible(true);
-			//TODO vérifier le comportement !!!
 		}
 		else if (Views.SEARCH.equals(view))
 			this.searchFrame.setVisible(true);
@@ -307,11 +306,12 @@ public final class MasterController
 				}
 				boolean newFriends = false;
 				this.user.setFriendList(Arrays.asList(stAlJson.getFriendList()));
-				for (String ask : stAlJson.getAskList())
-				{
-					popUpAskFriend(ask);
-					newFriends = true;
-				}
+				if(null != stAlJson.getAskList())
+					for (String ask : stAlJson.getAskList())
+					{
+						popUpAskFriend(ask);
+						newFriends = true;
+					}
 				this.cookie = this.httpRequest.getCookie();
 				if (newFriends)
 					stayAlive();
@@ -451,5 +451,10 @@ public final class MasterController
 			this.window.setView(actualPanel = this.identificationView.reset(), Views.IDENTIFICATION);
 			this.window.openDisconnectPopup();
 		}
+	}
+
+	public final void disconnect()
+	{
+		System.out.println("Déconnexion");
 	}
 }

@@ -130,7 +130,7 @@ public class SearchView extends JPanel
 			this.fFirstName = new JTextField();
 			this.fFirstName.setToolTipText(TOOL_TIP_TEXT);
 			this.fFirstName.setColumns(10);
-			setPrompt("Pr\u00E9 \u00E0 rechercher", this.fFirstName);
+			setPrompt("Pr\u00E9nom \u00E0 rechercher", this.fFirstName);
 			setFocusBehavior(SHOW_PROMPT, this.fFirstName);
 		}
 		return this.fFirstName;

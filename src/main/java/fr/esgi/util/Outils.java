@@ -8,6 +8,7 @@ import java.io.*;
 import java.util.Base64;
 import java.util.Properties;
 import java.util.UUID;
+import fr.esgi.annuel.ctrl.MasterController;
 
 /**
  * @author Gaël BLAISE
@@ -45,7 +46,7 @@ public class Outils
 	 *
 	* @param confirm {boolean} : <code>true</code> pour avoir une confirmation utilisateur, <code>false</code> sinon
 	**/
-	public static void breakPgm(boolean confirm)
+	public static void breakPgm(boolean confirm, MasterController controller)
 	{
 		int quit;
 		if (confirm) // Quitter avec confirmation
@@ -53,7 +54,10 @@ public class Outils
 		else
 			quit = 0; // Quitter sans confirmation
 		if (quit == 0)
+		{
+			controller.disconnect();
 			System.exit(0);
+		}
 	}
 
 	/**

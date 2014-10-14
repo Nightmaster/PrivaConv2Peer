@@ -205,7 +205,7 @@ public class MasterWindow extends JFrame
 		{
 			String str = ((JMenuItem) ev.getSource()).getText();
 			if (Constants.QUIT.equals(str))
-				Outils.breakPgm(true);
+				Outils.breakPgm(true, MasterWindow.this.controller);
 			else if (Constants.ABOUT.equals(str))
 				aboutChoice();
 			else if (Constants.PROFILE.equals(str))
@@ -214,6 +214,8 @@ public class MasterWindow extends JFrame
 				addUserWindows();
 			else if (Constants.HELP.equals(str))
 				helpChoice();
+			else if (Constants.DISCONNECT.equals(str))
+				MasterWindow.this.controller.disconnect();
 		}
 	}
 }
