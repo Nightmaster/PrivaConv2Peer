@@ -305,10 +305,10 @@ public class RegisterView extends JPanel implements Resettable
 
 				/**Fields content (except PW) verification**/
 				sb.append(!RegisterView.this.pw.equals(pwAgain) ? "Les deux mots de passe doivent \u00EAtre identiques !\n" : "");
-				sb.append(!isValidFieldContent(login, PSEUDO) ? getErrorMessageFor(PSEUDO) + "\n" : "");
-				sb.append(!isValidFieldContent(email, EMAIL) ? getErrorMessageFor(EMAIL) + "\n" : "");
-				sb.append(!isValidFieldContent(lastName, LASTNAME) ? getErrorMessageFor(LASTNAME) + "\n" : "");
-				sb.append(!isValidFieldContent(firstName, FIRSTNAME) ? getErrorMessageFor(FIRSTNAME) : "");
+				sb.append(!isValidFieldContent(RegisterView.this.login, PSEUDO) ? getErrorMessageFor(PSEUDO) + "\n" : "");
+				sb.append(!isValidFieldContent(RegisterView.this.email, EMAIL) ? getErrorMessageFor(EMAIL) + "\n" : "");
+				sb.append(!isValidFieldContent(RegisterView.this.lastName, LASTNAME) ? getErrorMessageFor(LASTNAME) + "\n" : "");
+				sb.append(!isValidFieldContent(RegisterView.this.firstName, FIRSTNAME) ? getErrorMessageFor(FIRSTNAME) : "");
 
 				/**Password verification**/
 				HashMap<PasswordConstraints, Boolean> map = PasswordUtilities.isStrongEnough(pw);
@@ -328,7 +328,7 @@ public class RegisterView extends JPanel implements Resettable
 				{
 					String res = sb.toString();
 					while (res.contains("\n\n"))
-						res = res.replace("\n\n", "\n");
+						res = res.replaceAll("\\n\\n", "\n");
 					if (res.endsWith("\n"))
 						res = res.substring(0, res.length() - 1);
 					JOptionPane.showMessageDialog(null, res, "Valeur(s) incorrecte(s) d\u00E0e(s)", JOptionPane.ERROR_MESSAGE);

@@ -12,5 +12,6 @@ public interface Constants
 			QUIT = "Quitter",
 			HELP = "Aide";
 
-	public final static char[] SPEC_CHARS = "-!\'з$%&/()=?+*~#\"_:.,@^<>гд╡".toCharArray();
+	// SPEC_CHARS = "-!'з$%&/()=?+*~#\"_:.,@^<>гд╡"
+	public final static char[] SPEC_CHARS = "\u002D\u0021\u0027\u00A7\u0025\u0025\u0026\u002F\u0028\u0029\u003D\u003F\u002B\u002A\u007E\u0023\"\u005F\u003A\u002E\u002C\u0040\u005E\u003C\u003E\u00A3\u00A4\u00B5".toCharArray();
 }

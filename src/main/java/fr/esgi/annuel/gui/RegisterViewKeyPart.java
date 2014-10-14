@@ -255,7 +255,7 @@ public class RegisterViewKeyPart extends JPanel implements Resettable
 				{
 					String res = sb.toString();
 					while (res.contains("\n\n"))
-						res = res.replace("\n\n", "\n");
+						res = res.replaceAll("\\n\\n", "\n");
 					if (res.endsWith("\n"))
 						res = res.substring(0, res.length() - 1);
 					JOptionPane.showMessageDialog(null, res, "Valeur(s) incorrecte(s) d\u00E0e(s)", JOptionPane.ERROR_MESSAGE);

@@ -2,21 +2,30 @@ package fr.esgi.annuel.gui;
 
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import com.google.common.base.Strings;
+import fr.esgi.annuel.constants.PasswordConstraints;
+import fr.esgi.annuel.crypt.PasswordUtilities;
 import fr.esgi.annuel.ctrl.MasterController;
 
+import static fr.esgi.annuel.constants.FieldType.*;
+import static fr.esgi.annuel.ctrl.FieldContentValidator.getErrorMessageFor;
+import static fr.esgi.annuel.ctrl.FieldContentValidator.isValidFieldContent;
 import static org.jdesktop.xswingx.PromptSupport.FocusBehavior.SHOW_PROMPT;
 import static org.jdesktop.xswingx.PromptSupport.setFocusBehavior;
 import static org.jdesktop.xswingx.PromptSupport.setPrompt;
 
-@SuppressWarnings("serial")
 public class ProfileView extends JPanel
 {
 	private JButton btnCancel, btnSubmit;
 	private JLabel lblEmailAddress, lblPwConfirmation, lblName, lblNewPw, lblFirstName, lblPseudo;
-	private JPasswordField pwdFieldChange, pwdFieldConfirm;
-	private JTextField textField, textField1, fFirstName, fLastName;
+	private JPasswordField fPassword, fPasswordAgain;
+	private JTextField fLogin, fEmail, fFirstName, fLastName;
+	private JTextField[] textFields;
 	private MasterController controller;
 
 	/**
@@ -24,64 +33,72 @@ public class ProfileView extends JPanel
 	**/
 	public ProfileView(MasterController controller)
 	{
-		//FIXME ajouter le bouton de validation
 		this.controller = controller;
 		MasterController.setLookAndFeel();
 		GroupLayout groupLayout = new GroupLayout(this);
-		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-			.addGroup(groupLayout.createSequentialGroup()
-				.addComponent(getLblName())
-				.addGap(141)
-				.addComponent(getLblEmailAddress()))
-			.addGroup(groupLayout.createSequentialGroup()
-				.addComponent(getFFirstName(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)
-				.addGap(19)
-				.addComponent(getTextField1(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE))
-			.addGroup(groupLayout.createSequentialGroup()
-				.addComponent(getLblFirstName())
-				.addGap(126)
-				.addComponent(getLblNewPw()))
-			.addGroup(groupLayout.createSequentialGroup()
-				.addComponent(getFLastName(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)
-				.addGap(19)
-				.addComponent(getPwdFieldChange(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE))
-			.addGroup(groupLayout.createSequentialGroup()
-				.addComponent(getLblPseudo())
-				.addGap(101)
-				.addComponent(getLblPwConfirmation()))
-			.addGroup(groupLayout.createSequentialGroup()
-				.addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)
-				.addGap(19)
-				.addComponent(getPwdFieldConfirm(), GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)));
-		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-			.addGroup(groupLayout.createSequentialGroup()
-				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
 					.addComponent(getLblName())
+					.addGap(159)
 					.addComponent(getLblEmailAddress()))
-				.addGap(6)
-				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-					.addComponent(getFFirstName(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addComponent(getTextField1(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-				.addGap(11)
-				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-					.addComponent(getLblFirstName())
+				.addGroup(groupLayout.createSequentialGroup()
+					.addComponent(getFLastName(), GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
+						.addGap(30)
+						.addComponent(getFEmail(), GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE))
 					.addGroup(groupLayout.createSequentialGroup()
-						.addGap(5)
-						.addComponent(getLblNewPw())))
-					.addGap(6)
-				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-					.addComponent(getFLastName(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addComponent(getPwdFieldChange(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-				.addGap(11)
-				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-					.addComponent(getLblPseudo())
-					.addComponent(getLblPwConfirmation()))
-				.addGap(11)
-				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-					.addComponent(getTextField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addComponent(getPwdFieldConfirm(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))));
+						.addComponent(getLblFirstName())
+						.addGap(144)
+						.addComponent(getLblNewPw()))
+					.addGroup(groupLayout.createSequentialGroup()
+						.addComponent(getFFirstName(), GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
+						.addGap(30)
+						.addComponent(getFPassword(), GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE))
+					.addGroup(groupLayout.createSequentialGroup()
+						.addComponent(getLblPseudo())
+						.addGap(119)
+						.addComponent(getLblPwConfirmation()))
+					.addGroup(groupLayout.createSequentialGroup()
+						.addComponent(getFLogin(), GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
+						.addGap(30)
+						.addComponent(getFPasswordAgain(), GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE))
+					.addGroup(groupLayout.createSequentialGroup()
+						.addGap(40)
+						.addComponent(getBtnCancel(), GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
+						.addGap(100)
+						.addComponent(getBtnSubmit(), GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)));
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(getLblName())
+						.addComponent(getLblEmailAddress()))
+					.addGap(5)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(getFLastName(), GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+						.addComponent(getFEmail(), GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
+					.addGap(10)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(getLblFirstName())
+						.addComponent(getLblNewPw()))
+					.addGap(5)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(getFFirstName(), GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+						.addComponent(getFPassword(), GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
+					.addGap(10)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(getLblPseudo())
+						.addComponent(getLblPwConfirmation()))
+					.addGap(10)
+						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(getFLogin(), GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+						.addComponent(getFPasswordAgain(), GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
+					.addGap(21)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(getBtnCancel())
+						.addComponent(getBtnSubmit()))));
 		setLayout(groupLayout);
-
+		this.textFields = new JTextField[] {this.fLogin, this.fEmail, this.fFirstName, this.fLastName, this.fPassword, this.fPasswordAgain};
 	}
 
 	private JLabel getLblEmailAddress()
@@ -126,46 +143,54 @@ public class ProfileView extends JPanel
 		return this.lblPseudo;
 	}
 
-	private JPasswordField getPwdFieldChange()
+	private JPasswordField getFPassword()
 	{
-		if (this.pwdFieldChange == null)
+		if (this.fPassword == null)
 		{
-			this.pwdFieldChange = new JPasswordField();
-			setPrompt("Nouveau mot de passe souhaité", this.pwdFieldChange);
-			setFocusBehavior(SHOW_PROMPT, this.pwdFieldChange);
+			this.fPassword = new JPasswordField();
+			this.fPassword.getDocument().addDocumentListener(new FieldListener());
+			setPrompt("Nouveau mot de passe souhait\u00E9", this.fPassword);
+			setFocusBehavior(SHOW_PROMPT, this.fPassword);
 		}
-		return this.pwdFieldChange;
+		return this.fPassword;
 	}
 
-	private JPasswordField getPwdFieldConfirm()
+	private JPasswordField getFPasswordAgain()
 	{
-		if (this.pwdFieldConfirm == null)
+		if (this.fPasswordAgain == null)
 		{
-			this.pwdFieldConfirm = new JPasswordField();
-			setPrompt("Confirmation du mot de passe", this.pwdFieldConfirm);
-			setFocusBehavior(SHOW_PROMPT, this.pwdFieldConfirm);
+			this.fPasswordAgain = new JPasswordField();
+			this.fPasswordAgain.getDocument().addDocumentListener(new FieldListener());
+			setPrompt("Confirmation du mot de passe", this.fPasswordAgain);
+			setFocusBehavior(SHOW_PROMPT, this.fPasswordAgain);
 		}
-		return this.pwdFieldConfirm;
+		return this.fPasswordAgain;
 	}
 
-	private JTextField getTextField()
+	private JTextField getFLogin()
 	{
-		if (this.textField == null)
+		if (this.fLogin == null)
 		{
-			this.textField = new JTextField();
-			this.textField.setColumns(10);
+			this.fLogin = new JTextField();
+			this.fLogin.setColumns(15);
+			this.fLogin.getDocument().addDocumentListener(new FieldListener());
+			setPrompt("Nouveau login", this.fLogin);
+			setFocusBehavior(SHOW_PROMPT, this.fLogin);
 		}
-		return this.textField;
+		return this.fLogin;
 	}
 
-	private JTextField getTextField1()
+	private JTextField getFEmail()
 	{
-		if (this.textField1 == null)
+		if (this.fEmail == null)
 		{
-			this.textField1 = new JTextField();
-			this.textField1.setColumns(10);
+			this.fEmail = new JTextField();
+			this.fEmail.setColumns(15);
+			this.fEmail.getDocument().addDocumentListener(new FieldListener());
+			setPrompt("Nouvel email", this.fEmail);
+			setFocusBehavior(SHOW_PROMPT, this.fEmail);
 		}
-		return this.textField1;
+		return this.fEmail;
 	}
 
 	private JTextField getFFirstName()
@@ -173,7 +198,10 @@ public class ProfileView extends JPanel
 		if (this.fFirstName == null)
 		{
 			this.fFirstName = new JTextField();
-			this.fFirstName.setColumns(10);
+			this.fFirstName.setColumns(15);
+			this.fFirstName.getDocument().addDocumentListener(new FieldListener());
+			setPrompt("Nouveau pr\u00E9nom", this.fFirstName);
+			setFocusBehavior(SHOW_PROMPT, this.fFirstName);
 		}
 		return this.fFirstName;
 	}
@@ -183,7 +211,10 @@ public class ProfileView extends JPanel
 		if (this.fLastName == null)
 		{
 			this.fLastName = new JTextField();
-			this.fLastName.setColumns(10);
+			this.fLastName.setColumns(15);
+			this.fLastName.getDocument().addDocumentListener(new FieldListener());
+			setPrompt("Nouveau nom", this.fLastName);
+			setFocusBehavior(SHOW_PROMPT, this.fLastName);
 		}
 		return this.fLastName;
 	}
@@ -193,6 +224,7 @@ public class ProfileView extends JPanel
 		if(this.btnSubmit == null)
 		{
 			this.btnSubmit = new JButton("Valider");
+			this.btnSubmit.setEnabled(false);
 			this.btnSubmit.addActionListener(new BtnListener());
 		}
 		return btnSubmit;
@@ -214,11 +246,85 @@ public class ProfileView extends JPanel
 		public void actionPerformed(ActionEvent e)
 		{
 			ProfileView.this.controller.stayAlive();
-			//FIXME vérifier les nouvelles valeurs
 			if(e.getSource().equals(ProfileView.this.btnCancel))
 				ProfileView.this.controller.closeProfileFrame();
-			//FIXME finaliser !
-			//ProfileView.this.controller.updateInformations();
+			else
+			{
+				String	pw = String.valueOf(ProfileView.this.fPassword.getPassword()),
+						login = ProfileView.this.fLogin.getText(),
+						email = ProfileView.this.fEmail.getText(),
+						firstName = ProfileView.this.fFirstName.getText(),
+						lastName = ProfileView.this.fLastName.getText(),
+						pwAgain = String.valueOf(ProfileView.this.fPasswordAgain.getPassword());
+
+				StringBuilder sb = new StringBuilder(1000);
+				/**Fields content (except PW) verification**/
+				sb.append(!pw.equals(pwAgain) ? "Les deux mots de passe doivent \u00EAtre identiques !\n" : "");
+				if (! Strings.isNullOrEmpty(login))
+					sb.append(!isValidFieldContent(login, PSEUDO) ? getErrorMessageFor(PSEUDO) + "\n" : "");
+				if (! Strings.isNullOrEmpty(email))
+					sb.append(!isValidFieldContent(email, EMAIL) ? getErrorMessageFor(EMAIL) + "\n" : "");
+				if (! Strings.isNullOrEmpty(lastName))
+					sb.append(!isValidFieldContent(lastName, LASTNAME) ? getErrorMessageFor(LASTNAME) + "\n" : "");
+				if (! Strings.isNullOrEmpty(firstName))
+					sb.append(!isValidFieldContent(firstName, FIRSTNAME) ? getErrorMessageFor(FIRSTNAME) : "");
+				if(! Strings.isNullOrEmpty(pw))
+				{
+					/**Password verification**/
+					HashMap<PasswordConstraints, Boolean> map = PasswordUtilities.isStrongEnough(pw);
+					for (PasswordConstraints constraint : map.keySet())
+						if (!map.get(constraint))
+						{
+							sb.append(constraint.getErrorMessage());
+							sb.append('\n');
+						}
+				}
+				if ("".equals(sb.toString())) //if no error has been detected
+					ProfileView.this.controller.updateInfos(login, email, PasswordUtilities.hashPassword(pw), firstName, lastName);
+				else
+				{
+					String res = sb.toString();
+					while (res.contains("\n\n"))
+						res = res.replaceAll("\\n\\n", "\n");
+					if (res.endsWith("\n"))
+						res = res.substring(0, res.length() - 1);
+					JOptionPane.showMessageDialog(null, res, "Valeur(s) incorrecte(s) d\u00E0e(s)", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		}
+	}
+
+	private class FieldListener implements DocumentListener
+	{
+		private void checkFieldsNotEmpty()
+		{
+			for (JTextField field : ProfileView.this.textFields)
+			{
+				if (! field.getText().trim().isEmpty())
+				{
+					ProfileView.this.btnSubmit.setEnabled(true);
+					return;
+				}
+			}
+			ProfileView.this.btnSubmit.setEnabled(false);
+		}
+
+		@Override
+		public void insertUpdate(DocumentEvent e)
+		{
+			checkFieldsNotEmpty();
+		}
+
+		@Override
+		public void removeUpdate(DocumentEvent e)
+		{
+			checkFieldsNotEmpty();
+		}
+
+		@Override
+		public void changedUpdate(DocumentEvent e)
+		{
+			checkFieldsNotEmpty();
 		}
 	}
 }

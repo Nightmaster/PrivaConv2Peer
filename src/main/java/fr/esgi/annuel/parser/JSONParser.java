@@ -10,7 +10,7 @@ import org.json.JSONObject;
  */
 public class JSONParser
 {
-	private static final String DISCONNECTION = "Disconnection", REGISTRATION = "Registration";
+	static final String DISCONNECTION = "Disconnection", REGISTRATION = "Registration";
 
 	/**
 	 * Create an instance of {@link AddFriendJsonParser}
@@ -73,15 +73,15 @@ public class JSONParser
 	}
 
 	/**
-	 * Create an instance of {@link ModifyProfileJsonParser}
+	 * Create an instance of {@link ModifiedProfileJsonParser}
 	 *
 	 * @param json {JSONObject}: the JSON returned by the web service on this action
 	 * @return {ModifyProfileJSONParser} the modify profile parser
 	 * @throws JSONException
 	 **/
-	public static ModifyProfileJsonParser getodifyProfileParser(String json) throws JSONException
+	public static ModifiedProfileJsonParser getModifyProfileParser(String json) throws JSONException
 	{
-		return new ModifyProfileJsonParser(new JSONObject(json));
+		return new ModifiedProfileJsonParser(new JSONObject(json));
 	}
 
 	/**

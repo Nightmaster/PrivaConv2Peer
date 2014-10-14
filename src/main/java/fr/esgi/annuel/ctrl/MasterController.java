@@ -9,10 +9,12 @@ import java.io.IOException;
 import java.net.HttpCookie;
 import java.util.Arrays;
 import java.util.Date;
+import com.google.common.base.Strings;
 import fr.esgi.annuel.client.ClientInfo;
 import fr.esgi.annuel.constants.Views;
 import fr.esgi.annuel.gui.*;
 import fr.esgi.annuel.parser.*;
+import fr.esgi.annuel.parser.subclasses.ChangedValues;
 import fr.esgi.annuel.server.Server;
 import org.json.JSONException;
 
@@ -304,7 +306,6 @@ public final class MasterController
 	**/
 	public final void stayAlive()
 	{
-		//TDL Prévoir comportement changement de nom
 		if (0 < new Date().compareTo(new Date(this.cookie.getMaxAge() * 1000)))
 			try
 			{
@@ -350,6 +351,7 @@ public final class MasterController
 		if (0 < new Date().compareTo(new Date(this.cookie.getMaxAge() * 1000)))
 			try
 			{
+				//FIXME utiliser le parseur
 				this.httpRequest.sendAnswerReqRequest(askerName, answer, this.cookie);
 				this.cookie = this.httpRequest.getCookie();
 			}
@@ -472,10 +474,92 @@ public final class MasterController
 	public final void disconnect()
 	{
 		if (userConnected)
-			//FIXME remplacer
-			System.out.println("Déconnexion");
-
+			if (0 < new Date().compareTo(new Date(this.cookie.getMaxAge() * 1000)))
+				try
+				{
+					SimpleJsonParser disconnectionJson = JSONParser.getDisconnectionParser(this.httpRequest.sendDisonnectRequest(this.cookie).getContent());
+					if(disconnectionJson.isError())
+						JOptionPane.showMessageDialog(this.searchFrame, disconnectionJson.getDisplayMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+				}
+				catch (JSONException ignored) {ignored.printStackTrace();}
+				catch (IOException e)
+				{
+					popUpErrorConnection();
+				}
+			else
+			{
+				this.window.setView(actualPanel = this.identificationView.reset(), Views.IDENTIFICATION);
+				openDisconnectPopup();
+			}
+		changeView(Views.IDENTIFICATION);
 		this.userConnected = false;
 		this.user = null;
+	}
+
+	public final void updateInfos(String login, String email, String hashPw, String firstName, String lastName)
+	{
+		assert 32 == hashPw.length() : "Le mot de passe doit \u00E7tre envoyé hashé !";
+		if (0 < new Date().compareTo(new Date(this.cookie.getMaxAge() * 1000)))
+			try
+			{
+				ModifiedProfileJsonParser modifiedProfileJson = JSONParser.getModifyProfileParser(this.httpRequest.sendUpdateInfosRequest(login, email, hashPw, firstName, lastName, this.cookie).getContent());
+				if(modifiedProfileJson.isError())
+					JOptionPane.showMessageDialog(this.searchFrame, modifiedProfileJson.getDisplayMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+				else
+				{
+					ChangedValues cv = modifiedProfileJson.getNewValues();
+					String	newLogin = cv.getLogin(),
+							newEmail = cv.getEmail(),
+							newFirstName = cv.getFirstName(),
+							newLastName = cv.getName();
+					boolean pwChanged = cv.isPasswordChanged();
+					StringBuilder sb = new StringBuilder(500);
+					if(! Strings.isNullOrEmpty(newLogin))
+					{
+						sb.append("Nouveau login : ");
+						sb.append(newEmail);
+						sb.append('\n');
+					}
+					if(! Strings.isNullOrEmpty(newEmail))
+					{
+						sb.append("Nouvelle adresse email : ");
+						sb.append(newEmail);
+						sb.append('\n');
+					}
+					if(pwChanged)
+					{
+						sb.append("Mot de passe correctement changé");
+						sb.append('\n');
+					}
+					if(! Strings.isNullOrEmpty(newFirstName))
+					{
+						sb.append("Nouveau pr\u00E9nom : ");
+						sb.append(newFirstName);
+						sb.append('\n');
+					}
+					if(! Strings.isNullOrEmpty(newLastName))
+					{
+						sb.append("Nouveau nom : ");
+						sb.append(newLastName);
+						sb.append('\n');
+					}
+					String res = sb.toString();
+					while (res.contains("\n\n"))
+						res = res.replaceAll("\\n\\n", "\n");
+					if (res.endsWith("\n"))
+						res = res.substring(0, res.length() - 1);
+					JOptionPane.showMessageDialog(this.profileFrame, res, "Confirmation de changements", JOptionPane.INFORMATION_MESSAGE);
+					closeProfileFrame();
+				}
+			}
+			catch (JSONException ignored) {}
+			catch (IOException e)
+			{
+				popUpErrorConnection();
+			}
+			finally
+			{
+				stayAlive();
+			}
 	}
 }

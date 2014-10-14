@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import com.google.common.base.Strings;
 import fr.esgi.annuel.parser.ConnectionJsonParser;
-import fr.esgi.annuel.parser.ModifyProfileJsonParser;
+import fr.esgi.annuel.parser.ModifiedProfileJsonParser;
 import fr.esgi.annuel.parser.subclasses.ChangedValues;
 
 /**
@@ -80,9 +80,9 @@ public class ClientInfo
 	/**
 	* Set the new values from the server answer
 	*
-	* @param updatedInformation {{@link fr.esgi.annuel.parser.ModifyProfileJsonParser}} the parsed JSON from the ModifyProfile request
+	* @param updatedInformation {{@link fr.esgi.annuel.parser.ModifiedProfileJsonParser}} the parsed JSON from the ModifyProfile request
 	**/
-	public void updateInformation(ModifyProfileJsonParser updatedInformation)
+	public void updateInformation(ModifiedProfileJsonParser updatedInformation)
 	{
 		ChangedValues newValues = updatedInformation.getNewValues();
 		this.login = Strings.isNullOrEmpty(newValues.getLogin()) ? this.login : newValues.getLogin();

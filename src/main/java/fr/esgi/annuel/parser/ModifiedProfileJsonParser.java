@@ -5,14 +5,14 @@ import fr.esgi.annuel.parser.subclasses.ChangedValues;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ModifyProfileJsonParser
+public class ModifiedProfileJsonParser
 {
 	private String displayMessage = null;
 	private boolean error, profileModified;
 	private int httpCode = 200;
 	private ChangedValues newValues;
 
-	ModifyProfileJsonParser(JSONObject json) throws JSONException
+	ModifiedProfileJsonParser(JSONObject json) throws JSONException
 	{
 		this.error = json.getBoolean("error");
 		if (this.error)

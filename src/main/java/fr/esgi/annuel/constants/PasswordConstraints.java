@@ -10,7 +10,7 @@ import static fr.esgi.annuel.constants.Constants.*;
 public enum PasswordConstraints
 {
 	LENGTH("Votre mot de passe doit faire au moins 8 carat\u00E8res"),
-	SPECIAL_CHARACTER("Votre mot de passe doit contenir au moins l'un des caractères suivants : " + Arrays.toString(SPEC_CHARS)),
+	SPECIAL_CHARACTER("Votre mot de passe doit contenir au moins l'un des caract\u00E8res suivants : " + Arrays.toString(SPEC_CHARS)),
 	CONTAINS_NUMBER ("Votre mot de passe doit contenir au moins un chiffre"),
 	CONTAINS_MINUS_LETTER ("Votre mot de passe doit contenir une lettre minuscule"),
 	CONTAINS_MAJUSCULE_LETTER ("Votre mot de passe doit contenir une lettre majusucule"),

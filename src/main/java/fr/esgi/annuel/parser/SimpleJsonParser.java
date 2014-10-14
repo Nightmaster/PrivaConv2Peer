@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static fr.esgi.annuel.parser.JSONParser.REGISTRATION;
+
 public class SimpleJsonParser
 {
 	private String displayMessage = null;
@@ -27,7 +29,10 @@ public class SimpleJsonParser
 			this.displayMessage = json.getString("displayMessage");
 			this.httpCode = json.getInt("httpErrorCode");
 		}
-		this.status = json.getBoolean("validation");
+		if(REGISTRATION.equals(action))
+			this.status = json.getBoolean("validation");
+		else
+			this.status = json.getBoolean("disconnect");
 	}
 
 	public String getDisplayMessage()

@@ -212,27 +212,12 @@ public class IdentificationView extends JPanel implements Resettable
 	@Override
 	public final IdentificationView reset()
 	{
-		this.fPassword.setText(null);
-		if (this.chckbxRememberMe.isSelected())
-		{
-			this.fLoginValue.setText(this.fLoginValue.getText());
-			if (! this.fLoginValue.requestFocusInWindow())
-				this.fLoginValue.requestFocus();
-		}
-		else
-		{
-			this.fLoginValue.setText(null);
-			if (! this.fPassword.requestFocusInWindow())
-				this.fPassword.requestFocus();
-		}
 		return new IdentificationView(this.controller);
 	}
 
 	/**
 	* Initialize the {@link javax.swing.JTextField login field} with a default value.
 	* This function is to used when the status of the saved properties file is known as read, and contains a default login value
-	*
-	* @param value {@link java.lang.String}: the login to set in the {@link javax.swing.JTextField login field}
 	**/
 	private void setLoginValue()
 	{
