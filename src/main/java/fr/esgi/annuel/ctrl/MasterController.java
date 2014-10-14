@@ -82,9 +82,15 @@ public final class MasterController
 			else if (0 == res)
 				showProfile(username, this.window);
 			else if (1 == res)
+			{
 				answerRequest(username, true);
+				exit = true;
+			}
 			else
+			{
 				answerRequest(username, false);
+				exit = true;
+			}
 		}
 		while (!exit);
 	}
