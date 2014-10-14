@@ -12,7 +12,8 @@ public enum Parameters
 	FIRSTNAME("firstname"),
 	LASTNAME("name"),
 	KEY_LENGTH("length"),
-	VALIDATION("validate");
+	VALIDATION("validate"),
+	PORT("port");
 
 	private final String parameterValue;
 

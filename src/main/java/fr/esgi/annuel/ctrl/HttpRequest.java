@@ -73,6 +73,26 @@ public class HttpRequest
 	}
 
 	/**
+	* Initiate a connection to the server to make a set listening port action
+	*
+	* @param port {<code>int</code>}: the port value
+	* @param cookie the cookie used by the webAPI to authenticate the user
+	*
+	* @return the actual instance of the {@link fr.esgi.annuel.ctrl.HttpRequest}
+	*
+	*
+	* @throws IOException
+	**/
+	public final HttpRequest sendSetListeningPortRequest(int port, HttpCookie cookie) throws IOException
+	{
+		initConnection(ServerAction.SET_LISTENING_PORT,
+					   Parameters.PORT.getParameterValue() + "=" + Integer.toString(port));
+		this.connection.setRequestProperty("Cookie", cookie.toString());
+		this.connection.connect();
+		return this;
+	}
+
+	/**
 	* Initiate a connection to the server to make a stay alive action
 	*
 	* @param cookie the cookie used by the webAPI to authenticate the user
@@ -272,16 +292,10 @@ public class HttpRequest
 		return this;
 	}
 
-	public URLConnection getConnection()
-	{
-		return this.connection;
-	}
-
 	private void initConnection(ServerAction action, String... parameters) throws IOException
 	{
 		if (action.getAddressFor().contains("%s"))
-			System.out.println(this.serverAddress + ":" + this.serverPort + "/" + String.format(action.getAddressFor(), parameters[0]));
-			//this.connection = new URL(this.serverAddress + ":" + this.serverPort + "/" + String.format(action.getAddressFor(), parameters[0]));
+			this.connection = (HttpURLConnection) new URL(this.serverAddress + ":" + this.serverPort + "/" + String.format(action.getAddressFor(), parameters[0])).openConnection();
 		else
 		{
 			StringBuilder sb = new StringBuilder(512);
@@ -298,7 +312,6 @@ public class HttpRequest
 						sb.append('&');
 					sb.append(param);
 				}
-			//System.out.println(this.serverAddress + ":" + this.serverPort + "/" + action.getAddressFor() + sb.toString());
 			this.connection = (HttpURLConnection) new URL(this.serverAddress + ":" + this.serverPort + "/" + action.getAddressFor() + sb.toString()).openConnection();
 		}
 	}

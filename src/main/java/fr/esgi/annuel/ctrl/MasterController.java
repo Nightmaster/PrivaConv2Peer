@@ -15,6 +15,7 @@ import fr.esgi.annuel.constants.Views;
 import fr.esgi.annuel.gui.*;
 import fr.esgi.annuel.parser.*;
 import fr.esgi.annuel.parser.subclasses.ChangedValues;
+import fr.esgi.annuel.parser.subclasses.IpAndPort;
 import fr.esgi.annuel.server.Server;
 import org.json.JSONException;
 
@@ -96,6 +97,11 @@ public final class MasterController
 									  "Vous avez \u00E9t\u00E9 d\u00E9connect\u00E9 suite \u00E0 votre inactivit\u00E9 de plus de 15 minutes",
 									  "D\u00E9connexion automatique",
 									  JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	private void openErrorPopup(String errorMessage, Component focusOwner)
+	{
+		JOptionPane.showMessageDialog(focusOwner, errorMessage, "Erreur", JOptionPane.ERROR_MESSAGE);
 	}
 
 	/**
@@ -257,10 +263,12 @@ public final class MasterController
 			throw new IllegalArgumentException("Both arguments hashPw && hashPwK must have been hashed for security reasons !");
 		try
 		{
-			return this.httpRequest.sendRegisterRequest(username, emailAddress, hashPw, firstName, lastName, keyLength, hashPwKey).getContent();
+			this.cookie = this.httpRequest.sendRegisterRequest(username, emailAddress, hashPw, firstName, lastName, keyLength, hashPwKey).getCookie();
+			return this.httpRequest.getContent();
 		}
 		catch (IOException ignored)
 		{
+			popUpErrorConnection();
 			return null;
 		}
 	}
@@ -279,7 +287,7 @@ public final class MasterController
 			this.cookie = this.httpRequest.sendConnectionRequest(username, emailAddress, hashPw).getCookie();
             ConnectionJsonParser connectionJson = JSONParser.getConnectionParser(this.httpRequest.getContent());
 			if (connectionJson.isError())
-				JOptionPane.showMessageDialog(this.identificationView, connectionJson.getDisplayMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+				openErrorPopup(connectionJson.getDisplayMessage(), this.window);
 			else if (connectionJson.isConnectionValidated())
 			{
 				this.userConnected = true;
@@ -309,10 +317,11 @@ public final class MasterController
 		if (0 < new Date().compareTo(new Date(this.cookie.getMaxAge() * 1000)))
 			try
 			{
-				StayAliveJsonParser stAlJson = JSONParser.getStayAliveParser(this.httpRequest.sendStayAliveRequest(this.cookie).getContent());
+				this.cookie = this.httpRequest.sendStayAliveRequest(this.cookie).getCookie();
+				StayAliveJsonParser stAlJson = JSONParser.getStayAliveParser(this.httpRequest.getContent());
 				if (stAlJson.isError())
 				{
-					JOptionPane.showMessageDialog(MasterController.this.window, stAlJson.getDisplayMessage(), "Erreur Stay Alive !!!", JOptionPane.ERROR_MESSAGE);
+					openErrorPopup(stAlJson.getDisplayMessage(), this.window);
 					this.window.setView(actualPanel = this.identificationView.reset(), Views.IDENTIFICATION);
 					openDisconnectPopup();
 					return;
@@ -352,8 +361,7 @@ public final class MasterController
 			try
 			{
 				//FIXME utiliser le parseur
-				this.httpRequest.sendAnswerReqRequest(askerName, answer, this.cookie);
-				this.cookie = this.httpRequest.getCookie();
+				this.cookie = this.httpRequest.sendAnswerReqRequest(askerName, answer, this.cookie).getCookie();
 			}
 			catch (IOException ioe)
 			{
@@ -381,9 +389,11 @@ public final class MasterController
 		if (0 < new Date().compareTo(new Date(this.cookie.getMaxAge() * 1000)))
 			try
 			{
-				ShowProfileJsonParser showProfileJson = JSONParser.getShowProfileParser(this.httpRequest.sendShowProfileRequest(username, this.cookie).getContent());
+				this.cookie = this.httpRequest.sendShowProfileRequest(username, this.cookie).getCookie();
+				ShowProfileJsonParser showProfileJson = JSONParser.getShowProfileParser(this.httpRequest.getContent());
+				this.cookie = this.httpRequest.getCookie();
 				if (showProfileJson.isError())
-					JOptionPane.showMessageDialog(component, showProfileJson.getDisplayMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+					openErrorPopup(showProfileJson.getDisplayMessage(), component);
 				JOptionPane.showMessageDialog(component, showProfileJson.getProfile().toString(), "Profil de " + username, JOptionPane.PLAIN_MESSAGE);
 			}
 			catch (JSONException ignored) {}
@@ -414,9 +424,10 @@ public final class MasterController
 			try
 			{
 				String username = login.contains("@") ? null : login, email = login.contains("@") ? login : null;
-				AddFriendJsonParser addFriendJson = JSONParser.getAddFriendParser(this.httpRequest.sendAddFriendRequest(username, email, this.cookie).getContent());
+				this.cookie = this.httpRequest.sendAddFriendRequest(username, email, this.cookie).getCookie();
+				AddFriendJsonParser addFriendJson = JSONParser.getAddFriendParser(this.httpRequest.getContent());
 				if (addFriendJson.isError())
-					JOptionPane.showMessageDialog(componentCallee, addFriendJson.getDisplayMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+					openErrorPopup(addFriendJson.getDisplayMessage(), componentCallee);
 				else
 					JOptionPane.showMessageDialog(componentCallee, "Votre invitation a \u00E9t\u00E9 correctement envoy\u00E9e", "Invitation envoy\u00E9e", JOptionPane.INFORMATION_MESSAGE);
 			}
@@ -449,9 +460,11 @@ public final class MasterController
 		if (0 < new Date().compareTo(new Date(this.cookie.getMaxAge() * 1000)))
 			try
 			{
-				SearchJsonParser searchJson = JSONParser.getSearchParser(this.httpRequest.sendSearchRequest(username, email, firstName, lastName, this.cookie).getContent());
+				this.cookie = this.httpRequest.sendSearchRequest(username, email, firstName, lastName, this.cookie).getCookie();
+				SearchJsonParser searchJson = JSONParser.getSearchParser(this.httpRequest.getContent());
+				this.cookie = this.httpRequest.getCookie();
 				if (searchJson.isError())
-					JOptionPane.showMessageDialog(this.searchFrame, searchJson.getDisplayMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+					openErrorPopup(searchJson.getDisplayMessage(), this.searchFrame);
 				else
 					this.searchFrame.setResultView(new ResultView(this, searchJson.getProfiles()));
 			}
@@ -471,6 +484,9 @@ public final class MasterController
 		}
 	}
 
+	/**
+	* Perform a disconnect request to the server, erase the user's information and go back to the identification view
+	**/
 	public final void disconnect()
 	{
 		if (userConnected)
@@ -479,7 +495,7 @@ public final class MasterController
 				{
 					SimpleJsonParser disconnectionJson = JSONParser.getDisconnectionParser(this.httpRequest.sendDisonnectRequest(this.cookie).getContent());
 					if(disconnectionJson.isError())
-						JOptionPane.showMessageDialog(this.searchFrame, disconnectionJson.getDisplayMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+						openErrorPopup(disconnectionJson.getDisplayMessage(), this.window);
 				}
 				catch (JSONException ignored) {ignored.printStackTrace();}
 				catch (IOException e)
@@ -492,17 +508,28 @@ public final class MasterController
 				openDisconnectPopup();
 			}
 		changeView(Views.IDENTIFICATION);
+		this.cookie = null;
 		this.userConnected = false;
 		this.user = null;
 	}
 
+	/**
+	* Perform a user's information update request to the server with the given values
+	*
+	* @param login {{@link java.lang.String}}: the new user's login
+	* @param email {{@link java.lang.String}}:  the new user'semail
+	* @param hashPw {{@link java.lang.String}}:  the MD5 hash of the new user's password
+	* @param firstName {{@link java.lang.String}}:  the new user's firstname
+	* @param lastName {{@link java.lang.String}}:  the new user's lastname
+	**/
 	public final void updateInfos(String login, String email, String hashPw, String firstName, String lastName)
 	{
 		assert 32 == hashPw.length() : "Le mot de passe doit \u00E7tre envoyé hashé !";
 		if (0 < new Date().compareTo(new Date(this.cookie.getMaxAge() * 1000)))
 			try
 			{
-				ModifiedProfileJsonParser modifiedProfileJson = JSONParser.getModifyProfileParser(this.httpRequest.sendUpdateInfosRequest(login, email, hashPw, firstName, lastName, this.cookie).getContent());
+				this.cookie = this.httpRequest.sendUpdateInfosRequest(login, email, hashPw, firstName, lastName, this.cookie).getCookie();
+				ModifiedProfileJsonParser modifiedProfileJson = JSONParser.getModifyProfileParser(this.httpRequest.getContent());
 				if(modifiedProfileJson.isError())
 					JOptionPane.showMessageDialog(this.searchFrame, modifiedProfileJson.getDisplayMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
 				else
@@ -561,5 +588,52 @@ public final class MasterController
 			{
 				stayAlive();
 			}
+		else
+		{
+			this.window.setView(actualPanel = this.identificationView.reset(), Views.IDENTIFICATION);
+			openDisconnectPopup();
+		}
+	}
+
+	/**
+	* Perform a demand for a user's IP and port request to the server
+	*
+	* @param username {{@link java.lang.String}}: the user's username from which one you want the both IP and port
+	*
+	* @return {{@link fr.esgi.annuel.parser.subclasses.IpAndPort}}: the class containing the requested data
+	**/
+	public final IpAndPort getUserIpAndPort(String username)
+	{
+		if (0 < new Date().compareTo(new Date(this.cookie.getMaxAge() * 1000)))
+			try
+			{
+				this.cookie = this.httpRequest.sendGetClientIpRequest(username, this.cookie).getCookie();
+				ClientIpJsonParser clientIpJson = JSONParser.getClientIpParser(this.httpRequest.getContent());
+				if (clientIpJson.isError())
+				{
+					openErrorPopup(clientIpJson.getDisplayMessage(), this.window);
+					return null;
+				}
+				return clientIpJson.getIpAndPort();
+			}
+			catch (JSONException ignored)
+			{
+				return null;
+			}
+			catch (IOException e)
+			{
+				popUpErrorConnection();
+				return null;
+			}
+			finally
+			{
+				stayAlive();
+			}
+		else
+		{
+			this.window.setView(actualPanel = this.identificationView.reset(), Views.IDENTIFICATION);
+			openDisconnectPopup();
+			return null;
+		}
 	}
 }

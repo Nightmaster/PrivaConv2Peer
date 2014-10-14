@@ -1,8 +1,7 @@
 package fr.esgi.annuel.parser;
 
 import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import fr.esgi.annuel.parser.subclasses.IpAndPort;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,7 +10,7 @@ public class ClientIpJsonParser
 	private String displayMessage = null;
 	private boolean error;
 	private int httpCode = 200;
-	private InetAddress ipAdress = null;
+	private IpAndPort ipAndPort = null;
 
 	/**
 	 * This class is made to parse the JSON returned by the server's web service when a user IP demand is done
@@ -27,14 +26,8 @@ public class ClientIpJsonParser
 			this.displayMessage = json.getString("displayMessage");
 			this.httpCode = json.getInt("httpErrorCode");
 		}
-		try
-		{
-			this.ipAdress = InetAddress.getByName(json.getString("ip"));
-		}
-		catch (UnknownHostException e)
-		{
-			e.printStackTrace();
-		}
+		else
+			this.ipAndPort = new IpAndPort(json.getJSONObject("infos"));
 	}
 
 	public String getDisplayMessage()
@@ -54,9 +47,9 @@ public class ClientIpJsonParser
 		return this.httpCode;
 	}
 
-	public InetAddress getIpAdress()
+	public IpAndPort getIpAndPort()
 	{
-		return this.ipAdress;
+		return this.ipAndPort;
 	}
 
 	public boolean isError()

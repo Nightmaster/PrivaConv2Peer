@@ -35,6 +35,20 @@ public enum ServerAction
 			return false;
 		}
 	},
+	SET_LISTENING_PORT("webAPI/setListeningPort")
+	{
+		@Override
+		public String[] getAllowedParameters()
+		{
+			return new String[] {USERNAME.getParameterValue(), PORT.getParameterValue()};
+		}
+
+		@Override
+		public boolean isPathParameter()
+		{
+			return false;
+		}
+	},
 	STAY_ALIVE("webAPI/stayAlive")
 	{
 		@Override
