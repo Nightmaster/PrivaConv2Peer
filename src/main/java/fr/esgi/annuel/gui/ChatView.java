@@ -1,5 +1,14 @@
 package fr.esgi.annuel.gui;
 
+import fr.esgi.annuel.client.ClientInfo;
+import fr.esgi.annuel.client.Friend;
+import fr.esgi.annuel.ctrl.MasterController;
+import fr.esgi.annuel.message.Message;
+import fr.esgi.annuel.message.MessageQueue;
+import fr.esgi.annuel.parser.ConnectionJsonParser;
+import fr.esgi.annuel.parser.subclasses.IpAndPort;
+import fr.esgi.annuel.server.Client;
+
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -11,20 +20,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import fr.esgi.annuel.client.ClientInfo;
-import fr.esgi.annuel.client.contact.Contacts;
-import fr.esgi.annuel.ctrl.MasterController;
-import fr.esgi.annuel.message.Message;
-import fr.esgi.annuel.message.MessageQueue;
-import fr.esgi.annuel.parser.subclasses.IpAndPort;
-import fr.esgi.annuel.server.Client;
 
 public class ChatView extends JPanel
 {
 	private static ClientInfo logedUser;
 	private boolean clearArea = false;
     private MasterController controller;
-	private String currentInterlocuteur = "";;
+	private String currentInterlocuteur = "";
 	private Map<String, String> discution = new HashMap<>();
 	private JList<String> list;
 	private JTextPane text = new JTextPane();
@@ -33,13 +35,17 @@ public class ChatView extends JPanel
 	private DefaultListModel<String> contacts = new DefaultListModel<>();
 	private JButton send = new JButton("Envoyer");
 	private JPanel panel = new JPanel();
+    private ClientInfo user;
+    private ConnectionJsonParser cjp;
 
 	/**
 	 * Create the panel.
 	 */
-	public ChatView(MasterController controller, ClientInfo user)
+	public ChatView(MasterController controller, ClientInfo user, ConnectionJsonParser jsonParser)
 	{
         this.controller = controller;
+        this.user = user;
+        this.cjp = jsonParser;
 		MasterController.setLookAndFeel();
 
 		initialize(user);
@@ -68,9 +74,8 @@ public class ChatView extends JPanel
 	private void initialize(ClientInfo user)
 	{
         logedUser = user;
-		for (String pseudo : Contacts.getAllPseudo()) {
-            this.contacts.addElement(pseudo);
-            System.out.println(pseudo);
+		for (Friend pseudo : cjp.getFriendList()) {
+            this.contacts.addElement(pseudo.getUsername());
         }
         this.contacts.addElement("stefens");
         this.contacts.addElement("brunogb");
@@ -140,10 +145,10 @@ public class ChatView extends JPanel
 			{
 				Message mess = new Message();
 				mess.setMessage(ChatView.this.textArea.getText());
-				mess.setReceiveDate(new Date());
-				MessageQueue.addMessage(logedUser.getLogin(), mess);
+                mess.setReceiveDate(new Date());
+                MessageQueue.addMessage(logedUser.getLogin(), mess);
                 MessageQueue.addMessageToPrint(logedUser.getLogin(), mess);
-				ChatView.this.clearArea = true;
+                ChatView.this.clearArea = true;
 			}
 			ChatView.this.textPane.getVerticalScrollBar().setValue(ChatView.this.text.getText().length());
             ChatView.this.repaint();
@@ -192,7 +197,7 @@ public class ChatView extends JPanel
 				ChatView.this.currentInterlocuteur = ChatView.this.list.getSelectedValue();
                 IpAndPort ipPort = ChatView.this.controller.getUserIpAndPort(ChatView.this.currentInterlocuteur);
                 System.out.println(ipPort.getPort());
-                Thread t = new Thread (new Client(ipPort.getIpAdress(),ipPort.getPort()));
+                Thread t = new Thread (new Client(ipPort.getIpAdress(),ipPort.getPort(),ChatView.this.currentInterlocuteur));
                 t.start();
 				ChatView.this.text.setText(ChatView.this.discution.get(ChatView.this.currentInterlocuteur));
 			}

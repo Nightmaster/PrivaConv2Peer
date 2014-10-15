@@ -82,12 +82,12 @@ public final class MasterController
 				showProfile(username, this.window);
 			else if (1 == res)
 			{
-				answerRequest(username, true);
+				answerRequest(username, false);
 				exit = true;
 			}
 			else
 			{
-				answerRequest(username, false);
+				answerRequest(username, true);
 				exit = true;
 			}
 		}
@@ -131,15 +131,13 @@ public final class MasterController
 		this.identificationView = new IdentificationView(this);
 		this.registerView = new RegisterView(this);
 		this.profileView = new ProfileView(this);
-		EventQueue.invokeLater(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				MasterController.this.searchFrame = new SearchFrame(MasterController.this);
-				MasterController.this.searchView = new SearchView(MasterController.this);
-			}
-		});
+		EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                MasterController.this.searchFrame = new SearchFrame(MasterController.this);
+                MasterController.this.searchView = new SearchView(MasterController.this);
+            }
+        });
 	}
 
 	public final void changeView(Views view/*, Map<String, Object> map*/)
@@ -212,25 +210,21 @@ public final class MasterController
 	public final void launch()
 	{
 		initializeComponents();
-		EventQueue.invokeLater(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				setLookAndFeel();
-				window = new MasterWindow(MasterController.this);
-				propertiesController.restorePosition(window);
-				MasterController.this.window.addComponentListener(new ComponentAdapter()
-				{
-					@Override
-					public void componentMoved(ComponentEvent e)
-					{
-						propertiesController.storePosition(window);
-					}
-				});
-				MasterController.this.window.setVisible(true);
-			}
-		});
+		EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                setLookAndFeel();
+                window = new MasterWindow(MasterController.this);
+                propertiesController.restorePosition(window);
+                MasterController.this.window.addComponentListener(new ComponentAdapter() {
+                    @Override
+                    public void componentMoved(ComponentEvent e) {
+                        propertiesController.storePosition(window);
+                    }
+                });
+                MasterController.this.window.setVisible(true);
+            }
+        });
 	}
 
 	/**
@@ -296,7 +290,7 @@ public final class MasterController
 				this.userConnected = true;
 				this.user = new ClientInfo(connectionJson);
                 // Démarrer le serveur
-                this.chatView = new ChatView(this,this.user);
+                this.chatView = new ChatView(this,this.user,connectionJson);
                 Thread t = new Thread(new Server(this));
                 t.start();
 				changeView(Views.CHAT);
