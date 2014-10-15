@@ -69,8 +69,7 @@ public class Server implements Runnable
             Socket socket = server.accept();
             while (true) {
                 System.out.println(socket.getInetAddress() + " " + socket.getPort());
-                //FIXME ajouter la couche de décryptage
-                byte[] b = new byte[256]; //FIXME voir comment gérer des messages très long sans splitter
+                byte[] b = new byte[256]; //TDL voir comment gérer des messages très long sans splitter
                 int count;
                 while ((count = socket.getInputStream().read(b)) > 0)
                     System.out.println(new String(Arrays.copyOf(b, count)));
