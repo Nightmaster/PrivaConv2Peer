@@ -24,7 +24,7 @@ public class PrivateKeyJsonParser
 			this.displayMessage = json.getString("displayMessage");
 			this.httpCode = json.getInt("httpErrorCode");
 		}
-		this.privateKey = json.getString("prKey");
+		this.privateKey = json.getString("prKey").replace("\n", "");
 	}
 
 	public String getDisplayMessage()

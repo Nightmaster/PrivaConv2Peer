@@ -31,7 +31,7 @@ public class PublicKeyJsonParser
 			try
 			{
 				this.username = json.getJSONObject("user").getString("username");
-				this.publicKey = json.getJSONObject("user").getString("pubKey");
+				this.publicKey = json.getJSONObject("user").getString("pubKey").replace("\n", "");
 			}
 			catch (JSONException ignored) {}
 		}

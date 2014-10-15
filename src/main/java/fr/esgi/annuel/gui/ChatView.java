@@ -50,9 +50,13 @@ public class ChatView extends JPanel
         this.controller = controller;
 		try
 		{
-			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-			KeySpec privateKeySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(this.controller.getPrivateKey(user.getLogin())));
-			this.privateKey = keyFactory.generatePrivate(privateKeySpec);
+			String key = this.controller.getPrivateKey(user.getLogin());
+			if(null != key)
+			{
+				KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+				KeySpec privateKeySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(key));
+				this.privateKey = keyFactory.generatePrivate(privateKeySpec);
+			}
 		}
 		catch (NoSuchAlgorithmException | InvalidKeySpecException e)
 		{
