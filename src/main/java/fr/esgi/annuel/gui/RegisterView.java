@@ -22,24 +22,22 @@ import static org.jdesktop.xswingx.PromptSupport.setPrompt;
 
 public class RegisterView extends JPanel implements Resettable
 {
-	private final RegisterViewKeyPart nextView;
 	private final JTextField[] textFields;
 	private final JPasswordField[] passwordFields;
 	private JLabel lPseudo, lUserEmail, lLastName, lFirstName, lPassword, lPasswordAgain;
 	private JTextField fPseudo, fEmail, fLastName, fFirstName;
 	private JPasswordField fPassword, fPasswordAgain;
-	private JButton btnNext, btnCancel;
+	private JButton btnRegister, btnCancel;
 	private String pw, login, email, firstName, lastName;
 	private MasterController controller;
 
 	/**
 	* Create and init the panel.
 	**/
-	public RegisterView(MasterController controller, RegisterViewKeyPart nextView)
+	public RegisterView(MasterController controller)
 	{
 		this.controller = controller;
 		MasterController.setLookAndFeel();
-		this.nextView = nextView;
 		//@formatter:off
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
@@ -71,8 +69,8 @@ public class RegisterView extends JPanel implements Resettable
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(18)
 					.addComponent(getBtnCancel())
-					.addGap(19)
-					.addComponent(getBtnNext()))
+					.addGap(45)
+					.addComponent(getBtnRegister()))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -114,7 +112,7 @@ public class RegisterView extends JPanel implements Resettable
 					.addGap(11)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addComponent(getBtnCancel())
-						.addComponent(getBtnNext())))
+						.addComponent(getBtnRegister())))
 		);
 		setLayout(groupLayout);
 		//@formatter:on
@@ -132,15 +130,15 @@ public class RegisterView extends JPanel implements Resettable
 		return this.btnCancel;
 	}
 
-	private JButton getBtnNext()
+	private JButton getBtnRegister()
 	{
-		if (this.btnNext == null)
+		if (this.btnRegister == null)
 		{
-			this.btnNext = new JButton("Etape suivante");
-			this.btnNext.addActionListener(new ButtonListener());
-			this.btnNext.setEnabled(false);
+			this.btnRegister = new JButton("S'enregistrer");
+			this.btnRegister.addActionListener(new ButtonListener());
+			this.btnRegister.setEnabled(false);
 		}
-		return this.btnNext;
+		return this.btnRegister;
 	}
 
 	private JTextField getFieldEmail()
@@ -259,16 +257,6 @@ public class RegisterView extends JPanel implements Resettable
 		return this.lUserEmail;
 	}
 
-	public void sendValuesToNextView()
-	{
-		final HashMap<StoredValues, String> values = new HashMap<>();
-		values.put(StoredValues.LOGIN, this.login);
-		values.put(StoredValues.EMAIL, this.email);
-		values.put(StoredValues.LASTNAME, this.lastName);
-		values.put(StoredValues.FIRSTNAME, this.firstName);
-		values.put(StoredValues.HASHED_PASSWORD, PasswordUtilities.hashPassword(this.pw));
-		this.nextView.setPrevViewValues(values);
-	}
 
 	@Override
 	public RegisterView reset()
@@ -291,7 +279,7 @@ public class RegisterView extends JPanel implements Resettable
 		public void actionPerformed(ActionEvent e)
 		{
 
-			if (RegisterView.this.btnNext.equals(e.getSource()))
+			if (RegisterView.this.btnRegister.equals(e.getSource()))
 			{
 				RegisterView.this.pw = String.valueOf(RegisterView.this.fPassword.getPassword());
 				RegisterView.this.login = RegisterView.this.fPseudo.getText();
@@ -321,8 +309,7 @@ public class RegisterView extends JPanel implements Resettable
 
 				if ("".equals(sb.toString())) //if no error has been detected
 				{
-					sendValuesToNextView();
-					RegisterView.this.controller.changeView(Views.REGISTER_PART_2);
+					RegisterView.this.controller.register(RegisterView.this.login, RegisterView.this.email, PasswordUtilities.hashPassword(RegisterView.this.pw), RegisterView.this.firstName, RegisterView.this.lastName);
 				}
 				else
 				{
@@ -336,8 +323,7 @@ public class RegisterView extends JPanel implements Resettable
 			}
 			else // if (RegisterView.this.btnCancel.equals(e.getSource()))
 			{
-				reset()
-				.nextView.reset();
+				reset();
 				RegisterView.this.controller.changeView(Views.IDENTIFICATION);
 			}
 		}
@@ -351,7 +337,7 @@ public class RegisterView extends JPanel implements Resettable
 			{
 				if (field.getText().trim().isEmpty())
 				{
-					RegisterView.this.btnNext.setEnabled(false);
+					RegisterView.this.btnRegister.setEnabled(false);
 					return;
 				}
 			}
@@ -359,11 +345,11 @@ public class RegisterView extends JPanel implements Resettable
 			{
 				if (Strings.isNullOrEmpty(String.valueOf(field.getPassword())))
 				{
-					RegisterView.this.btnNext.setEnabled(false);
+					RegisterView.this.btnRegister.setEnabled(false);
 					return;
 				}
 			}
-			RegisterView.this.btnNext.setEnabled(true);
+			RegisterView.this.btnRegister.setEnabled(true);
 		}
 
 		@Override

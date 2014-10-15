@@ -38,16 +38,14 @@ public class HttpRequest
 	*
 	* @throws IOException
 	**/
-	public final HttpRequest sendRegisterRequest(String username, String email, String hashPw, String firstname, String name, int length, String hashPwKey) throws IOException
+	public final HttpRequest sendRegisterRequest(String username, String email, String hashPw, String firstname, String name) throws IOException
 	{
 		initConnection(ServerAction.REGISTER,
 					   Parameters.USERNAME.getParameterValue() + "=" + username,
 					   Parameters.EMAIL.getParameterValue() + "=" + email,
 					   Parameters.PASSWORD.getParameterValue() + "=" + hashPw,
 					   Parameters.FIRSTNAME.getParameterValue() + "=" + firstname,
-					   Parameters.LASTNAME.getParameterValue() + "=" + name,
-					   Parameters.PASSWORD_KEY.getParameterValue() + "=" + hashPwKey,
-					   Parameters.KEY_LENGTH.getParameterValue() + "=" + Integer.toString(length));
+					   Parameters.LASTNAME.getParameterValue() + "=" + name);
 		return this;
 	}
 

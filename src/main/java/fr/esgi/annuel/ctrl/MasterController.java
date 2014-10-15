@@ -34,7 +34,6 @@ public final class MasterController
 	private IdentificationView identificationView;
 	private ProfileView profileView;
 	private RegisterView registerView;
-	private RegisterViewKeyPart registerKeyPartView;
 	private SearchView searchView;
 
 	/**
@@ -130,8 +129,7 @@ public final class MasterController
 	public void initializeComponents()
 	{
 		this.identificationView = new IdentificationView(this);
-		this.registerKeyPartView = new RegisterViewKeyPart(this);
-		this.registerView = new RegisterView(this, this.registerKeyPartView);
+		this.registerView = new RegisterView(this);
 		this.profileView = new ProfileView(this);
 		EventQueue.invokeLater(new Runnable()
 		{
@@ -157,12 +155,6 @@ public final class MasterController
 			setLookAndFeel();
 			this.window.setView(this.registerView, view);
 			setActualPanel(this.registerView);
-		}
-		else if (Views.REGISTER_PART_2.equals(view))
-		{
-			setLookAndFeel();
-			this.window.setView(this.registerKeyPartView, view);
-			setActualPanel(this.registerKeyPartView);
 		}
 		else if (Views.PROFILE.equals(view))
 		{
@@ -259,25 +251,28 @@ public final class MasterController
 	* @param hashPw       {{@link java.lang.String}}: The MD5 hash of the user's password
 	* @param firstName    {{@link java.lang.String}}: The user's first name
 	* @param lastName     {{@link java.lang.String}}: The user's last name
-	* @param keyLength    {<ocde>int</ocde>}: The chosen key length
-	* @param hashPwKey    {{@link java.lang.String}}: The user's password for his private key
-	* @return {{@link java.lang.String}}: The stringified answer returned by the server after the request
 	*
 	* @throws java.lang.IllegalArgumentException if password are not MD5 hashed
 	**/
-	public final String register(String username, String emailAddress, String hashPw, String firstName, String lastName, int keyLength, String hashPwKey) throws IllegalArgumentException
+	public final void register(String username, String emailAddress, String hashPw, String firstName, String lastName) throws IllegalArgumentException
 	{
-		if (32 != hashPw.length() || 32 != hashPwKey.length())
+		if (32 != hashPw.length())
 			throw new IllegalArgumentException("Both arguments hashPw && hashPwK must have been hashed for security reasons !");
 		try
 		{
-			this.cookie = this.httpRequest.sendRegisterRequest(username, emailAddress, hashPw, firstName, lastName, keyLength, hashPwKey).getCookie();
-			return this.httpRequest.getContent();
+			SimpleJsonParser registerJson = JSONParser.getRegistrationParser(this.httpRequest.sendRegisterRequest(username, emailAddress, hashPw, firstName, lastName).getContent());
+			if (registerJson.isError())
+				JOptionPane.showMessageDialog(this.window, registerJson.getDisplayMessage(), "Erreur \u00E0 l'enregistrement", JOptionPane.ERROR_MESSAGE);
+			else
+			{
+				JOptionPane.showMessageDialog(this.window, "F\u00E9licitation, vous \u00EAtes bien enregistr\u00E9", "Validation d'enregistrement", JOptionPane.INFORMATION_MESSAGE);
+				changeView(Views.IDENTIFICATION);
+			}
 		}
-		catch (IOException ignored)
+		catch (JSONException ignored) {}
+		catch (IOException e)
 		{
 			popUpErrorConnection();
-			return null;
 		}
 	}
 

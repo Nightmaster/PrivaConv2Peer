@@ -6,7 +6,6 @@ public enum Views
 	REGISTER("Register"),
 	CHAT("Chat"),
 	PROFILE("Profile"),
-	REGISTER_PART_2("Register - key part"),
 	SEARCH("Search"),
 	SEARCH_RESULT("Search result");
 
