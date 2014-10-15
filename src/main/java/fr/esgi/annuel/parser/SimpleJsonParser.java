@@ -4,8 +4,7 @@ import java.io.UnsupportedEncodingException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static fr.esgi.annuel.parser.JSONParser.DISCONNECTION;
-import static fr.esgi.annuel.parser.JSONParser.REGISTRATION;
+import static fr.esgi.annuel.parser.JSONParser.*;
 
 public class SimpleJsonParser
 {
@@ -22,7 +21,7 @@ public class SimpleJsonParser
 	 **/
 	SimpleJsonParser(JSONObject json, String action) throws JSONException
 	{
-		if (! "registration" .equalsIgnoreCase(action) && ! "disconnection".equalsIgnoreCase(action))
+		if (! REGISTRATION.equalsIgnoreCase(action) && ! DISCONNECTION.equalsIgnoreCase(action) && SET_LISTENING_PORT.equalsIgnoreCase(action))
 			throw new IllegalArgumentException("action parameter must be: \"Registration\" or \"Disconnection\" (not case sensitive)!");
 		this.error = json.getBoolean("error");
 		if (this.error)
