@@ -1,15 +1,17 @@
 package fr.esgi.annuel.server;
 
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.io.IOException;
+import java.net.*;
 import java.util.Arrays;
-import java.net.InetAddress;
 import java.util.Map;
 
 import fr.esgi.annuel.ctrl.MasterController;
 import org.bitlet.weupnp.GatewayDevice;
 import org.bitlet.weupnp.GatewayDiscover;
 import org.bitlet.weupnp.PortMappingEntry;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 public class Server implements Runnable
 {
@@ -22,7 +24,7 @@ public class Server implements Runnable
         this.controller = controller;
     }
 	@Override
-	public void run() {
+	public void run(){
         GatewayDevice activeGW = null;
         try {
             //décrouvrir la box
@@ -53,20 +55,21 @@ public class Server implements Runnable
                     if (activeGW.getSpecificPortMappingEntry(samplePort, "TCP", portMapping)) {
                         samplePort++;
                     } else {
-                        portMapped = true;
+                        if (activeGW.addPortMapping(samplePort, samplePort, localAddress.getHostAddress(), "TCP", "test")) {
+                            portMapped = true;
+                        }
                     }
-                } catch (Exception e) {
+            } catch (SAXException e) {
                     e.printStackTrace();
-                } finally {
-                    System.out.println(samplePort);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            }
-            System.out.println(samplePort);
-            this.controller.setListeningPort(samplePort);
+
+                this.controller.setListeningPort(samplePort);
             ServerSocket server = new ServerSocket(samplePort);
             System.out.println("Server Launched");
+            Socket socket = server.accept();
             while (true) {
-                Socket socket = server.accept();
                 System.out.println(socket.getInetAddress() + " " + socket.getPort());
                 //FIXME ajouter la couche de décryptage
                 byte[] b = new byte[256]; //FIXME voir comment gérer des messages très long sans splitter
@@ -75,9 +78,19 @@ public class Server implements Runnable
                     System.out.println(new String(Arrays.copyOf(b, count)));
                 socket.close();
             }
-        } catch (Exception e) {
+        }
+    } catch (ParserConfigurationException e) {
             e.printStackTrace();
-        } finally {
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        }
+        finally {
             try{
                 activeGW.deletePortMapping(samplePort, "TCP");
             }

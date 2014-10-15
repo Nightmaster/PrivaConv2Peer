@@ -1,7 +1,6 @@
 package fr.esgi.annuel.server;
 
 
-import fr.esgi.annuel.gui.ChatView;
 import fr.esgi.annuel.message.Message;
 import fr.esgi.annuel.message.MessageQueue;
 
