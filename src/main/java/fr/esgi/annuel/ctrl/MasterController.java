@@ -301,8 +301,8 @@ public final class MasterController
 				this.userConnected = true;
 				this.user = new ClientInfo(connectionJson);
                 // Démarrer le serveur
-                this.chatView = new ChatView(this.user);
-                Thread t = new Thread(new Server());
+                this.chatView = new ChatView(this,this.user);
+                Thread t = new Thread(new Server(this));
                 t.start();
 				changeView(Views.CHAT);
 			}

@@ -1,39 +1,34 @@
 package fr.esgi.annuel.server;
 
-import java.io.IOException;
 import java.net.Socket;
-import java.util.Scanner;
+import java.util.Arrays;
 
 public class Client implements Runnable
 {
-	private final Socket socket;
+    private String address;
+    private int port;
 	public Client(String address, int port)
 	{
-		Socket soc;
-		try
-		{
-			soc = new Socket(address, port);
-		}
-		catch (IOException ignored)
-		{
-			soc = null;
-		}
-		this.socket = soc;
-		if(null == this.socket)
-			return;
+		this.address = address;
+        this.port = port;
 	}
 
 	@Override
 	public void run()
 	{
-		try
-		{
-			Scanner scanner = new Scanner(System.in);
-			String st;
-			while ((st = scanner.nextLine()).trim().length() > 0)
-				this.socket.getOutputStream().write(st.getBytes());
-			scanner.close();
-		}
-		catch (Exception ignored) {}
-	}
+        try {
+            // Connexion à la box de l'interlocuteur
+            Socket s = new Socket(this.address, this.port);
+            byte[] b = new byte[256];
+            int count;
+            System.out.println("Client lancé");
+            while ((count = s.getInputStream().read(b)) > 0) {
+                System.out.println(new String(Arrays.copyOf(b, count)));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 }

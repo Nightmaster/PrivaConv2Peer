@@ -21,7 +21,7 @@ public class SimpleJsonParser
 	 **/
 	SimpleJsonParser(JSONObject json, String action) throws JSONException
 	{
-		if (! REGISTRATION.equalsIgnoreCase(action) && ! DISCONNECTION.equalsIgnoreCase(action) && SET_LISTENING_PORT.equalsIgnoreCase(action))
+		if (! REGISTRATION.equalsIgnoreCase(action) && ! DISCONNECTION.equalsIgnoreCase(action) && ! SET_LISTENING_PORT.equalsIgnoreCase(action))
 			throw new IllegalArgumentException("action parameter must be: \"Registration\" or \"Disconnection\" (not case sensitive)!");
 		this.error = json.getBoolean("error");
 		if (this.error)
