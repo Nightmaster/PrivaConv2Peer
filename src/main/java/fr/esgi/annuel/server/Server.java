@@ -1,17 +1,15 @@
 package fr.esgi.annuel.server;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.net.*;
 import java.util.Arrays;
 import java.util.Map;
-
 import fr.esgi.annuel.ctrl.MasterController;
 import org.bitlet.weupnp.GatewayDevice;
 import org.bitlet.weupnp.GatewayDiscover;
 import org.bitlet.weupnp.PortMappingEntry;
 import org.xml.sax.SAXException;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 public class Server implements Runnable
 {
@@ -89,15 +87,6 @@ public class Server implements Runnable
             e.printStackTrace();
         } catch (SAXException e) {
             e.printStackTrace();
-        }
-        finally {
-            try{
-                activeGW.deletePortMapping(samplePort, "TCP");
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
         }
     }
 }

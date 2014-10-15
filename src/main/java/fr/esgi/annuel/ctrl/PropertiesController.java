@@ -127,7 +127,6 @@ public class PropertiesController
 		}
 		catch (NumberFormatException e)
 		{
-			e.printStackTrace();
 			centerWindow(window);
 		}
 	}

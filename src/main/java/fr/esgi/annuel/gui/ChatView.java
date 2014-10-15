@@ -1,5 +1,20 @@
 package fr.esgi.annuel.gui;
 
+import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.*;
+import java.awt.event.*;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.List;
 import fr.esgi.annuel.client.ClientInfo;
 import fr.esgi.annuel.client.Friend;
 import fr.esgi.annuel.ctrl.MasterController;
@@ -9,23 +24,12 @@ import fr.esgi.annuel.parser.ConnectionJsonParser;
 import fr.esgi.annuel.parser.subclasses.IpAndPort;
 import fr.esgi.annuel.server.Client;
 
-import javax.swing.*;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import java.awt.*;
-import java.awt.event.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class ChatView extends JPanel
 {
 	private static ClientInfo logedUser;
 	private boolean clearArea = false;
     private MasterController controller;
+	private PrivateKey privateKey;
 	private String currentInterlocuteur = "";
 	private Map<String, String> discution = new HashMap<>();
 	private JList<String> list;
@@ -44,7 +48,17 @@ public class ChatView extends JPanel
 	public ChatView(MasterController controller, ClientInfo user, ConnectionJsonParser jsonParser)
 	{
         this.controller = controller;
-        this.user = user;
+		try
+		{
+			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+			KeySpec privateKeySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(this.controller.getPrivateKey(user.getLogin())));
+			this.privateKey = keyFactory.generatePrivate(privateKeySpec);
+		}
+		catch (NoSuchAlgorithmException | InvalidKeySpecException e)
+		{
+			e.printStackTrace();
+		}
+		this.user = user;
         this.cjp = jsonParser;
 		MasterController.setLookAndFeel();
 
@@ -77,9 +91,6 @@ public class ChatView extends JPanel
 		for (Friend pseudo : cjp.getFriendList()) {
             this.contacts.addElement(pseudo.getUsername());
         }
-        this.contacts.addElement("stefens");
-        this.contacts.addElement("brunogb");
-        this.contacts.addElement("nightmaster");
 		if (this.contacts.size() > 0)
 			this.currentInterlocuteur = this.contacts.firstElement();
 		this.list = new JList<String>(this.contacts);
@@ -197,7 +208,7 @@ public class ChatView extends JPanel
 				ChatView.this.currentInterlocuteur = ChatView.this.list.getSelectedValue();
                 IpAndPort ipPort = ChatView.this.controller.getUserIpAndPort(ChatView.this.currentInterlocuteur);
                 System.out.println(ipPort.getPort());
-                Thread t = new Thread (new Client(ipPort.getIpAdress(),ipPort.getPort(),ChatView.this.currentInterlocuteur));
+                Thread t = new Thread (new Client(ipPort.getIpAdress(),ipPort.getPort(),ChatView.this.currentInterlocuteur, ChatView.this.controller));
                 t.start();
 				ChatView.this.text.setText(ChatView.this.discution.get(ChatView.this.currentInterlocuteur));
 			}

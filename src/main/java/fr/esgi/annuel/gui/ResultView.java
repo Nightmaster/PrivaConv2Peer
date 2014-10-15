@@ -28,7 +28,7 @@ public class ResultView extends JPanel
 		this.controller = controller;
 		MasterController.setLookAndFeel();
 		GroupLayout groupLayout = new GroupLayout(this);
-		if(null != this.results)
+		if(null != this.results && 0 != this.results.length)
 		{
 			groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -155,7 +155,7 @@ public class ResultView extends JPanel
 		if (this.lblCorrespondingUser == null)
 		{
 			this.lblCorrespondingUser = new JLabel("Utilisateur correspondant \u00E0 vos crit\u00E8res n\u00B0" + Integer.toString(this.index));
-			this.lblCorrespondingUser.setForeground(Color.WHITE);
+			this.lblCorrespondingUser.setForeground(Color.BLUE);
 			this.lblCorrespondingUser.setFont(new Font("Calibri", Font.BOLD, 15));
 		}
 		return this.lblCorrespondingUser;
@@ -167,7 +167,7 @@ public class ResultView extends JPanel
 		{
 			this.lblNoResults = new JLabel("Votre recherche n'a retourn\u00E9 aucun r\u00E9sultat");
 			this.lblNoResults.setFont(new Font("Calibri", Font.BOLD, 15));
-			this.lblNoResults.setForeground(Color.WHITE);
+			this.lblNoResults.setForeground(Color.BLUE);
 		}
 		return this.lblNoResults;
 	}
