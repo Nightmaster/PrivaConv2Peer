@@ -214,7 +214,7 @@ public class HttpRequest
 	{
 		initConnection(ServerAction.ANSWER_REQUEST,
 					   Parameters.USERNAME.getParameterValue() + "=" + username,
-					   Parameters.EMAIL.getParameterValue() + "=" + String.valueOf(validationStatus));
+					   Parameters.VALIDATION.getParameterValue() + "=" + String.valueOf(validationStatus));
 		this.connection.setRequestProperty("Cookie", cookie.toString());
 		this.connection.connect();
 		return this;

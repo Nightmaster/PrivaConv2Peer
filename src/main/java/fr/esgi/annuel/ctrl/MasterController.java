@@ -679,8 +679,78 @@ public final class MasterController
 		}
 	}
 
-	public final void repaintSearchFrame()
+	/**
+	* Perform a demand for the connected user's private key request to the server
+	*
+	* @param username {{@link java.lang.String}}: the connected user's username
+	*
+	* @return {{@link java.lang.String}}: the key as a String
+	**/
+	public final String getPrivateKey(String username)
 	{
-		this.searchFrame.repaint();
+		String key = null;
+		if (0 < new Date().compareTo(new Date(this.cookie.getMaxAge() * 1000)))
+		try
+		{
+			this.cookie = this.httpRequest.sendGetPrivateKeyReqRequest(username, this.cookie).getCookie();
+			PrivateKeyJsonParser prkJon = JSONParser.getPrivateKeyParser(this.httpRequest.getContent());
+			if (prkJon.isError())
+				openErrorPopup(prkJon.getDisplayMessage(), this.window);
+			key = prkJon.getPrivateKey();
+		}
+		catch (JSONException ignored) {}
+		catch (IOException e)
+		{
+			popUpErrorConnection();
+		}
+		finally
+		{
+			stayAlive();
+			return key;
+		}
+		else
+		{
+			this.window.setView(actualPanel = this.identificationView.reset(), Views.IDENTIFICATION);
+			openDisconnectPopup();
+			return key;
+		}
+	}
+
+
+	/**
+	* Perform a demand for an user's public key request to the server
+	*
+	* @param username {{@link java.lang.String}}: the user's username to which one you want to talk
+	*
+	* @return {{@link java.lang.String}}: the key as a String
+	**/
+	public final String getPubliceKey(String username)
+	{
+		String key = null;
+		if (0 < new Date().compareTo(new Date(this.cookie.getMaxAge() * 1000)))
+			try
+			{
+				this.cookie = this.httpRequest.sendGetPublicKeyReqRequest(username, this.cookie).getCookie();
+				PublicKeyJsonParser pubKJon = JSONParser.getPublicKeyParser(this.httpRequest.getContent());
+				if (pubKJon.isError())
+					openErrorPopup(pubKJon.getDisplayMessage(), this.window);
+				key = pubKJon.getPublicKey();
+			}
+			catch (JSONException ignored) {}
+			catch (IOException e)
+			{
+				popUpErrorConnection();
+			}
+			finally
+			{
+				stayAlive();
+				return key;
+			}
+		else
+		{
+			this.window.setView(actualPanel = this.identificationView.reset(), Views.IDENTIFICATION);
+			openDisconnectPopup();
+			return key;
+		}
 	}
 }

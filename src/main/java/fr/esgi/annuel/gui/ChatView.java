@@ -1,13 +1,5 @@
 package fr.esgi.annuel.gui;
 
-import fr.esgi.annuel.client.ClientInfo;
-import fr.esgi.annuel.client.contact.Contacts;
-import fr.esgi.annuel.ctrl.MasterController;
-import fr.esgi.annuel.message.Message;
-import fr.esgi.annuel.message.MessageQueue;
-import fr.esgi.annuel.parser.subclasses.IpAndPort;
-import fr.esgi.annuel.server.Client;
-
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -19,6 +11,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import fr.esgi.annuel.client.ClientInfo;
+import fr.esgi.annuel.client.contact.Contacts;
+import fr.esgi.annuel.ctrl.MasterController;
+import fr.esgi.annuel.message.Message;
+import fr.esgi.annuel.message.MessageQueue;
+import fr.esgi.annuel.parser.subclasses.IpAndPort;
+import fr.esgi.annuel.server.Client;
 
 public class ChatView extends JPanel
 {
@@ -41,7 +40,7 @@ public class ChatView extends JPanel
 	public ChatView(MasterController controller, ClientInfo user)
 	{
         this.controller = controller;
-		this.controller.setLookAndFeel();
+		MasterController.setLookAndFeel();
 
 		initialize(user);
 		setLayout(new BorderLayout(10, 10));
@@ -73,7 +72,7 @@ public class ChatView extends JPanel
             this.contacts.addElement(pseudo);
             System.out.println(pseudo);
         }
-        this.contacts.addElement("julien01");
+        this.contacts.addElement("stefens");
         this.contacts.addElement("brunogb");
         this.contacts.addElement("nightmaster");
 		if (this.contacts.size() > 0)
