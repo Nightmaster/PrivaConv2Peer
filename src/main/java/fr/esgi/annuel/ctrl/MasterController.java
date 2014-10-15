@@ -368,9 +368,12 @@ public final class MasterController
 		if (0 < new Date().compareTo(new Date(this.cookie.getMaxAge() * 1000)))
 			try
 			{
-				//FIXME utiliser le parseur
 				this.cookie = this.httpRequest.sendAnswerReqRequest(askerName, answer, this.cookie).getCookie();
+				AnswerRequestJsonParser arJson = JSONParser.getAnswerRequestParser(this.httpRequest.getContent());
+				if (arJson.isError())
+					openErrorPopup(arJson.getDisplayMessage(), this.window);
 			}
+			catch (JSONException ignored) {}
 			catch (IOException ioe)
 			{
 				popUpErrorConnection();

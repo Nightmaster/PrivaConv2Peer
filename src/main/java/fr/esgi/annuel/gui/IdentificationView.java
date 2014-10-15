@@ -4,8 +4,7 @@ import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import com.google.common.base.Strings;
 import fr.esgi.annuel.constants.Views;
 import fr.esgi.annuel.crypt.PasswordUtilities;
@@ -138,6 +137,7 @@ public class IdentificationView extends JPanel implements Resettable
 		{
 			this.fLoginValue = new JTextField(10);
 			PromptSupport.setPrompt("Pseudo ou @ mail", this.fLoginValue);
+			this.fLoginValue.addKeyListener(new KeyPressed());
 			PromptSupport.setFocusBehavior(FocusBehavior.SHOW_PROMPT, this.fLoginValue);
 			this.fLoginValue.getDocument().addDocumentListener(new FieldListener());
 		}
@@ -150,6 +150,7 @@ public class IdentificationView extends JPanel implements Resettable
 		{
 			this.fPassword = new JPasswordField();
 			this.fPassword.getDocument().addDocumentListener(new FieldListener());
+			this.fPassword.addKeyListener(new KeyPressed());
 			PromptSupport.setPrompt("Mot de passe", this.fPassword);
 			PromptSupport.setFocusBehavior(FocusBehavior.SHOW_PROMPT, this.fPassword);
 		}
@@ -232,26 +233,30 @@ public class IdentificationView extends JPanel implements Resettable
 			this.chckbxRememberMe.setEnabled(false);
 	}
 
+	private void login()
+	{
+		final String login = getLogin(),
+				password = getHashedPassword(),
+				toRegister = this.chckbxRememberMe.isSelected() ? login : "";
+		this.controller.getPropertiesController().storeLogin(toRegister);
+		if (Strings.isNullOrEmpty(password))
+			return;
+		if (login.contains("@"))
+			if (! isValidFieldContent(login, EMAIL))
+				JOptionPane.showMessageDialog(this, getErrorMessageFor(EMAIL), "Identifiant incorrect", JOptionPane.ERROR_MESSAGE);
+			else
+				IdentificationView.this.controller.connect(null, login, password);
+		else if (!isValidFieldContent(login, PSEUDO))
+			JOptionPane.showMessageDialog(this, getErrorMessageFor(PSEUDO), "Identifiant incorrect", JOptionPane.ERROR_MESSAGE);
+		else
+			this.controller.connect(login, null, password);}
+
 	private final class BtnListener implements ActionListener
 	{
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
-			final String login = getLogin(),
-						 password = getHashedPassword(),
-						 toRegister = IdentificationView.this.chckbxRememberMe.isSelected() ? login : "";
-			IdentificationView.this.controller.getPropertiesController().storeLogin(toRegister);
-			if (Strings.isNullOrEmpty(password))
-				return;
-			if (login.contains("@"))
-				if (! isValidFieldContent(login, EMAIL))
-					JOptionPane.showMessageDialog(IdentificationView.this, getErrorMessageFor(EMAIL), "Identifiant incorrect", JOptionPane.ERROR_MESSAGE);
-				else
-					IdentificationView.this.controller.connect(null, login, password);
-			else if (!isValidFieldContent(login, PSEUDO))
-				JOptionPane.showMessageDialog(IdentificationView.this, getErrorMessageFor(PSEUDO), "Identifiant incorrect", JOptionPane.ERROR_MESSAGE);
-			else
-				IdentificationView.this.controller.connect(login, null, password);
+			login();
 		}
 	}
 
@@ -285,6 +290,23 @@ public class IdentificationView extends JPanel implements Resettable
 		public void changedUpdate(DocumentEvent e)
 		{
 			checkFieldsContent();
+		}
+	}
+
+	private class KeyPressed extends KeyAdapter
+	{
+		@Override
+		public void keyPressed(KeyEvent e)
+		{
+			KeyStroke ks = KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, InputEvent.CTRL_DOWN_MASK);
+			int key = e.getKeyCode();
+			Object source = e.getSource();
+			if (key == KeyEvent.VK_ENTER)
+				login();
+			else if(ks.getKeyCode() == key && (source.equals(IdentificationView.this.fPassword) || source.equals(IdentificationView.this.fLoginValue)))
+				if(e.getSource().equals(IdentificationView.this.fPassword))
+					IdentificationView.this.fPassword.setText(null);
+
 		}
 	}
 }
