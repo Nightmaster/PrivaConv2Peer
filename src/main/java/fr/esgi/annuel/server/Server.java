@@ -66,8 +66,9 @@ public class Server implements Runnable
                 this.controller.setListeningPort(samplePort);
             ServerSocket server = new ServerSocket(samplePort);
             System.out.println("Server Launched");
-            Socket socket = server.accept();
+
             while (true) {
+                Socket socket = server.accept();
                 System.out.println(socket.getInetAddress() + " " + socket.getPort());
                 byte[] b = new byte[256]; //TDL voir comment gérer des messages très long sans splitter
                 int count;

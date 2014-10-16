@@ -95,9 +95,9 @@ public class ChatView extends JPanel
 		for (Friend pseudo : cjp.getFriendList()) {
             this.contacts.addElement(pseudo.getUsername());
         }
-		if (this.contacts.size() > 0)
-			this.currentInterlocuteur = this.contacts.firstElement();
+
 		this.list = new JList<String>(this.contacts);
+        this.textArea.setEditable(false);
 		this.list.setPreferredSize(new Dimension(100, 100));
 		this.list.addMouseListener(new MouseClickListener());
 		new Thread(new Runnable()
@@ -210,6 +210,7 @@ public class ChatView extends JPanel
 			{
 				ChatView.this.discution.put(ChatView.this.currentInterlocuteur, ChatView.this.text.getText());
 				ChatView.this.currentInterlocuteur = ChatView.this.list.getSelectedValue();
+                ChatView.this.textArea.setEditable(true);
                 IpAndPort ipPort = ChatView.this.controller.getUserIpAndPort(ChatView.this.currentInterlocuteur);
                 System.out.println(ipPort.getPort());
                 Thread t = new Thread (new Client(ipPort.getIpAdress(),ipPort.getPort(),ChatView.this.currentInterlocuteur, ChatView.this.controller));
